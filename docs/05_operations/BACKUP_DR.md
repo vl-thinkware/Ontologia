@@ -1,5 +1,8 @@
 # Backup & Disaster Recovery
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 What we back up, how often, how fast we can recover, and how we prove it.
 
 ---

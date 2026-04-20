@@ -1,5 +1,8 @@
 # Customer Success
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How we help customers realise the value they bought. The playbook for onboarding, retention, expansion, and turning happy customers into advocates.
 
 ---

@@ -1,5 +1,8 @@
 # Customer Acquisition
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 The funnels, plays, and experiments we run to turn strangers into happy, expanding customers. Operational companion to [GO_TO_MARKET.md](GO_TO_MARKET.md) and [MARKETING_STRATEGY.md](MARKETING_STRATEGY.md).
 
 ---

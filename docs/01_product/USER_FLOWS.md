@@ -1,12 +1,16 @@
 # User Flows
 
-This document walks through the most important end-to-end flows. Each flow is described with the happy path, key error states and UX notes. Mermaid sequence diagrams are embedded where they add clarity.
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (MVP scope trimmed)
+
+End-to-end flows for the MVP. Each flow has a happy path, key error states, and UX notes. Mermaid sequence diagrams are embedded where they add clarity.
+
+> **MVP scope**: branches, review requests, and three-way merges are deferred. Flows 3 and 4 in v1 of this doc (review request, conflict resolution) are moved to the deferred section at the end.
 
 ---
 
-## 1. Sign-up to first commit (activation flow)
+## 1. Sign-up to first change (activation flow)
 
-**Objective.** A brand-new user lands on a first ontology and creates a meaningful commit in under 10 minutes.
+**Objective.** A brand-new user lands on a first ontology and makes a meaningful change in under 10 minutes.
 
 ```mermaid
 sequenceDiagram
@@ -15,184 +19,164 @@ sequenceDiagram
   participant A as Auth (Clerk)
   participant B as Backend API
   participant N as Neo4j
+  participant P as Postgres
   U->>W: visit ontologia.com → "Try free"
   W->>A: sign up (email / Google)
   A-->>W: token
   W->>B: POST /orgs (implicit during onboarding)
-  B->>N: provision workspace graph
+  B->>P: create org + workspace + ontology
   U->>W: pick "Start from template" (e-commerce)
   W->>B: POST /ontologies/from-template
-  B->>N: clone template into new ontology
-  U->>W: edit a concept → "Commit"
-  W->>B: POST /commits
-  B->>N: write commit + new concept version
-  B-->>W: 201 Created
+  B->>N: materialise template concepts and relations
+  B->>P: append initial change events
+  U->>W: edit a concept → Save
+  W->>B: PATCH /concepts/{id}
+  B->>N: update concept in place
+  B->>P: append change_event row
+  B-->>W: 200 OK (with new changeEventId)
 ```
 
 **Key UX checkpoints.**
 - Sign-up form: 1 step, no company questions.
 - First workspace auto-named "Personal" (renameable).
-- First-run tooltip ring: Canvas → Inspector → Commit button.
+- First-run tooltip ring: Canvas → Inspector → Save button.
 - Empty-state CTA: "Import CSV" · "Start from template" · "Start blank".
 
 **Edge cases.**
-- SSO orgs: admin-led onboarding (see Flow 5).
-- Quota exceeded on Free tier: soft-block with upgrade prompt.
+- SSO orgs: admin-led onboarding (see Flow 6).
+- Free-tier limits reached (500 concepts or 5k API calls): soft-block with upgrade prompt.
 
 ---
 
-## 2. Direct commit on `main` (Editor on `main`)
+## 2. Edit a concept (direct change)
 
-**Objective.** A trusted Editor makes a small change directly on the default branch.
+**Objective.** An Editor makes a small change to a concept.
 
 ```
 Editor edits concept "Product"
   → UI stores the change in a local draft (green "unsaved" badge)
-  → Editor clicks "Commit changes"
-  → Modal asks for a commit message
-  → POST /commits {ontologyId, branchId=main, draftId}
-  → Neo4j writes the new commit, advances HEAD of main
-  → Changelog updates, webhooks fire, notifications go out
+  → Editor clicks "Save"
+  → PATCH /concepts/{id} with expectedLastEventId
+  → Backend:
+    - verifies expectedLastEventId still matches (else 409 stale-head)
+    - updates the concept in Neo4j
+    - appends a change_event to Postgres
+  → Changelog updates, webhooks fire, notifications go out to watchers
 ```
 
 **Safeguards.**
-- Branch policy can require review on `main` (disables direct commits) — enforced server-side.
-- Conflict check runs before accepting the commit: if `main` advanced since the draft started, UI prompts "rebase" (replay on top of new HEAD) or "push to branch".
+- Conflict check: if another Editor saved first, the UI surfaces "this concept was just updated by @alex — reload or keep your version".
+- Plan gating: if the org has hit the concept or API-call ceiling, Save returns 402 with a friendly upgrade prompt.
 
 ---
 
-## 3. Change proposal with review (conceptual PR)
+## 3. Tag a good state
 
-**Objective.** A contributor proposes changes that require sign-off before merging.
+**Objective.** An Owner marks a known-good state of the ontology so downstream consumers can pin to it.
 
-```mermaid
-sequenceDiagram
-  participant C as Contributor
-  participant W as Web App
-  participant B as Backend
-  participant R as Reviewer
-  C->>W: create branch "feature/add-variants"
-  C->>W: edits multiple concepts
-  C->>W: "Open Review Request"
-  W->>B: POST /reviews {branch, reviewers}
-  B-->>R: email + in-app notification
-  R->>W: opens review, sees diff, comments
-  R->>W: "Approve"
-  W->>B: POST /reviews/:id/approve
-  C->>W: "Merge"
-  W->>B: POST /reviews/:id/merge
-  B->>B: attempt fast-forward / 3-way merge
-  B-->>W: merge commit created
-```
-
-**UI highlights.**
-- Review page layout: left rail (diff summary) · center (diff view, graph or list) · right rail (reviewers, status, comments).
-- Concept-level threads; resolve on reply.
-- Merge button disabled until approvals match policy.
-- "Auto-archive branch on merge" default on.
-
----
-
-## 4. Conflict resolution (3-way merge)
-
-**Objective.** When two branches mutated the same concept, a reviewer resolves the conflict.
-
-**Steps.**
-1. Merge attempt detects conflict → UI surfaces "3 concepts need resolution".
-2. Reviewer opens the conflict UI: three columns — common ancestor · ours (`main`) · theirs (`feature/foo`).
-3. For each field (name, description, property, relation), reviewer picks a side or types a custom value.
-4. Reviewer saves → backend creates a *resolution commit* on the feature branch.
-5. Merge retried automatically.
-
-**Error states.**
-- Reviewer abandons: the partial resolution saves as draft.
-- A third party pushes to `main` mid-resolution: UI warns and rebases the resolution context.
-
----
-
-## 5. Rollback / revert
-
-**Objective.** An admin restores a previous ontology state after a bad merge.
-
-1. Admin opens history view, selects target commit `v2`.
-2. Clicks "Revert to this version".
-3. Modal confirms: "This will create a new commit that restores `v2`. History is preserved."
-4. POST `/commits/revert`.
-5. New commit `v4` sets all concepts/relations to the state at `v2`.
-6. Changelog + webhooks reflect the revert.
+1. Owner opens history view and finds the change event they want to tag (usually "latest").
+2. Clicks "Create tag" → modal asks for a name (e.g. `v1.2`, `2026-Q2`).
+3. POST `/ontologies/{id}/tags` with `name` and `changeEventId`.
+4. Tag appears in the history view and is available via the API (`GET /tags`).
+5. Downstream API consumers target `?tag=v1.2` in their export calls.
 
 **Notes.**
-- Revert never deletes history.
-- Revert across many merges is allowed but expensive; shown as an async job with progress.
+- Tag names are unique per ontology.
+- Tags cannot be moved. To supersede a tag, append a new one.
+- Tags are surfaced in exports as a `tag:` field so consumers can tell which named version they received.
 
 ---
 
-## 6. CSV import → clean ontology
+## 4. Rollback / revert
+
+**Objective.** A user restores the ontology to a prior state.
+
+1. User opens history view and selects a change event.
+2. Clicks "Revert this change".
+3. Modal confirms: "This will append a new change event that undoes this one. History is preserved."
+4. POST `/change-events/{id}/revert` with optional message.
+5. Backend computes the inverse diff, applies it to Neo4j, appends a new change event.
+6. Changelog shows the revert with a link back to the original event.
+
+**Multi-event revert.**
+- Selecting a range ("revert everything since tag `v1.2`") generates one revert change event per affected entity.
+- Runs as an async job for large ranges; progress shown in-app.
+
+**Notes.**
+- Revert never deletes history; it adds to it.
+- A revert can itself be reverted.
+
+---
+
+## 5. CSV import → clean ontology
 
 **Objective.** A domain expert brings a taxonomy from a spreadsheet.
 
 1. "Import → CSV" with drag-drop.
 2. Mapping step: which column is concept name? description? parent concept?
 3. Preview: shows 10 rows, highlights issues (duplicates, unmatched parents).
-4. Confirm → job runs (BullMQ) → import creates a draft on a new branch `import/YYYY-MM-DD`.
-5. User reviews diff → commits → optionally opens a Review Request.
+4. Confirm → job runs (BullMQ) → import appends a single `operation='bulk_import'` change event whose diff is the full list of creates.
+5. User reviews the resulting state on the canvas and can revert the import in one click if anything went wrong.
 
 **Error handling.**
 - Malformed CSV: stop early, show line numbers.
 - Duplicate names: offer "merge", "suffix", "fail".
-- Partial failure: job completes with a summary; user can retry failed rows.
+- Partial failure: job completes with a summary; user can retry failed rows or revert the partial import.
 
 ---
 
-## 7. API consumption (Platform Engineer)
+## 6. API consumption (Platform Engineer)
 
-**Objective.** Paul ingests the ontology into his RAG pipeline.
+**Objective.** A platform engineer ingests the ontology into their RAG pipeline.
 
-1. Workspace settings → "Create API key"; Paul copies the bearer token.
-2. Paul calls `GET /v1/ontologies/:id/export?format=jsonld&ref=main`.
-3. He subscribes to a webhook: `POST /v1/webhooks {url, events:["branch.merged"]}`.
-4. On every merge, Ontologia POSTs a signed JSON payload to his endpoint.
-5. Paul's pipeline re-indexes.
+1. Workspace settings → "Create API key"; engineer copies the bearer token.
+2. Engineer calls `GET /v1/ontologies/:id/exports?format=jsonld` (async job returns presigned URL).
+3. Engineer subscribes to a webhook: `POST /v1/webhooks {url, events:["change.created","tag.created"]}`.
+4. On every change, Ontologia POSTs a signed JSON payload to their endpoint.
+5. Pipeline re-indexes incrementally; for heavy consumers, they pull when a new tag is created.
 
 Detailed auth, error codes and pagination in [API_SPECIFICATION.md](../02_architecture/API_SPECIFICATION.md).
 
 ---
 
-## 8. Billing & plan change
+## 7. Billing & plan change
 
-**Objective.** An Owner upgrades from Starter to Pro.
+**Objective.** An Owner upgrades from Team to Business.
 
 1. Owner goes to `Org settings → Billing`.
-2. Sees current plan, usage, next invoice.
-3. Clicks "Upgrade to Pro" → Stripe-hosted checkout.
-4. On success, Stripe webhook updates the org → features unlock in real time.
+2. Sees current plan, current-period usage (workspaces, concepts, API calls), next invoice.
+3. Clicks "Upgrade to Business" → Stripe-hosted checkout.
+4. On success, Stripe webhook updates the org → higher limits unlock in real time.
 5. Usage is retroactively valid: no data loss.
 
 **Downgrade path.**
-- Downgrading below current usage blocks with a "resolve first" dialog (archive ontologies, remove seats).
+- Downgrading below current usage blocks with a "resolve first" dialog (archive workspaces, reduce concepts).
 - Enterprise plans use manual invoicing; Stripe is bypassed.
+
+**Add-on attach.**
+- Add-ons (extra concepts, extra API calls, AI pack) attached inline from the same Billing page.
 
 ---
 
-## 9. SSO-based onboarding (Enterprise)
+## 8. SSO-based onboarding (Business / Enterprise)
 
-**Objective.** An IT admin provisions the whole team via SAML.
+**Objective.** An IT admin provisions the team via SAML or OIDC.
 
-1. Admin configures SAML in the Ontologia enterprise console.
-2. SCIM pushes users/groups; groups map to roles.
-3. Users log in via IdP; seats auto-assigned.
-4. De-provisioning in IdP → seat freed within 5 minutes.
+1. Admin configures SAML or OIDC in the Ontologia admin console.
+2. (Business+) SCIM pushes users and groups; groups map to roles.
+3. Users log in via IdP; memberships auto-assigned.
+4. De-provisioning in IdP → membership removed within 5 minutes.
 
 Full sequence in [AUTHENTICATION.md](../06_security_compliance/AUTHENTICATION.md).
 
 ---
 
-## 10. Incident: service degradation
+## 9. Incident: service degradation
 
 **Objective.** How users experience a partial outage.
 
 - Read path degrades → read-only banner at the top of the app.
-- Write path degrades → Commit button disabled with a friendly message and a retry timer.
+- Write path degrades → Save button disabled with a friendly message and a retry timer.
 - Status page at `status.ontologia.com` auto-updates from monitoring signals.
 - Webhooks retried on recovery.
 
@@ -200,4 +184,18 @@ Full engineering response playbook in [INCIDENT_RESPONSE.md](../05_operations/IN
 
 ---
 
-Related: [PRD](PRD.md) · [Features](FEATURES.md) · [API Specification](../02_architecture/API_SPECIFICATION.md)
+## Deferred flows (ship with S1 / S2)
+
+### D1. Change proposal with review (conceptual PR)
+
+A contributor creates a branch, edits concepts, opens a review request, reviewers comment and approve, then merge. Full sequence diagram preserved in Git history of this file; will be re-enabled when branches ship.
+
+### D2. Conflict resolution (3-way merge)
+
+When two branches mutated the same concept, a reviewer resolves the conflict field-by-field (common ancestor · ours · theirs). Resolution commit lands on the feature branch; merge retries automatically.
+
+These flows are fully designed but not built for MVP. The change-event log plus revert covers ~95% of the operational need until two paying customers request branches.
+
+---
+
+Related: [PRD](PRD.md) · [Features](FEATURES.md) · [API Specification](../02_architecture/API_SPECIFICATION.md) · [Versioning System](../02_architecture/VERSIONING_SYSTEM.md)

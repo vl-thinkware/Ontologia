@@ -1,5 +1,8 @@
 # Security
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 This document summarises Ontologia's security posture. For the audit-ready version, see the trust center at `ontologia.com/trust`.
 
 ---

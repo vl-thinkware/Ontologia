@@ -1,5 +1,8 @@
 # Product Requirements Document — Ontologia v1.0
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Document owner: Product (Valentin Lemort)
 Status: **draft for engineering review**
 Last updated: 2026-04-20

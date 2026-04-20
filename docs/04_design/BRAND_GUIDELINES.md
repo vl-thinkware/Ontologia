@@ -1,5 +1,8 @@
 # Brand Guidelines
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Rules for presenting Ontologia in public. Covers logo, palette usage in marketing, typography, voice, photography, motion and partner co-branding.
 
 ---

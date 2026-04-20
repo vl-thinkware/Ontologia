@@ -1,6 +1,10 @@
 # System Architecture
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (MVP scope trimmed)
+
 High-level architecture for Ontologia. This document is the starting point for engineers; it links to deeper documents for each subsystem.
+
+> **MVP scope**: the branch / commit / review layer is deferred (see [VERSIONING_SYSTEM.md](VERSIONING_SYSTEM.md)). MVP persists ontologies as current state in Neo4j plus an append-only change-event log in Postgres.
 
 ---
 
@@ -102,11 +106,11 @@ flowchart LR
 
 ### 3.5 Databases
 
-**Postgres 16 (managed — Neon, Supabase or RDS).**
-Entities: `organizations`, `workspaces`, `memberships`, `users`, `api_keys`, `comments`, `reviews`, `notifications`, `audit_events`, `subscriptions`, `invoices`, `webhook_subscriptions`.
+**Postgres 16 (managed — Neon for MVP).**
+Entities (MVP): `organizations`, `workspaces`, `memberships`, `users`, `api_keys`, `change_event`, `tag`, `comments`, `notifications`, `audit_events`, `subscriptions`, `usage_counters`, `invoices`, `webhook_subscriptions`. `reviews` and `review_reviewers` ship with S2.
 
-**Neo4j Aura 5.x.**
-Entities: `:Ontology`, `:Branch`, `:Commit`, `:Concept`, `:RelationType`, and typed relations. See [DATA_MODEL.md](DATA_MODEL.md).
+**Neo4j Aura 5.x (Free tier at build, Professional from launch).**
+Entities (MVP): `:Org`, `:Ontology`, `:Concept`, `:ConceptRelation`, `:RelationType`, `:Tag`. The `:Branch`, `:Commit` and commit-graph edges ship with S1. See [DATA_MODEL.md](DATA_MODEL.md).
 
 **Redis 7.**
 Uses: cache (hot ontology heads, rate limits), BullMQ queues, Redis Streams event bus, WebSocket pub/sub for in-app notifications.
@@ -118,7 +122,7 @@ Uses: import payloads, export artefacts, backups, large attachments.
 
 | Purpose | Vendor | Notes |
 |---|---|---|
-| Auth | Clerk | Email, Google, Microsoft, OIDC/SAML on Pro+ |
+| Auth | Clerk | Email, Google, Microsoft, OIDC on Team+, SAML on Business+ |
 | Payments | Stripe | Tax via Stripe Tax; self-serve + manual invoicing |
 | Email | Resend | Transactional; Postmark as backup |
 | LLM | OpenAI primary, Anthropic fallback | Route via internal abstraction; per-workspace usage cap |
@@ -132,47 +136,62 @@ Uses: import payloads, export artefacts, backups, large attachments.
 
 Summary — full detail in [MULTI_TENANCY.md](MULTI_TENANCY.md):
 
-- **Pro & Enterprise:** one Neo4j Aura database per organisation ("database-per-tenant").
-- **Free & Starter:** shared Neo4j database with `orgId` property on every node and edge, indexed, enforced via Cypher middleware.
+- **Enterprise:** one Neo4j Aura database per organisation ("database-per-tenant").
+- **Free, Team, Business:** shared Neo4j database with `orgId` property on every node and edge, indexed, enforced via Cypher middleware. Business customers can upgrade to dedicated Aura on request.
 - Postgres is always shared; `orgId` is on every row and enforced by row-level security (RLS).
 - Redis keys are always prefixed with `org:{orgId}:`.
 
 ---
 
-## 5. Request paths (happy path examples)
+## 5. Request paths (happy path examples — MVP)
 
-### 5.1 Create commit
-1. `POST /v1/commits` with a draft payload.
-2. Fastify handler validates with Zod, checks authz (`write:ontology`).
-3. Cypher transaction: creates `:Commit`, links concepts/relations to new commit, advances `:Branch` HEAD.
+### 5.1 Edit a concept (append a change event)
+1. `PATCH /v1/concepts/:id` with new field values and `expectedLastEventId`.
+2. Fastify handler validates with Zod, checks authz (`write:ontology`), verifies plan limits (`usage_counters`).
+3. Two-phase write coordinated by the app layer:
+   a. Append a row to `change_event` in Postgres.
+   b. Update the `:Concept` node in Neo4j, setting `lastChangeEventId`.
 4. Postgres insert into `audit_events`.
-5. Event emitted on Redis Streams.
+5. Event emitted on Redis Streams (`change.created`).
 6. Response within 150 ms on p50.
-7. Webhook dispatcher and changelog indexer consume the event asynchronously.
+7. Webhook dispatcher and notification service consume the event asynchronously.
 
-### 5.2 Diff two commits
-1. `GET /v1/ontologies/:id/diff?from=abc&to=def`.
+### 5.2 Revert a change event
+1. `POST /v1/change-events/:id/revert`.
+2. Backend loads the target event's diff and computes the inverse.
+3. Append a new `change_event` row with `operation='revert'` and apply the inverse to Neo4j in the same two-phase write.
+4. Event emitted on Redis Streams (`change.reverted`).
+
+### 5.3 Diff two change events
+1. `GET /v1/ontologies/:id/diff?from=eventA&to=eventB`.
 2. Check cache key `diff:{orgId}:{ontologyId}:{from}:{to}`.
-3. On miss, Cypher queries build the set diff on concepts/relations.
-4. Cached 1 h; invalidated on new commits.
+3. On miss, replay relevant change events from Postgres and compute the set diff at concept/relation level.
+4. Cached 1 h; invalidated on any new change event on that ontology.
 
-### 5.3 Merge branch
+### 5.4 Bulk import
+1. `POST /v1/ontologies/:id/imports` with an uploaded file.
+2. File stored in R2; an `import` job is enqueued.
+3. Worker processes the file, validates entries, and appends a single `operation='bulk_import'` change event whose diff contains the list of creates.
+4. Neo4j state updated in the same worker transaction.
+
+### 5.5 Deferred — merge branch (ships with S1)
 1. `POST /v1/branches/:id/merge`.
 2. Attempt fast-forward in a single transaction.
 3. On divergence, enqueue a `merge` job that computes the 3-way merge (common ancestor, ours, theirs).
 4. If conflicts, job returns a conflict report; UI shows resolution flow.
-5. On resolution, new commit created and `main` HEAD advances.
+5. On resolution, a new commit is created and the branch HEAD advances.
 
 ---
 
 ## 6. Scalability plan
 
-| Concern | v1.0 | Growth trigger | Mitigation |
+| Concern | MVP | Growth trigger | Mitigation |
 |---|---|---|---|
-| Neo4j per-tenant count | < 500 tenants | > 500 Pro tenants | Consolidate small tenants onto shared DBs; encourage Enterprise tier for largest |
+| Neo4j per-tenant count | Shared tenant for Team and Business | > 3 Enterprise tenants | Add dedicated Aura clusters per Enterprise customer |
 | Single-graph canvas size | Up to 5k nodes | > 20k nodes in workspace | Server-side culling; "focus area" mode |
+| Change-event throughput | ~100 writes / s on shared Postgres | Sustained > 500 writes / s | Partition `change_event` by `org_id` hash |
 | Search index size | Postgres `tsvector` | > 50M tokens cluster-wide | OpenSearch migration (pre-planned) |
-| WebSocket connections | Single Redis pub/sub | > 50k concurrent | Redis Cluster + shard by workspace |
+| WebSocket connections | Single Redis pub/sub | > 10k concurrent | Redis Cluster + shard by workspace |
 | Job throughput | 2 workers × 2 concurrency | Queue latency > 1 min | Autoscale workers, priority queues |
 
 ---

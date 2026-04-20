@@ -1,5 +1,8 @@
 # Incident Response
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 A practical playbook for the first 60 minutes of an incident, and the days that follow.
 
 ---

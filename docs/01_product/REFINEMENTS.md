@@ -1,5 +1,8 @@
 # Refinements to v1 Spec
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 This document consolidates proposed refinements to `Ontologia — Spécifications v1.0.pdf` (17 Apr 2026). The other docs in this repo are kept faithful to v1 — this file is where we stage evolutions for product review.
 
 Priority legend: **P0** (ship before GA) · **P1** (should land during v1.x) · **P2** (revisit in 2027).

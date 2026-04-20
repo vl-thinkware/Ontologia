@@ -1,5 +1,8 @@
 # Design System
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Design tokens, components and rules that keep Ontologia's UI consistent, accessible and fast to build for.
 
 ---

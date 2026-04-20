@@ -1,5 +1,8 @@
 # Testing Strategy
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 We test enough to ship confidently. We don't test so much that we can't ship. This document defines what lives at each level and how to decide where a test goes.
 
 ---

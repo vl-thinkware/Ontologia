@@ -1,5 +1,8 @@
 # Partnerships
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How Ontologia grows with and through other companies — technology alliances, channel partners, systems integrators, communities, and academic ties.
 
 ---

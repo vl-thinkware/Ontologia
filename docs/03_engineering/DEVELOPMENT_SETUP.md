@@ -1,5 +1,8 @@
 # Development Setup
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 From a blank laptop to a running Ontologia stack in under 30 minutes. If anything here is wrong or slow, file an issue — the onboarding experience is a product.
 
 ---

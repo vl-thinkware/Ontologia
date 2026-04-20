@@ -1,5 +1,8 @@
 # Integrations
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Ontologia is only valuable if it plugs into the rest of the data stack. This document captures every supported integration, at what maturity, and how engineers should build new ones.
 
 ---

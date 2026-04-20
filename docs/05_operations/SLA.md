@@ -1,5 +1,8 @@
 # Service Level Agreement
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Public-facing SLA structure. The marketing-friendly version lives at `ontologia.com/legal/sla`. Enterprise contracts may supersede these defaults with MSA-specific terms.
 
 ---

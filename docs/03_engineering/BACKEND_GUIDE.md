@@ -1,5 +1,8 @@
 # Backend Guide
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Patterns and recipes for the Ontologia API and worker services.
 
 ---

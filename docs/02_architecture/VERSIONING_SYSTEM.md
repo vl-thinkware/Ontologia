@@ -1,26 +1,107 @@
 # Versioning System
 
-This is Ontologia's most distinctive subsystem. It must be simple enough to explain to Persona B (Domain Expert) and robust enough for Persona A (Knowledge Architect). This document describes the conceptual model, the algorithms and the invariants we protect.
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (MVP scope trimmed)
+
+This is Ontologia's most distinctive subsystem. It must be simple enough to explain to a domain expert and robust enough for a knowledge architect. This document describes the conceptual model, the algorithms, and the invariants we protect.
+
+> **MVP scope (v2 of this doc)**: MVP ships with an *immutable change history* at the concept and ontology level, plus revert and tags. The git-like *branches / merge / review* workflow is deferred until at least two paying customers on Business or Enterprise have demonstrated a real need. Section 1–6 describe the MVP. Section 7–10 describe the deferred branch/merge design we will revisit.
 
 ---
 
-## 1. Core concepts
+## 1. Core concepts (MVP)
 
-- **Commit.** An immutable snapshot of an ontology at a moment in time. Identified by a UUID; has a message, an author, a timestamp and a parent (or two parents for merges).
+- **Change event.** An immutable record of a single editorial action on an ontology. Identified by a UUID; has an author, a timestamp, an entity type (`concept` | `relation`), an entity id, a diff payload, and an optional human-readable message.
+- **Ontology.** A container of change events. The state of the ontology at any time is the result of applying all change events in order.
+- **Tag.** A named, immutable pointer to a specific change event (e.g. `v1-released`, `2026-Q2`). Tags never move once created.
+- **Draft.** Client-side, uncommitted pending changes. Lives in the browser and in a server-side workspace-scoped staging area for resilience. Not part of the history until submitted.
+- **Revert event.** A change event that inverts the effect of a specified prior change event. It is itself a change event — history is never rewritten, only appended to.
+
+## 2. Invariants (MVP)
+
+1. **Immutability.** Once a change event is written, its data is never mutated. The only way to "undo" is to append a revert event.
+2. **Attribution.** Every change event has exactly one author and a server-assigned timestamp.
+3. **Traceability.** For every concept or relation version, we can answer: which change event created it? which change event most recently modified it? which reverted what?
+4. **Reproducibility.** Given `(ontologyId, changeEventId)`, the state of the ontology up to and including that event is deterministic.
+5. **No history rewriting.** Admins cannot delete change events; they can only append reverts. Tags cannot be moved.
+
+## 3. Change event storage (MVP)
+
+Change events are stored in Postgres (authoritative, immutable, append-only) with a pointer into Neo4j for the materialised state.
+
+### 3.1 Postgres table (simplified)
+
+```sql
+create table change_event (
+  id uuid primary key,
+  ontology_id uuid not null,
+  author_id uuid not null,
+  created_at timestamptz not null default now(),
+  entity_type text not null check (entity_type in ('concept','relation','ontology','tag')),
+  entity_id uuid,
+  operation text not null check (operation in ('create','update','delete','revert','tag')),
+  diff jsonb not null,
+  message text,
+  reverts_event_id uuid references change_event(id)
+);
+
+create index on change_event (ontology_id, created_at);
+create index on change_event (ontology_id, entity_type, entity_id);
+```
+
+### 3.2 Neo4j materialised state
+
+Neo4j holds the *current* state of each ontology. When a change event is written:
+
+1. Begin a transaction.
+2. Apply the diff to the current Neo4j state.
+3. Link the affected concept/relation nodes to the change event id (`LAST_MODIFIED_BY` edge).
+4. Commit Postgres row + Neo4j transaction in a two-phase write coordinated by the application layer (with idempotency keys so retries are safe).
+
+The source of truth for history is Postgres; Neo4j is a derived store that can be rebuilt by replaying events.
+
+## 4. Diff payload
+
+```ts
+type Diff =
+  | { op: 'create', entity: Concept | Relation }
+  | { op: 'update', entity_id: string, before: Partial<Entity>, after: Partial<Entity> }
+  | { op: 'delete', entity_id: string, snapshot: Entity }
+  | { op: 'revert', reverts_event_id: string, inverse: Diff };
+```
+
+Storing before/after in the update variant gives us cheap two-way diffing and trivial reverts.
+
+## 5. Revert (MVP)
+
+Given a target change event `T`:
+
+1. Compute the inverse diff of `T`.
+2. Append a new change event with `operation='revert'` and `reverts_event_id=T.id`.
+3. Apply the inverse diff to Neo4j in the same transaction.
+4. Emit a `change.reverted` event.
+
+A revert of a revert is just another change event; the chain is fully traceable.
+
+## 6. Tags (MVP)
+
+- A tag is a named pointer to a change event id.
+- Tags are created by ontology owners and editors.
+- Tags cannot be moved or deleted — delete means append a new "tag deprecated" event and create a fresh one.
+- Tags are the primary way downstream consumers target a known-good version of an ontology (e.g. `ontology@v2.3`).
+
+---
+
+## 7. Deferred: branches (S1)
+
+The following design is pre-agreed but not in the MVP. It ships only when at least two paying customers have asked for it and Alexandre has the bandwidth.
+
+### 7.1 Concepts
+
+- **Commit.** A grouped, named bundle of change events written atomically. Has a parent commit (or two parents for merges).
 - **Branch.** A named pointer to a commit. Moves forward as commits are added.
-- **Ontology.** A container of commits and branches. The default branch is `main`.
-- **Draft.** Client-side, uncommitted pending changes. Lives in the browser (and in a server-side workspace-scoped staging area for resilience).
-- **Ref.** A generic name for "something that resolves to a commit" (`main`, `feature/x`, a specific SHA-like id).
+- **Ref.** Generic name for "something that resolves to a commit" (`main`, `feature/x`, a specific SHA-like id).
 
-## 2. Invariants
-
-1. **Immutability.** Once a commit is written, its data is never mutated. The only way to "undo" is to create a revert commit.
-2. **Attribution.** Every commit has exactly one author; merges have one author *and* two parents.
-3. **Traceability.** For every concept / relation version, we can answer: which commit created it? which commit retired it?
-4. **Reproducibility.** Given `(ontologyId, commitId)`, the state of the ontology is deterministic.
-5. **No history rewriting.** No force-push in v1.0. Admins cannot delete commits; only revert.
-
-## 3. The commit graph
+### 7.2 Commit graph
 
 ```
 main:     C0 ── C1 ── C2 ── C3 (HEAD)
@@ -36,43 +117,11 @@ main:     C0 ── C1 ── C2 ── C3 ── M4 (HEAD)
 feature/ab:          C2' ── C3'
 ```
 
-`M4` has two parents: `C3` (main) and `C3'` (feature/ab).
+### 7.3 Neo4j materialisation
 
-## 4. Staging model (drafts)
+In the branch world, the set of concepts/relations "alive at" a commit is modelled with `(:Commit)-[:INCLUDES]->(:Concept|:ConceptRelation)`. We'll use snapshot pages (materialise the full INCLUDES set every 50 commits) to avoid O(N) copies on every commit.
 
-Editors work in a **draft** over a ref. The draft stores the deltas on top of that ref (adds, modifies, deletes) without touching the graph. The draft persists:
-
-- Locally in IndexedDB (source of truth for unsaved work).
-- Periodically synced to the server (`/v1/drafts/:id`) to protect against lost work.
-
-Committing = "promote this draft to a new commit on this branch."
-
-## 5. Commit semantics in Neo4j
-
-The commit is a node. The set of concepts/relations "alive at" a commit is modelled with `(:Commit)-[:INCLUDES]->(:Concept|:ConceptRelation)`.
-
-Rationale: diffing two commits becomes a set operation on their INCLUDES sets, which Neo4j handles efficiently with proper indexing.
-
-### 5.1 Writing a commit
-In a single Cypher transaction:
-
-1. Read HEAD of the target branch.
-2. For each changed concept/relation:
-   - If added: create a new `:Concept|:ConceptRelation` with a fresh `versionId`, link with `INCLUDES` to the new commit.
-   - If modified: create a new version node, `NEXT_VERSION` from the previous version, link with `INCLUDES`.
-   - If deleted: do not link `INCLUDES`; set `status='deprecated'` on the previous version.
-3. For all concepts/relations unchanged in this commit, copy over the `INCLUDES` edges (constant-time pointer list, not a deep copy).
-4. Create the `:Commit` node with parent = old HEAD.
-5. Move `:Branch`-[:POINTS_TO]-> to the new commit.
-
-All within the same transaction; either everything lands or nothing does.
-
-### 5.2 Copy-on-write optimisation
-To avoid O(N) `INCLUDES` copies on every commit we use **snapshot pages**. Every 50 commits on a branch, we materialise a full `INCLUDES` set; intermediate commits store only deltas (`ADDED`, `REMOVED` edges) over the nearest snapshot. Resolving "state at commit X" walks forward from the nearest snapshot.
-
-Thresholds tunable via config; monitored by a Grafana panel.
-
-## 6. Diff algorithm
+## 8. Deferred: diff algorithm between commits
 
 Given commits `A` and `B`:
 
@@ -80,45 +129,23 @@ Given commits `A` and `B`:
 - **Removed = INCLUDES(A) − INCLUDES(B)**
 - **Modified = items whose `id` is in both sets but whose `versionId` differs**
 
-Represented as:
+Same TypeScript shape as MVP diffs, scaled to many entities at once. Cached for 1 hour; invalidated on new commits on either commit's branch.
 
-```ts
-type Diff = {
-  concepts: { added: Concept[]; removed: Concept[]; modified: ConceptChange[] };
-  relations: { added: Relation[]; removed: Relation[]; modified: RelationChange[] };
-  stats: { added: number; modified: number; removed: number };
-};
-```
+## 9. Deferred: merge algorithm
 
-Cached for 1 hour; invalidated on new commits on either commit's branch.
-
-## 7. Merge algorithm
-
-### 7.1 Fast-forward
+### 9.1 Fast-forward
 If the target branch's HEAD is an ancestor of the source branch's HEAD: just move the target branch pointer to the source HEAD. No merge commit.
 
-### 7.2 3-way merge
-Let:
-- `O` = lowest common ancestor (LCA) commit.
-- `A` = HEAD of target (e.g. `main`).
-- `B` = HEAD of source (e.g. `feature/x`).
+### 9.2 3-way merge
+Let `O` = lowest common ancestor (LCA), `A` = HEAD of target, `B` = HEAD of source.
 
-Algorithm:
 1. Compute `diffA = diff(O, A)` and `diffB = diff(O, B)`.
-2. For each concept `c`:
-   - If only one side touched it, take that side.
-   - If both sides touched it:
-     - Same change? Trivial merge.
-     - Different changes? **Conflict.**
-3. Same for relations.
-4. Compile the merged state.
-5. If no conflicts, write a merge commit with two parents (`A`, `B`) including the merged state.
-6. If conflicts, return a `ConflictReport`; merge is deferred until resolved.
+2. For each concept/relation: if only one side touched it, take that side; if both sides touched it and the change is identical, trivial merge; otherwise, **conflict**.
+3. Compile the merged state.
+4. If no conflicts, write a merge commit with two parents (`A`, `B`).
+5. If conflicts, return a `ConflictReport`; merge is deferred until resolved.
 
-### 7.3 LCA (ancestor) computation
-Walk parents breadth-first from both sides. With commits numbered by topological order, this is `O(d)` where `d` is the distance from HEAD to branch point. For typical ontologies (< 10k commits), negligible.
-
-### 7.4 Conflict types
+### 9.3 Conflict types
 
 | Conflict | Example |
 |---|---|
@@ -129,73 +156,60 @@ Walk parents breadth-first from both sides. With commits numbered by topological
 | `deletion_modification` | One deleted `X`, the other modified it |
 | `structural_conflict` | Both added a relation that creates a cycle where the type forbids it |
 
-Each conflict ships a resolution suggestion (choose ours / choose theirs / custom).
+Each conflict ships with a resolution suggestion (choose ours / choose theirs / custom).
 
-## 8. Revert
+## 10. Deferred: branch policies + review requests (S2)
 
-Given target commit `T` on branch `B` with HEAD `H`:
-
-- Compute `diff(T, H)`.
-- Create a new commit `R` whose `INCLUDES` set equals `T`'s.
-- Move branch `B` to `R`.
-- Emit `commit.reverted` event with `revertedCommitId=H-target`, `restoredCommitId=T`.
-
-## 9. Branch policies
-
-A branch can be protected with:
+When we ship S1 we also ship S2. A branch can be protected with:
 
 - `requireReviews: n` (minimum approvals).
-- `requireChecks: ['lint','cycle-free','no-breaking-rename']` (server-side validators).
+- `requireChecks: ['cycle-free','no-breaking-rename']` (server-side validators).
 - `restrictDirectCommits: boolean`.
 - `allowedMergers: userId[] | role[]`.
 
-Default policy on `main` for new Pro+ workspaces: `requireReviews=1`, `restrictDirectCommits=false`, `requireChecks=['cycle-free']`.
+Default policy on `main` for Business+ workspaces: `requireReviews=1`, `restrictDirectCommits=false`, `requireChecks=['cycle-free']`.
 
-## 10. Server-side validators (for protected branches)
+Server-side validators:
 
 - **cycle-free**: rejects commits that would introduce a cycle in declared transitive relations.
 - **no-breaking-rename**: rejects commits where > 10% of concepts are renamed without deprecation.
 - **relation-type-strict**: when strict mode is on, rejects commits using undeclared relation types.
 
-Validators are pure functions over diffs; added via a plugin interface.
-
-## 11. Published versions (post-v1.0)
-
-Owners may "publish" a commit as an immutable, named version (`ontology:v2.3`). Downstream consumers target published versions rather than `main` to avoid drift.
-
-Published versions are just tags — pointers to commits — stored in Postgres (`published_versions` table) and visible in the UI and API.
-
-## 12. Edge cases
-
-- **Empty ontology.** `main` points to a genesis commit whose INCLUDES set is empty.
-- **First commit.** `parentCommitId` is null.
-- **Fork of an empty branch.** Not allowed; branches can only be created from an existing commit.
-- **Concurrent commits on the same branch.** Handled optimistically: commit request carries `expectedHeadCommitId`. If HEAD moved, the server returns `409 Conflict` and the UI prompts to rebase.
-- **Large bulk imports.** Run as a single commit with a `bulk: true` flag; the INCLUDES copy becomes a full snapshot automatically.
-
-## 13. Performance targets
-
-| Operation | P50 | P95 |
-|---|---|---|
-| Write commit (≤ 50 changes) | 120 ms | 400 ms |
-| Diff two commits (≤ 1k INCLUDES delta) | 80 ms | 300 ms |
-| Fast-forward merge | 50 ms | 150 ms |
-| 3-way merge (≤ 500 concepts touched) | 400 ms | 1.5 s |
-| Revert to any commit | 150 ms | 600 ms |
-
-Measured on the canonical Neo4j Aura instance (2 vCPU / 8 GB).
-
-## 14. Testing strategy
-
-- **Unit tests** on the diff and merge functions with small handcrafted graphs.
-- **Property-based tests** (`fast-check`) on invariants: "after revert(X, Y) then revert the revert, state equals original HEAD".
-- **Scenario tests**: scripted sequences of commits and merges; snapshot compare the resulting INCLUDES sets.
-- **Chaos tests**: random bytes in commit messages, enormous drafts, concurrent merges — we expect graceful failure, not corruption.
-
-## 15. Open design choices
-
-Tracked in [REFINEMENTS.md](../01_product/REFINEMENTS.md). Most notably: snapshot interval tuning, published versions in v1.0 vs v1.1, optional linear-history enforcement on `main`.
+Validators are pure functions over diffs, added via a plugin interface.
 
 ---
 
-Related: [Data Model](DATA_MODEL.md) · [API Specification](API_SPECIFICATION.md) · [Testing Strategy](../03_engineering/TESTING_STRATEGY.md)
+## 11. Edge cases (MVP)
+
+- **Empty ontology.** The first change event creates the ontology; no predecessor needed.
+- **Concurrent edits.** Handled optimistically: each change event submission carries `expectedLastEventId` for the affected entity. If the entity has moved on, the server returns `409 Conflict` and the UI prompts to reload.
+- **Large bulk imports.** Run as a single change event with an `operation='bulk_import'` variant whose diff is a list of creates. Idempotent via a client-supplied import id.
+- **Clock skew.** Server-assigned timestamps only; the client's timestamp is recorded separately for audit but never used for ordering.
+
+## 12. Performance targets (MVP)
+
+| Operation | P50 | P95 |
+|---|---|---|
+| Write change event (single concept edit) | 80 ms | 250 ms |
+| Append revert event | 100 ms | 300 ms |
+| Diff two change events at ontology level (≤ 500 entities delta) | 80 ms | 300 ms |
+| Create tag | 30 ms | 100 ms |
+| Load change history page (50 events) | 120 ms | 400 ms |
+
+Measured on the canonical Neo4j Aura instance (4 GB shared tenant) plus Neon Postgres Launch.
+
+## 13. Testing strategy (MVP)
+
+- **Unit tests** on the diff and revert functions with small handcrafted graphs.
+- **Property-based tests** (`fast-check`) on invariants: "after revert(X) then revert of that revert, state equals original".
+- **Scenario tests**: scripted sequences of change events; snapshot compare the resulting Neo4j state against Postgres-replayed state.
+- **Chaos tests**: random bytes in messages, enormous bulk imports, concurrent edits — we expect graceful failure, not corruption.
+- **Rebuild test**: nightly job replays all events for a sample ontology and verifies the resulting Neo4j state matches the live state. If not, page Alexandre.
+
+## 14. Open design choices
+
+Tracked in [REFINEMENTS.md](../01_product/REFINEMENTS.md). Most notably: when exactly we ship S1 branches, whether we enforce optional linear history once branches exist, and how we handle multi-entity events (one change touching many concepts via a schema rename).
+
+---
+
+Related: [Data Model](DATA_MODEL.md) · [API Specification](API_SPECIFICATION.md) · [Architecture](ARCHITECTURE.md) · [Testing Strategy](../03_engineering/TESTING_STRATEGY.md) · [Features](../01_product/FEATURES.md)

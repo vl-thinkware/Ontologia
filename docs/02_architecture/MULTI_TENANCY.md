@@ -1,5 +1,8 @@
 # Multi-Tenancy
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 This document describes how Ontologia isolates organisations ("tenants") across the stack. Every engineering decision that involves data, cache, jobs or logs must honour these rules.
 
 ---

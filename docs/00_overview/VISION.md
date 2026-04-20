@@ -1,5 +1,8 @@
 # Vision
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 ## One-liner
 Ontologia is the **GitHub + Notion of enterprise ontologies** — a multi-tenant SaaS where data teams build, version and govern the knowledge graphs that power their AI, analytics and operations.
 

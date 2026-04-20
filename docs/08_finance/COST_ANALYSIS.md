@@ -1,256 +1,253 @@
 # Cost Analysis
 
-What it costs to build and run Ontologia — today, at GA, and at scale. A pragmatic view used for pricing decisions, gross-margin analysis, and capital planning.
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
-> All figures in USD. Cost bands are realistic mid-range estimates based on public pricing and comparable SaaS businesses in 2025–2026. Update quarterly.
+What it costs to build and run Ontologia — month by month, as a two-founder bootstrapped company, with a deliberate bias toward free tiers, usage-based pricing, and deferring every expense that is not customer-visible.
+
+> All figures in USD. Cost bands based on public pricing observed in April 2026. Reviewed monthly.
 
 ---
 
 ## 1. Cost structure overview
 
-We break costs into four buckets:
+Four buckets:
 
 1. **COGS** — direct cost of delivering the service. Drives gross margin.
-2. **R&D (engineering + product + design)** — building the product.
-3. **S&M (sales + marketing)** — acquiring and retaining customers.
-4. **G&A** — running the company.
+2. **Build (engineering + product + design)** — founders' time, plus minimal tools.
+3. **Acquire (sales + marketing)** — content, events, and any paid channels.
+4. **Run the company** — legal, accounting, banking, insurance.
 
-Plus: infrastructure capex-equivalent (pre-paid reserved capacity) treated as COGS over the term.
+Founder time is *not* loaded into any bucket while we are bootstrapped. Tracking cash out only; once we start drawing salaries (year 2), we layer that in explicitly.
 
-## 2. COGS — per-tenant components
+## 2. The bootstrap floor — what we actually pay today
 
-For each paying tenant we incur a blend of fixed and variable costs.
+Monthly infra + tooling cost before we have customers:
 
-| Component | Starter (small team) | Pro (mid-size team) | Enterprise (dedicated) |
-|---|---|---|---|
-| Neo4j Aura (graph DB) | Shared (~$25/mo allocated) | Shared (~$80/mo allocated) | Dedicated ~$500–$2,500/mo |
-| Postgres (Neon / RDS) | Shared (~$10/mo allocated) | Shared (~$40/mo allocated) | Dedicated ~$200–$800/mo |
-| Redis (Upstash / ElastiCache) | $5/mo allocated | $20/mo allocated | $100–$300/mo |
-| Cloudflare R2 (object storage) | Negligible | $5–$20/mo | $50–$200/mo |
-| Compute (Fly.io / Vercel / Render) | $10/mo allocated | $40/mo allocated | $200–$800/mo |
-| CDN & bandwidth (Cloudflare) | Included | Mostly included | $50–$200/mo |
-| Clerk auth | $0 on free tier → $0.02/MAU | ~$0.02/MAU | Enterprise plan ~$3k/yr min |
-| Stripe billing | 2.9% + 30¢ per transaction | Same | Wire / ACH for many |
-| Email (Resend) | $20/mo pool | $90/mo pool | $200/mo pool |
-| Observability (Grafana Cloud, Sentry, Logtail) | $50/mo pool | $200/mo pool | $500–$1,500/mo |
-| LLM pass-through (for AI features, opt-in) | Pass-through + 20% margin | Pass-through + 20% margin | Pass-through or fixed bundle |
-| Security tooling (GitGuardian, Semgrep, Snyk) | allocated | allocated | allocated |
-| CS & support (labour alloc) | $3/seat/mo | $8/seat/mo | $30/seat/mo |
-
-Indicative **blended COGS per plan** (excluding LLM pass-through):
-
-| Plan | Monthly COGS per typical customer | Price | Gross margin |
-|---|---|---|---|
-| Free | $3–$5 | $0 | Negative — marketing expense |
-| Starter (5 editors) | $20–$35 | $75 | ~60–70% |
-| Pro (20 editors) | $150–$250 | $980 | ~75–82% |
-| Enterprise (100 editors, dedicated) | $3,500–$6,000 | $45,000/yr ≈ $3,750/mo average | ~75–85% (blended with platform fees) |
-
-Numbers widen with scale (economies on Aura, Redis, support leverage).
-
-## 3. COGS scaling curves
-
-Assumptions:
-
-- Neo4j Aura per-instance cost drops with commit discounts at >$200k/yr committed.
-- Shared tiers benefit from batching at ~5–10× more customers on the same cluster.
-- Support labour scales sub-linearly with good docs and community.
-
-| Customers | Total COGS / month | Avg COGS / paying customer |
+| Item | Tier | Cost / month |
 |---|---|---|
-| 50 | $12k | $240 |
-| 250 | $45k | $180 |
-| 1,000 | $140k | $140 |
-| 5,000 | $550k | $110 |
-| 15,000 | $1.4M | $93 |
+| Neo4j Aura Free | Free | $0 |
+| Neon Postgres | Free | $0 |
+| Upstash Redis | Free | $0 |
+| Cloudflare R2 | Free (10 GB) | $0 |
+| Fly.io compute (small) | Hobby | $15 |
+| Vercel (frontend) | Hobby | $0 |
+| Cloudflare (DNS, CDN) | Free | $0 |
+| Clerk auth | Free dev tier | $0 |
+| Stripe | pay-per-transaction | $0 until revenue |
+| Resend (email) | Free (3k emails) | $0 |
+| Sentry | Free (5k events) | $0 |
+| GitHub | Free | $0 |
+| Linear | Free (2 users) | $0 |
+| 1Password | 2 users | $7.99 |
+| Domain | annual | ~$2 |
+| **Total** | | **~$25 / month** |
 
-## 4. Infrastructure reserved capacity
+One-time: Mac / Linux workstations we already own; no new hardware.
 
-To reduce cost, we commit to reserved capacity at predictable scale:
+## 3. Infra cost at 10 paying customers (month 6–9 of year 1)
 
-- Neo4j Aura committed spend tier at ~$50k/yr unlocks 15% discount.
-- Cloudflare Enterprise commit unlocks negotiated bandwidth + WAF pricing.
-- AWS / GCP committed-use discounts when we migrate compute to Kubernetes in year 2.
+| Item | Tier | Cost / month |
+|---|---|---|
+| Neo4j Aura Professional | Shared tenant, 8 GB | $65 |
+| Neon Postgres Launch | Shared | $20 |
+| Upstash Redis Pro | pay-as-you-go | $15 |
+| Cloudflare R2 | usage | $5 |
+| Fly.io compute | 2 small machines | $35 |
+| Vercel Pro | Pro | $20 |
+| Clerk auth | Pro | $25 |
+| Resend | Pro | $20 |
+| Sentry Team | Team | $26 |
+| Grafana Cloud | Free + usage | $10 |
+| Stripe Tax | pay-per-txn | $10 |
+| Linear Standard | 2 users | $16 |
+| 1Password | 2 users | $8 |
+| **Total** | | **~$275 / month** |
 
-Pre-pay only when usage prediction has ≥ 80% confidence.
+At $5,000 MRR, that is 5.5% COGS — ample room for gross margin.
 
-## 5. LLM cost model (feature C2)
+## 4. Infra cost at 50 paying customers (year 2)
+
+| Item | Cost / month |
+|---|---|
+| Neo4j Aura (mixed shared + first dedicated) | $700 |
+| Postgres (Neon scale) | $150 |
+| Redis (Upstash pay-as-you-go) | $80 |
+| R2 object storage | $40 |
+| Compute (Fly.io / Vercel) | $250 |
+| Clerk auth | $120 |
+| Resend email | $80 |
+| Observability (Grafana Cloud, Sentry, Logtail) | $200 |
+| LLM pass-through (opt-in AI pack) | $150 (covered by add-on revenue) |
+| Security scanning (Semgrep, Dependabot) | $0–$50 |
+| **Total** | **~$1,800 / month** |
+
+At $40,000 MRR, infra is 4.5% of revenue — on target.
+
+## 5. Per-tenant COGS blended by plan
+
+| Plan | Avg monthly COGS | Monthly price | Gross margin |
+|---|---|---|---|
+| Free | $2–$4 | $0 | negative (marketing expense, capped by the 500-concept / 5k-API ceiling) |
+| Team | $60–$90 | $416–$499 | ~82% |
+| Business | $250–$400 | $1,659–$1,990 | ~85% |
+| Enterprise (dedicated) | $600–$1,200 | $3,333+ | ~85–90% |
+
+Numbers compress as we get better at resource-sharing on the shared tenant and as Neo4j Aura reserved pricing kicks in around $50k committed.
+
+## 6. COGS scaling curves
+
+| Paying customers | Monthly infra | Monthly infra / paying customer |
+|---|---|---|
+| 10 | $275 | $27 |
+| 50 | $1,800 | $36 |
+| 200 | $6,500 | $33 |
+| 500 | $15,000 | $30 |
+| 1,000 | $28,000 | $28 |
+
+Per-customer infra cost stays in a $25–$40 band through the first 1,000 customers. The big step-up happens when we add a second dedicated Neo4j cluster for Enterprise isolation, which Enterprise ACV more than covers.
+
+## 7. Reserved capacity (only when we have visibility)
+
+We commit to reserved capacity only when monthly usage has been ≥ 80% predictable for three consecutive months.
+
+Likely candidates (year 2):
+- Neo4j Aura: commit to annual pricing at ~$50k/yr to unlock 15% discount — only once we have two Enterprise customers plus steady Business volume.
+- Cloudflare: no commit needed before year 3.
+- No cloud-provider reservations until we migrate anything off managed services, which we do not plan in year 1–2.
+
+## 8. LLM cost model (AI add-on pack)
 
 - Average request: ~2k tokens in, 500 tokens out.
-- Using GPT-4-class models: ~$0.03–$0.05 per request.
-- Using cheaper models (GPT-4o-mini, Claude Haiku) for most cases: ~$0.005 per request.
-- Fallback to open-weights (Llama, Mistral) for internal features: pay infra only.
+- Cheapest tier (Claude Haiku, GPT-4o-mini): ~$0.005 / request.
+- Mid-tier (Claude Sonnet, GPT-4o): ~$0.02 / request.
+- Budget: $199/mo AI pack covers up to ~10,000 mid-tier requests or ~40,000 cheap-tier requests per month.
+- Margin target on AI pack: ≥ 40% after vendor cost at the 80th-percentile usage profile.
 
-Per-tenant quota enforced. Pass-through billing for Enterprise customers choosing "pay for what you use" pattern.
+Multi-vendor adapter is a must: any vendor price shock gets routed around rather than eaten.
 
-Margin target on AI features: ≥ 50% (after vendor cost).
+## 9. Build cost (founders' time, year 0 and year 1)
 
-## 6. Engineering (R&D) cost
+Year 0 (months 0–6, pre-launch): two founders full-time, zero cash compensation.
 
-### Team shape year 1 (post-GA)
+Cash cost of building:
+- Infra + tooling: ~$150–$300 / month (see Section 2).
+- Legal company setup (SAS or Delaware C-Corp + basic templates): $1,500–$3,000 one-time.
+- Accounting software (bookkeeping): $25 / month from year 1.
+- Domain + branding assets: ~$500 one-time.
 
-| Role | Count | Blended fully-loaded cost (USD/yr) |
-|---|---|---|
-| Founders (CEO, CTO) | 2 | $300k each |
-| Senior engineers (FE, BE, data, infra) | 5 | $220k |
-| Product manager | 1 | $220k |
-| Designer | 1 | $200k |
-| DevRel | 1 | $200k |
-| Total | 10 | ≈ $2.5M |
+Founder draws: $0 in year 0. Starting from month 9–12 of year 1 when MRR covers infra + tooling + 3 months of safety buffer, founders may take token draws ($1,000–$2,000 / month each). Full or partial market salaries only from year 2 onward.
 
-Includes salary + equity refresh cost + benefits + computer + SaaS tools.
+### Contractors (selectively)
 
-### Year 2 shape
-- 18–22 people. Engineering ~12.
-- Target: R&D ≤ 50% of OPEX in year 2, ≤ 40% by year 3.
+- Part-time designer (0.1 FTE) from month 4: ~$1,500/month for landing page + early brand work.
+- Part-time technical writer (0.05 FTE) from month 6: ~$600/month for docs polish.
 
-### Tools
-- GitHub Enterprise, Vercel, Fly.io, Grafana Cloud, Sentry, Linear, Notion, Figma, Slack, 1Password, Doppler, Drata.
-- Blended ~$400/employee/month in SaaS costs.
+Everything else stays with the founders.
 
-## 7. Sales & marketing cost
+## 10. Acquisition cost (marketing and sales, year 1)
 
-### Year 1
-- ~$400k total: events, content, paid ads (small), partner MDF.
-- 1 AE + 1 SDR + 1 CSM + fractional CMO.
-- Total S&M headcount cost ≈ $800k.
-- Total S&M ≈ $1.2M.
+Bootstrap channel mix — total year 1 cash cost < $3,000:
 
-### Year 2
-- Sales team: 3 AEs, 2 SDRs, 1 sales ops.
-- Marketing: head of marketing, content lead, DevRel, events, growth.
-- Total S&M ≈ $3.5–4M.
+| Channel | Monthly cost |
+|---|---|
+| Content (founders write) | $0 |
+| Open-source (Ontology-Importer library) | $0 |
+| SEO tooling (Ahrefs Starter) | $29 |
+| Community (Discord, OSS events) | $50 travel / goodies |
+| Founder-led sales | $0 cash; time only |
+| Paid ads | $0 in year 1 |
+| Events (one low-cost talk / meetup) | $100 / event, 3 / year |
 
-### Year 3
-- Sales: 8 AEs (mix of mid-market + enterprise), 4 SDRs, 2 sales ops, 1 VP Sales.
-- Marketing: full team of 7–9.
-- Total S&M ≈ $8–10M.
+Year 2 may add: small paid retargeting experiment (budget $500/mo), one paid conference sponsorship (~$3,000).
 
-Target: S&M as a % of revenue ≤ 60% year 1, ≤ 50% year 2, ≤ 45% year 3.
+## 11. Company-running cost
 
-## 8. G&A cost
+| Item | Year 1 | Year 2 | Year 3 |
+|---|---|---|---|
+| Legal (company + customer MSAs, external counsel) | $2,000 | $4,000 | $8,000 |
+| Accounting (external bookkeeper + annual return) | $1,500 | $3,500 | $6,000 |
+| Banking fees | $200 | $400 | $600 |
+| Insurance (cyber, professional) | $0 | $2,500 | $6,000 |
+| Founders' tools (1Password, Notion personal, Miro) | $800 | $1,200 | $1,800 |
+| **Total / year** | **~$4,500** | **~$11,600** | **~$22,400** |
 
-- Legal (fractional + outside counsel): $150k year 1; $400k year 2.
-- Finance (bookkeeping + fractional CFO): $120k year 1.
-- People ops: $100k year 1; $300k year 2.
-- Office / remote stipends: $80k year 1.
-- Insurance (D&O, E&O, cyber): $40k year 1; ramps with team and revenue.
-- Audits (SOC 2): $50k year 1; $35k / yr after.
-- Compliance tooling (Drata / Vanta): $30k / yr.
+Note: We defer insurance to year 2 because most early customers will not demand it; we carry the risk explicitly.
 
-Year 1 G&A ~$600k. Year 2 ~$1.2M. Year 3 ~$2.5M.
+## 12. Compliance cost (deferred, not zeroed)
 
-## 9. Total cost envelope
+Customer-facing compliance is expensive. We defer it until a customer *pays* for it.
 
-| Year | COGS | R&D | S&M | G&A | Total OPEX |
-|---|---|---|---|---|---|
-| 0 (pre-GA, build) | $80k | $1.6M | $200k | $300k | $2.2M |
-| 1 (GA year) | $650k | $2.5M | $1.2M | $600k | $5.0M |
-| 2 | $2.2M | $5.5M | $4.0M | $1.2M | $12.9M |
-| 3 | $5.5M | $9.5M | $10M | $2.5M | $27.5M |
+- **SOC 2 Type I** audit: $8,000–$15,000 one-time + $6,000–$10,000 / year. Triggered by first customer that contractually requires it or by $250k ARR — whichever comes first.
+- **GRC tooling** (Drata / Vanta / Secureframe): $8,000–$15,000 / year. Begun only at SOC 2 kick-off.
+- **Annual penetration test**: $8,000–$15,000. Triggered at SOC 2 kick-off or by Enterprise customer requirement.
+- **ISO 27001**: deferred past year 2 unless customer demands it.
+- **HIPAA BAA**: on-demand per customer.
 
-Compare with revenue projections in [FINANCIAL_PROJECTIONS.md](FINANCIAL_PROJECTIONS.md).
-
-## 10. Per-customer acquisition cost (CAC)
-
-Reconciled to sales cycle:
-
-| Segment | Blended CAC | Payback |
-|---|---|---|
-| Self-serve (Free → Starter → Pro) | $500–$1,500 | < 6 months |
-| Mid-market (assisted sale) | $8k–$15k | 10–14 months |
-| Enterprise | $40k–$60k | 12–24 months |
-
-CAC discipline: we do not spend to acquire customers we can't retain. Any channel exceeding targets for two quarters is cut.
-
-## 11. Cost of support
-
-- Community self-service: aim > 40% of Free+Starter support covered by docs/community.
-- Ticket-to-success ratio: target < 15 minutes average per Pro+ ticket on average (simple questions).
-- Enterprise TAM coverage: 1 TAM per ~$2M ARR covered.
-
-Invest early in:
-- Comprehensive docs (saves CSM hours).
-- In-product help (tooltips, onboarding).
-- Templates library (cuts "how do I start?" tickets).
-
-## 12. Cost of security & compliance
-
-- SOC 2 Type I audit: one-time ~$25k + ongoing $20–30k/yr audit fee.
-- Annual penetration test: $25–40k.
-- GRC platform (Drata/Vanta/Secureframe): $25k/yr.
-- Bug bounty (post year 1): $30k/yr reserve.
-- ISO 27001 (year 2+): ~$80k one-time + ongoing audit fees.
-- Vendor security reviews: covered by GRC + internal.
-
-Budgeted separately because customers care about this as a product feature.
+We publish a clear compliance roadmap (see [COMPLIANCE.md](../06_security_compliance/COMPLIANCE.md)) so prospects know when to expect each milestone.
 
 ## 13. Cost of infrastructure failure
 
-Budget a reserve for:
-- DR drills (quarterly): $5k per drill in labour.
-- Annual restore-from-backup full test: $15k in labour + infra.
-- Region failover: $20k per year in reserved secondary capacity once we offer it.
-- SLA credit reserve: ~1% of annual revenue.
+- DR drill: 1 per quarter, half a founder-day each — no cash cost.
+- Annual full restore test: one founder-day — no cash cost.
+- SLA credit reserve: 1% of annual recognised revenue, held on the balance sheet.
 
 ## 14. Cost of building feature C2 (AI suggestions)
 
-- Engineering: 2 FTE for 6 months (~$230k).
-- LLM ops: initial model experimentation budget $15k.
-- Evaluation tooling and red-teaming: $25k.
-- Ongoing: $0.05–$0.50 per editor-month at steady state, billed via the AI add-on.
-
-ROI: feature expected to drive 10–15% upgrade rate and 5% ACV increase.
+- Engineering: Alexandre, ~3 weeks part-time during year 1.
+- LLM experimentation budget: $300 one-time.
+- Evaluation tooling: internal scripts, no cash cost.
+- Ongoing: self-funding via the $199/mo add-on.
 
 ## 15. Cost of building feature C5 (MCP server)
 
-- Engineering: 1 FTE for 3 months (~$55k).
-- Runs on existing infra; marginal hosting $200/mo.
-- Strategic: positions Ontologia as the canonical ontology source for agent ecosystems.
+- Engineering: Alexandre, ~2 weeks.
+- Runs on existing infra; marginal hosting $0 in year 1.
+- Strategic value: positions Ontologia as the canonical ontology source for agent ecosystems.
 
-## 16. Cost efficiency levers
+## 16. Cost efficiency levers (bootstrap-specific)
 
-- **Caching** (Redis, HTTP): cuts read load by 60–80%.
-- **Shared multi-tenant** on Starter/Pro avoids per-customer infra cost.
-- **CDN + edge compute** (Cloudflare Workers) for hot paths.
+- **Caching** (Redis, HTTP): cuts read load by 60–80% — mandatory from day one.
+- **Shared multi-tenant** on Team and Business avoids per-customer infra cost.
+- **CDN + edge compute** on Cloudflare for hot paths.
 - **Batching jobs** during off-peak hours.
-- **Rightsizing Aura** per tenant at scheduled review points.
-- **Auto-scaling** on compute tiers.
-- **Reserved commits** once usage is predictable.
+- **Prefer usage-based billing from vendors** over flat tiers until volume justifies it.
+- **Turn off what is not used**: monthly cost audit kills subscriptions with <1 use per week.
 
 ## 17. Cost risks
 
 | Risk | Mitigation |
 |---|---|
-| Neo4j Aura price hikes | Multi-year pricing; adapter pattern to swap GraphStore if needed |
-| LLM vendor price volatility | Multi-model strategy; pass-through to customer on heavy workloads |
-| Cloud egress surprises | Cloudflare R2 (zero egress); cache strategy |
-| Enterprise dedicated tenants under-priced | Pricing floor + annual cost review; per-customer cost dashboards |
-| Support labour creep | Docs-first; deflection metrics; template library |
-| Compliance costs scaling fast | Batch audits; tooling; in-house ownership vs consultants |
+| Neo4j Aura price hikes | Shared tenant leverage; adapter pattern to swap GraphStore if needed; keep an ArcadeDB fallback evaluated |
+| LLM vendor price volatility | Multi-model adapter; pass-through on heavy workloads; add-on pricing can absorb a 2x spike |
+| Cloud egress surprises | Cloudflare R2 (zero egress); aggressive caching |
+| Enterprise tenant under-priced | Floor $40k/yr; per-customer cost dashboard to catch drift early |
+| Support load from Free users | Hard 500-concept / 5k-API ceiling; docs-first |
+| Compliance spend ahead of demand | Deferred until customer-paid trigger |
 
 ## 18. Governance
 
-- Monthly cost review by CEO + CTO + (future) CFO.
-- Quarterly deep dive with engineering team.
-- Cost dashboards in Grafana with per-tenant cost estimation.
-- Alerts on anomalies (doubling week-over-week).
+- **Monthly cost review**: Valentin + Alexandre, 30 minutes, first Monday of the month.
+- **Every new subscription** requires both founders' approval.
+- **Cost dashboard** in Grafana: per-vendor monthly spend, per-customer estimated COGS.
+- **Alerts** on anomalies (spend doubling week-over-week, any single line item > 20% of COGS).
 
-## 19. Where cost is worth spending
+## 19. Where cost is worth spending (even when bootstrapped)
 
-- **People**. Paying below market is false economy.
-- **Security**. Customers vote with SOC 2 in hand.
-- **Performance**. Latency is a product feature.
-- **Reliability**. SLA credits are cheaper than a lost enterprise.
-- **Docs**. Every hour of writing saves hours of support.
-- **Design polish**. Our category win depends on UX excellence.
+- **Founder health**: at least one week off per quarter. Burnout is the most expensive cost we could incur.
+- **Security**: customer-visible basics (TLS, password hygiene, audit log) from day one.
+- **Performance**: latency is a product feature; caching and proper indexing get built right the first time.
+- **Docs**: every hour of writing saves hours of support.
+- **Design polish**: the UX difference vs Protégé is the reason customers will pay.
 
 ## 20. Where we resist spending
 
-- Agencies for marketing before we know what we're promoting.
-- Long-term SaaS contracts we haven't verified we'll use.
-- Conferences that don't align to ICP.
-- "Growth hack" tools that don't respect the user.
-- Logos on our office wall.
+- **Agencies** for marketing before we know what we are promoting.
+- **Annual SaaS contracts** for tools we have not verified we will use.
+- **Conferences** that do not align to ICP — maximum one per quarter.
+- **Growth hack tools** that do not respect the user.
+- **Logos on an office wall** — we do not have an office.
+- **Premature hires**. Our costliest line item is the one that is not a bug, not a feature, and not a customer.
+
+---
 
 Related: [Pricing Model](PRICING_MODEL.md) · [Financial Projections](FINANCIAL_PROJECTIONS.md) · [Unit Economics](UNIT_ECONOMICS.md) · [Infrastructure](../05_operations/INFRASTRUCTURE.md) · [Business Strategy](../07_business/BUSINESS_STRATEGY.md)

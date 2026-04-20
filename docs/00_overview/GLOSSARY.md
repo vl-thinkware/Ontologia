@@ -1,5 +1,8 @@
 # Glossary
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Shared vocabulary used across product, engineering, design and GTM. Terms are alphabetical. When in doubt, refer here rather than inventing new words.
 
 ---

@@ -1,5 +1,8 @@
 # Onboarding
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 The first 30, 60, 90 days at Ontologia. How to land smoothly, do your best work, and feel at home in a remote-first, async-heavy team.
 
 ---

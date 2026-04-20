@@ -1,5 +1,8 @@
 # Code of Conduct
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Ontologia is committed to providing a harassment-free, welcoming, and productive environment for everyone — team members, customers, contributors, and community participants — regardless of gender, gender identity, sexual orientation, disability, physical appearance, body size, ethnicity, nationality, age, religion, or level of experience.
 
 This code applies to every Ontologia space: our workplaces, online channels (Slack, Discord, GitHub, LinkedIn), events we host or sponsor, customer interactions, and representations of the company in public.

@@ -1,5 +1,8 @@
 # UI/UX Guidelines
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Opinions that keep the product coherent across features.
 
 ---

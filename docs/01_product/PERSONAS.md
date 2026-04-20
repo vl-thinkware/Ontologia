@@ -1,5 +1,8 @@
 # Personas
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Three primary personas drive v1.0. They are intentionally narrow; secondary personas (CIO sponsor, compliance officer, LLM ops engineer) are acknowledged but not optimised for until v2.
 
 ---

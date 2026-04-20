@@ -1,5 +1,8 @@
 # Coding Standards
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Opinions live here so debates don't live in PRs. When something is missing, propose it in a PR against this file.
 
 ---

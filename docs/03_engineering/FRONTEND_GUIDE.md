@@ -1,5 +1,8 @@
 # Frontend Guide
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Principles, patterns and recipes for the Ontologia web app.
 
 ---

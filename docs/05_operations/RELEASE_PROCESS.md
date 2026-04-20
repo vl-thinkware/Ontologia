@@ -1,5 +1,8 @@
 # Release Process
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How we go from "green on main" to "customer impact", safely and repeatably.
 
 ---

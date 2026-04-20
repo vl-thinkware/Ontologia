@@ -1,5 +1,8 @@
 # Contributing
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How to contribute to Ontologia as a team member, a design partner, or an external contributor on our open-source components.
 
 ---

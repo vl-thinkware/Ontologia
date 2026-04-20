@@ -1,5 +1,8 @@
 # Git Workflow
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 ## 1. Model
 
 **Trunk-based development.** Short-lived branches off `main`, frequent merges, feature flags to hide unfinished work.

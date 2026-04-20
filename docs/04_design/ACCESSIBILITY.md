@@ -1,5 +1,8 @@
 # Accessibility
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 We target **WCAG 2.2 AA** for the whole product. Accessibility is not a separate track — it is part of shipping.
 
 ---

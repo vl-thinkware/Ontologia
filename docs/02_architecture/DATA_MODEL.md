@@ -1,6 +1,10 @@
 # Data Model
 
-Complete schema for the two databases powering Ontologia — Neo4j for the graph domain, PostgreSQL for everything relational.
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (MVP scope trimmed)
+
+Complete schema for the two databases powering Ontologia — Neo4j for the graph domain, PostgreSQL for everything relational and for the authoritative change history.
+
+> **MVP scope (v2 of this doc)**: MVP uses an *append-only ChangeEvent log* in Postgres and a materialised current-state view in Neo4j. The commit-graph / branch / review tables described in Section 6 are **deferred** until the branches feature (S1 / S2) ships.
 
 ---
 
@@ -8,14 +12,14 @@ Complete schema for the two databases powering Ontologia — Neo4j for the graph
 
 Each organisation (tenant) has:
 
-- **one tenant-scoped Neo4j database** (Pro+) or **a namespace inside a shared database** (Free/Starter) holding that org's ontologies, commits, concepts, relations.
-- **rows in the shared Postgres** for users, orgs, memberships, billing, comments, audits, reviews, notifications, API keys, webhooks.
+- **one tenant-scoped Neo4j database** (Business+) or **a namespace inside a shared database** (Free / Team) holding the current state of that org's ontologies, concepts, and relations.
+- **rows in the shared Postgres** for users, orgs, memberships, change events, billing, comments, audits, notifications, API keys, and webhooks.
 
 All Postgres tables carry an `org_id` column enforced via RLS. All Neo4j nodes and relations carry an `orgId` property when on shared Neo4j.
 
 ---
 
-## 2. Neo4j schema
+## 2. Neo4j schema (MVP — current-state only)
 
 ### 2.1 Node labels
 
@@ -27,51 +31,24 @@ All Postgres tables carry an `org_id` column enforced via RLS. All Neo4j nodes a
 (:Ontology {
   id,                 // uuid
   orgId,              // string (tenant)
-  name,               // string
-  description,        // string
-  defaultBranchId,    // uuid, refs :Branch
+  name,
+  description,
   createdAt, updatedAt,
   createdBy           // userId
 })
 
-// Branches
-(:Branch {
-  id,                 // uuid
-  orgId, ontologyId,
-  name,               // string (unique per ontology)
-  headCommitId,       // uuid, refs :Commit
-  isProtected,        // boolean
-  createdAt, createdBy
-})
-
-// Commits
-(:Commit {
-  id,                 // uuid
-  orgId, ontologyId, branchId,
-  message,            // string
-  authorId,           // userId
-  parentCommitId,     // uuid or null
-  mergeParentId,      // uuid or null (for merge commits)
-  stats: {
-    concepts: { added, modified, deleted },
-    relations: { added, modified, deleted }
-  },
-  createdAt
-})
-
-// Concepts
+// Concepts — one node per concept, mutated in place in Neo4j (history lives in Postgres)
 (:Concept {
-  id,                 // uuid — stable across versions
-  versionId,          // uuid — unique per concept version
+  id,                 // uuid — stable
   orgId, ontologyId,
-  firstCommitId,      // uuid
-  lastCommitId,       // uuid (points to the commit that created this version)
   name, description,
   status,             // 'draft' | 'validated' | 'deprecated'
   synonyms,           // string[]
-  source,             // string or null
+  source,
   confidence,         // number 0..1 or null
-  properties          // map (JSON) of custom keys
+  properties,         // map (JSON) of custom keys
+  lastChangeEventId,  // uuid — pointer into change_event table
+  updatedAt
 })
 
 // Relation types (schema)
@@ -79,11 +56,30 @@ All Postgres tables carry an `org_id` column enforced via RLS. All Neo4j nodes a
   id,
   orgId, ontologyId,
   name,               // e.g. 'is-a', 'part-of'
-  label,              // human readable
-  isTransitive,       // boolean
-  isSymmetric,        // boolean
-  isReflexive,        // boolean
-  strict              // boolean — when true, relations of this type must be declared
+  label,
+  isTransitive,
+  isSymmetric,
+  isReflexive,
+  strict
+})
+
+// Typed relations between concepts — realised as a node to carry per-edge metadata
+(:ConceptRelation {
+  id,
+  orgId, ontologyId,
+  relationTypeId,
+  label, properties,
+  lastChangeEventId,
+  updatedAt
+})
+
+// Tags — named, immutable pointers into the change_event log
+(:Tag {
+  id,
+  orgId, ontologyId,
+  name,
+  changeEventId,      // uuid — target change event
+  createdAt, createdBy
 })
 ```
 
@@ -93,63 +89,40 @@ All Postgres tables carry an `org_id` column enforced via RLS. All Neo4j nodes a
 // Org → ontologies
 (:Org)-[:HAS_ONTOLOGY]->(:Ontology)
 
-// Ontology → branches / commits
-(:Ontology)-[:HAS_BRANCH]->(:Branch)
-(:Ontology)-[:HAS_COMMIT]->(:Commit)
+// Ontology → concepts / relations / tags
+(:Ontology)-[:HAS_CONCEPT]->(:Concept)
+(:Ontology)-[:HAS_RELATION_TYPE]->(:RelationType)
+(:Ontology)-[:HAS_TAG]->(:Tag)
 
-// Commit lineage
-(:Commit)-[:PARENT]->(:Commit)
-(:Commit)-[:MERGED_FROM]->(:Commit)   // optional, for merge commits
-
-// Branch head
-(:Branch)-[:POINTS_TO]->(:Commit)
-
-// A commit "sees" the set of concept/relation versions alive at that commit.
-// Modeled via a bitmap-like membership:
-(:Commit)-[:INCLUDES]->(:Concept)
-(:Commit)-[:INCLUDES]->(:ConceptRelation)
-
-// Concept genealogy (version chain)
-(:Concept)-[:NEXT_VERSION]->(:Concept)
-
-// Typed relations between concepts — realised as a node to carry metadata per edge and per version
-(:ConceptRelation {
-  id, versionId,
-  orgId, ontologyId,
-  relationTypeId,     // refs :RelationType
-  label, properties,
-  firstCommitId, lastCommitId
-})
+// Typed relations between concepts
 (:Concept)-[:HAS_RELATION]->(:ConceptRelation)-[:TARGETS]->(:Concept)
 ```
 
-Why realise a relation as a node? To attach per-edge properties and version them independently. This mirrors how git handles path-level diffs.
+Why realise a relation as a node? To attach per-edge properties cleanly and version them independently via change events.
 
 ### 2.3 Indexes & constraints
 
 ```cypher
 CREATE CONSTRAINT ontology_id IF NOT EXISTS FOR (o:Ontology) REQUIRE o.id IS UNIQUE;
-CREATE CONSTRAINT branch_id IF NOT EXISTS FOR (b:Branch) REQUIRE b.id IS UNIQUE;
-CREATE CONSTRAINT commit_id IF NOT EXISTS FOR (c:Commit) REQUIRE c.id IS UNIQUE;
-CREATE CONSTRAINT concept_version_id IF NOT EXISTS FOR (c:Concept) REQUIRE c.versionId IS UNIQUE;
-CREATE CONSTRAINT relation_version_id IF NOT EXISTS FOR (r:ConceptRelation) REQUIRE r.versionId IS UNIQUE;
+CREATE CONSTRAINT concept_id IF NOT EXISTS FOR (c:Concept) REQUIRE c.id IS UNIQUE;
+CREATE CONSTRAINT relation_id IF NOT EXISTS FOR (r:ConceptRelation) REQUIRE r.id IS UNIQUE;
 CREATE CONSTRAINT relation_type_id IF NOT EXISTS FOR (r:RelationType) REQUIRE r.id IS UNIQUE;
+CREATE CONSTRAINT tag_id IF NOT EXISTS FOR (t:Tag) REQUIRE t.id IS UNIQUE;
 
 // Lookup by tenant
 CREATE INDEX concept_org_ontology IF NOT EXISTS FOR (c:Concept) ON (c.orgId, c.ontologyId);
 CREATE INDEX relation_org_ontology IF NOT EXISTS FOR (r:ConceptRelation) ON (r.orgId, r.ontologyId);
-CREATE INDEX commit_lookup IF NOT EXISTS FOR (c:Commit) ON (c.orgId, c.ontologyId, c.branchId);
 
 // Full-text
 CREATE FULLTEXT INDEX concept_fts IF NOT EXISTS FOR (c:Concept) ON EACH [c.name, c.description, c.synonyms];
 ```
 
-### 2.4 Versioning invariants
+### 2.4 Versioning invariants (MVP)
 
-1. A concept is **never mutated in place**. Edits produce a new `:Concept` node with the same `id` but a new `versionId`, linked via `[:NEXT_VERSION]` from the previous version and tagged with the new `lastCommitId`.
-2. A commit atomically adds `[:INCLUDES]` edges for the new versions and retires (by not including) prior versions.
-3. A branch's current state = "concepts included by HEAD commit and not superseded within HEAD's transitive commit set."
-4. Revert creates a new commit whose `[:INCLUDES]` set equals the target commit's `[:INCLUDES]` set.
+1. Neo4j holds the **current** state. Edits mutate concept / relation nodes in place, and set `lastChangeEventId` to the id of the change event that produced the current state.
+2. The authoritative history lives in Postgres as append-only `change_event` rows — see Section 3.2. Neo4j can be rebuilt from scratch by replaying events.
+3. Tags are immutable pointers into the change_event log.
+4. Revert is itself a new change event whose diff is the inverse of the target event.
 
 More detail in [VERSIONING_SYSTEM.md](VERSIONING_SYSTEM.md).
 
@@ -166,7 +139,7 @@ CREATE TABLE organizations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
-  plan TEXT NOT NULL DEFAULT 'free', -- free | starter | pro | enterprise
+  plan TEXT NOT NULL DEFAULT 'free', -- free | team | business | enterprise
   region TEXT NOT NULL DEFAULT 'us',
   stripe_customer_id TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -202,14 +175,46 @@ CREATE TABLE workspaces (
 );
 ```
 
-### 3.2 Collaboration
+### 3.2 Change history (MVP)
+
+```sql
+CREATE TABLE change_event (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID NOT NULL,
+  ontology_id UUID NOT NULL,
+  author_id UUID NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  entity_type TEXT NOT NULL CHECK (entity_type IN ('concept','relation','ontology','tag')),
+  entity_id UUID,
+  operation TEXT NOT NULL CHECK (operation IN ('create','update','delete','revert','tag','bulk_import')),
+  diff JSONB NOT NULL,
+  message TEXT,
+  reverts_event_id UUID REFERENCES change_event(id)
+);
+
+CREATE INDEX ON change_event (org_id, ontology_id, created_at DESC);
+CREATE INDEX ON change_event (org_id, ontology_id, entity_type, entity_id, created_at DESC);
+
+CREATE TABLE tag (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID NOT NULL,
+  ontology_id UUID NOT NULL,
+  name TEXT NOT NULL,
+  change_event_id UUID NOT NULL REFERENCES change_event(id),
+  created_by UUID NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (org_id, ontology_id, name)
+);
+```
+
+### 3.3 Collaboration (MVP — comments only)
 
 ```sql
 CREATE TABLE comments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   org_id UUID NOT NULL,
   ontology_id UUID NOT NULL,
-  target_type TEXT NOT NULL CHECK (target_type IN ('concept','relation','diff','commit')),
+  target_type TEXT NOT NULL CHECK (target_type IN ('concept','relation','change_event')),
   target_id TEXT NOT NULL,
   author_id UUID NOT NULL REFERENCES users(id),
   parent_id UUID REFERENCES comments(id),
@@ -218,37 +223,18 @@ CREATE TABLE comments (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-
-CREATE TABLE reviews (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  org_id UUID NOT NULL,
-  ontology_id UUID NOT NULL,
-  branch_id UUID NOT NULL,
-  target_branch_id UUID NOT NULL,
-  title TEXT NOT NULL,
-  status TEXT NOT NULL CHECK (status IN ('open','changes_requested','approved','merged','closed')),
-  author_id UUID NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  closed_at TIMESTAMPTZ
-);
-
-CREATE TABLE review_reviewers (
-  review_id UUID REFERENCES reviews(id) ON DELETE CASCADE,
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  decision TEXT CHECK (decision IN ('approved','changes_requested','pending')) DEFAULT 'pending',
-  decided_at TIMESTAMPTZ,
-  PRIMARY KEY (review_id, user_id)
-);
 ```
 
-### 3.3 Audit & notifications
+Review requests are deferred; see Section 6.
+
+### 3.4 Audit & notifications
 
 ```sql
 CREATE TABLE audit_events (
   id BIGSERIAL PRIMARY KEY,
   org_id UUID NOT NULL,
   user_id UUID,
-  action TEXT NOT NULL,            -- e.g. 'commit.created'
+  action TEXT NOT NULL,            -- e.g. 'change.created'
   resource_type TEXT NOT NULL,     -- e.g. 'ontology'
   resource_id TEXT NOT NULL,
   ip INET,
@@ -269,7 +255,7 @@ CREATE TABLE notifications (
 );
 ```
 
-### 3.4 API keys & webhooks
+### 3.5 API keys & webhooks
 
 ```sql
 CREATE TABLE api_keys (
@@ -308,18 +294,28 @@ CREATE TABLE webhook_deliveries (
 );
 ```
 
-### 3.5 Billing
+### 3.6 Billing (workspace / volume — not per-seat)
 
 ```sql
 CREATE TABLE subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   org_id UUID UNIQUE NOT NULL REFERENCES organizations(id),
   stripe_subscription_id TEXT,
-  plan TEXT NOT NULL,
-  seats INT NOT NULL DEFAULT 1,
-  status TEXT NOT NULL,           -- active | trialing | past_due | canceled
+  plan TEXT NOT NULL,              -- free | team | business | enterprise
+  billing_cycle TEXT NOT NULL CHECK (billing_cycle IN ('monthly','annual','enterprise_custom')),
+  status TEXT NOT NULL,            -- active | trialing | past_due | canceled
   current_period_end TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Usage counters for plan limits (workspaces, concepts, API calls)
+CREATE TABLE usage_counters (
+  org_id UUID NOT NULL,
+  period_start DATE NOT NULL,      -- first of the billing month
+  workspaces INT NOT NULL DEFAULT 0,
+  concepts INT NOT NULL DEFAULT 0,
+  api_calls BIGINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (org_id, period_start)
 );
 
 CREATE TABLE invoices (
@@ -333,7 +329,9 @@ CREATE TABLE invoices (
 );
 ```
 
-### 3.6 Row-Level Security (RLS)
+Note: no `seats` column on `subscriptions`. Users are never billed as seats; plan gating is driven by `usage_counters`.
+
+### 3.7 Row-Level Security (RLS)
 
 Every tenant-scoped table has RLS enabled:
 
@@ -355,26 +353,101 @@ All events share a base envelope:
 {
   "id": "evt_01J…",
   "orgId": "org_…",
-  "type": "commit.created",
+  "type": "change.created",
   "createdAt": "2026-05-01T10:12:34.000Z",
-  "data": { … type-specific … }
+  "data": { }
 }
 ```
 
-Event types at v1.0:
+Event types at v1.0 (MVP):
 - `ontology.created`
-- `branch.created` · `branch.deleted` · `branch.merged`
-- `commit.created` · `commit.reverted`
-- `review.opened` · `review.approved` · `review.merged` · `review.closed`
+- `change.created` — any new entry in `change_event`
+- `change.reverted` — a change event with `operation='revert'`
+- `tag.created`
 - `concept.deprecated`
 - `member.invited` · `member.role_changed` · `member.removed`
+- `billing.plan_changed` · `billing.usage_threshold`
+
+Deferred (ship with S1 / S2):
+- `branch.created` · `branch.deleted` · `branch.merged`
+- `review.opened` · `review.approved` · `review.merged` · `review.closed`
 
 ---
 
-## 5. Import/export formats
+## 5. Import / export formats
 
 - **JSON (native).** Export shape mirrors the Neo4j entities listed above. Stable field names.
 - **CSV.** Two-files-or-one-zip: `concepts.csv`, `relations.csv`; column contracts documented in the UI and in [API_SPECIFICATION.md](API_SPECIFICATION.md).
 - **JSON-LD.** Documented `@context` published at `ontologia.com/schemas/context.jsonld`.
+- **TTL.** Read-only export in MVP; import in a later release.
+
+---
+
+## 6. Deferred schema — branches and reviews (S1 / S2)
+
+The following Neo4j nodes and Postgres tables are designed and documented but **not shipped in MVP**. They will be added once branches and review requests ship (Phase 4 in [ROADMAP.md](../00_overview/ROADMAP.md)).
+
+### 6.1 Neo4j additions when S1 ships
+
+```cypher
+(:Branch {
+  id,
+  orgId, ontologyId,
+  name,
+  headCommitId,
+  isProtected,
+  createdAt, createdBy
+})
+
+(:Commit {
+  id,
+  orgId, ontologyId, branchId,
+  message,
+  authorId,
+  parentCommitId,
+  mergeParentId,
+  stats: { /* concepts/relations added/modified/deleted */ },
+  createdAt
+})
+
+// A commit "sees" a set of concept/relation versions
+(:Commit)-[:INCLUDES]->(:Concept)
+(:Commit)-[:INCLUDES]->(:ConceptRelation)
+(:Commit)-[:PARENT]->(:Commit)
+(:Commit)-[:MERGED_FROM]->(:Commit)
+(:Branch)-[:POINTS_TO]->(:Commit)
+
+// Concept genealogy becomes multi-version
+(:Concept)-[:NEXT_VERSION]->(:Concept)
+```
+
+### 6.2 Postgres additions when S2 ships
+
+```sql
+CREATE TABLE reviews (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id UUID NOT NULL,
+  ontology_id UUID NOT NULL,
+  branch_id UUID NOT NULL,
+  target_branch_id UUID NOT NULL,
+  title TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('open','changes_requested','approved','merged','closed')),
+  author_id UUID NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  closed_at TIMESTAMPTZ
+);
+
+CREATE TABLE review_reviewers (
+  review_id UUID REFERENCES reviews(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  decision TEXT CHECK (decision IN ('approved','changes_requested','pending')) DEFAULT 'pending',
+  decided_at TIMESTAMPTZ,
+  PRIMARY KEY (review_id, user_id)
+);
+```
+
+When S1 ships, the `change_event` table stays. Commits become a grouping layer on top: a commit references a set of change events. The MVP log never needs to be migrated.
+
+---
 
 Related: [Architecture](ARCHITECTURE.md) · [Versioning System](VERSIONING_SYSTEM.md) · [Multi-Tenancy](MULTI_TENANCY.md) · [API Specification](API_SPECIFICATION.md)

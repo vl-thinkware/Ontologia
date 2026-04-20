@@ -1,5 +1,8 @@
 # Compliance
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 What standards Ontologia intends to meet, where we are on the journey, and how we keep our story honest when customers, auditors or regulators ask.
 
 ---

@@ -1,5 +1,8 @@
 # Deployment
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How code moves from a PR to production.
 
 ---

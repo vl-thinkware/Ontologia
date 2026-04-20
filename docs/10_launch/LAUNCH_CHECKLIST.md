@@ -1,5 +1,8 @@
 # Launch Checklist
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 The definitive pre-GA checklist. Every box ticked, every owner signed off, every gate green. When this doc is 100% done, we turn Ontologia from "beta" to "generally available".
 
 ---

@@ -1,5 +1,8 @@
 # Authentication & Authorisation
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How users and machines prove who they are, and what they are allowed to do.
 
 ---

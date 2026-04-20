@@ -1,5 +1,8 @@
 # Competitive Analysis
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 The landscape Ontologia operates in, what distinguishes us, how we win, and where we should be humble.
 
 ---

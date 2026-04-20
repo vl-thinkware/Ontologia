@@ -1,220 +1,231 @@
 # Hiring Plan
 
-Who we hire, when, and how. Living document; refreshed at the start of each quarter.
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+Who we hire, when, and how. Written from a two-founder bootstrap baseline, not a VC-funded headcount ramp. Living document; refreshed at the start of each quarter.
 
 ---
 
 ## 1. Hiring philosophy
 
-- **Slow to hire, kind to let go**. We keep the bar high at entry and handle exits with respect.
-- **Hire ahead of need — slightly**. Sales reps ramp for a quarter; engineers for six weeks.
-- **Seniority early, then specialists**. First 20 hires are senior generalists.
-- **Optimise for taste and trajectory**. Experience matters; judgment matters more.
-- **Remote-first**. Hire the best person, not the nearest person.
+- **The team is two founders.** Everything about hiring assumes this for the next 12–18 months, minimum.
+- **Every hire is a customer-funded hire.** We do not hire on a forecast; we hire after the revenue exists or the commitment is signed.
+- **Slow to hire, kind to let go.** High bar at entry; exits handled with respect.
+- **Seniority before specialists.** Our first full-time hire will be a senior generalist.
+- **Contractors first.** For many functions (design polish, writing, legal, bookkeeping), a part-time specialist is a better fit for our volume than a full-time employee.
+- **Remote-first.** Hire the best person for the role, not the nearest person.
 
-## 2. Role sequencing
+## 2. Founder roles and responsibilities
 
-### Pre-seed / seed (existing + first 10)
-Already on board or first to join: CEO, CTO, 2 senior FE engineers, 2 senior BE engineers, 1 infra/data engineer, 1 product manager, 1 designer, 1 DevRel (fractional at first).
+### Valentin — co-founder, business and product
 
-### Year 1 adds (post-GA)
-- First AE (mid-market).
-- First SDR.
-- First CSM.
-- Second designer.
-- Head of marketing (fractional → full time).
-- Senior engineer (security-focused).
-- DevRel full-time.
-- Support engineer.
+Time allocation (year 1):
 
-### Year 2 adds
-- VP Sales (only if ARR > $5M run-rate).
-- 3 more AEs (split mid-market / enterprise).
-- 2 more SDRs.
-- Sales engineer.
-- 2 CSMs.
-- Content manager + growth marketer.
-- Data engineer.
-- SRE.
-- 2 more product engineers.
-- People ops lead.
+- Product management, prioritisation, roadmap: 30%
+- Sales, pricing, customer success: 25%
+- Marketing, content, community: 20%
+- Finance, legal, operations: 15%
+- Hiring and team: 10%
 
-### Year 3 adds
-- CFO.
-- VP Engineering (when team > 25 engineers).
-- VP Product.
-- International lead (EU).
-- Security engineer (dedicated).
-- Solutions architect (Enterprise).
-- Full-time legal counsel.
-- 4 more AEs, 2 more SDRs, 4 more CSMs, 3 more engineers per squad.
+Owns every document in `07_business/`, `08_finance/`, `10_launch/`, most of `00_overview/`, and shares `01_product/` with Alexandre.
 
-## 3. Headcount plan
+### Alexandre Delplace — co-founder, CTO
+
+Time allocation (year 1):
+
+- Engineering (backend, graph, infra): 60%
+- Engineering (frontend): 20%
+- Security, compliance, on-call: 10%
+- Hiring (technical): 5%
+- Architecture, tech strategy: 5%
+
+Owns every document in `02_architecture/`, `03_engineering/`, `04_design/` (shared with Valentin), `05_operations/`, `06_security_compliance/`, and shares `01_product/` with Valentin.
+
+### Shared / joint responsibilities
+
+- Monthly financial and strategic review (Section 8 of [FINANCIAL_PROJECTIONS.md](../08_finance/FINANCIAL_PROJECTIONS.md)).
+- Roadmap sign-off.
+- Hiring decisions (both must agree).
+- Pricing changes (both must agree).
+- Any contract > $5,000 ACV signed by both.
+
+## 3. When do we hire full-time number 3?
+
+We do **not** hire a full-time person until *all* the following are true:
+
+- MRR has covered infra + tooling + a modest founder draw for both founders for six consecutive months.
+- We have a signed 12-month pipeline or retained customer base that funds the new role's fully-loaded cost without shrinking the cash buffer.
+- The specific pain the hire solves has persisted for at least one quarter despite process changes and automation attempts.
+- Both founders agree this is the single most valuable use of the next $100k.
+
+Realistically this means: end of year 1 at the earliest, likelier mid-year 2.
+
+## 4. First full-time hire (likely year 2)
+
+Candidate roles in priority order:
+
+1. **Founding Product Engineer** — senior full-stack, Neo4j-comfortable, takes a vertical slice from design to production. Frees Alexandre to think deeper on platform, security, and architecture. Triggered when engineering velocity is the bottleneck.
+2. **Developer Relations / Community Lead** — writes, speaks, runs Discord, owns the importer library. Frees Valentin from content treadmill. Triggered when content is producing traffic but founder time is the constraint.
+3. **Customer Success / Technical Account** — onboards Business and Enterprise customers, handles support escalations. Triggered when Valentin is spending > 40% of the week on support.
+
+Whichever role is picked is the one the data says is the biggest constraint that quarter. The other two are deferred.
+
+## 5. Year 2 target: three full-time people
+
+By end of year 2:
+
+- Valentin (founder, business / product)
+- Alexandre (founder, CTO)
+- Full-time hire #1 (one of the three roles above)
+
+Part-time contractors we likely retain:
+
+- Designer (0.1–0.2 FTE) for marketing and UX polish.
+- Technical writer (0.05–0.1 FTE) for docs.
+- Bookkeeper (monthly, ~4 hours).
+- External counsel (on-demand per contract).
+
+## 6. Year 3 shape
+
+By end of year 3:
+
+- Both founders.
+- 1–2 full-time hires (the second likely the role we didn't pick in year 2).
+- Same part-time contractors plus an additional senior engineer *if* Enterprise revenue justifies it.
+
+Target team size end of year 3: **3–4 full-time**, not 72.
+
+## 7. Headcount plan
 
 | Function | Year 0 | Year 1 | Year 2 | Year 3 |
 |---|---|---|---|---|
-| Engineering | 6 | 10 | 16 | 24 |
-| Design | 1 | 2 | 3 | 4 |
-| Product | 1 | 2 | 3 | 5 |
-| DevRel | 1 | 1 | 2 | 3 |
-| Sales | 0 | 2 | 6 | 12 |
-| CS & Support | 0 | 2 | 5 | 9 |
-| Marketing | 0 | 2 | 5 | 9 |
-| G&A (HR, Finance, Legal, Ops) | 1 | 2 | 4 | 6 |
-| **Total** | **10** | **23** | **44** | **72** |
+| Founders | 2 | 2 | 2 | 2 |
+| Engineering (non-founder) | 0 | 0 | 0–1 | 1–2 |
+| DevRel / community | 0 | 0 | 0–1 | 1 |
+| Customer success / support | 0 | 0 | 0–1 | 0–1 |
+| Part-time contractors (FTE-equivalent) | 0 | 0.15 | 0.3 | 0.4 |
+| **Total FTE** | **2** | **~2.15** | **2.5–3.5** | **3.5–5** |
 
-These numbers are plan-linked, not goal-linked. We hire if unit economics and pipeline justify.
+Numbers are plan-linked, not goal-linked. We hire if unit economics and pipeline justify.
 
-## 4. Compensation bands
+## 8. Compensation bands
 
-Transparent bands exist for every role. Market data sourced from Pave + Radford + peer networks.
+Transparent bands for every role. Market data sourced from Pave, Radford, Levels.fyi, and peer networks.
 
-- Posted in the job ad (base + equity + bonus range if applicable).
-- Re-benchmarked annually and when we open a new geo.
-- Adjusted for cost-of-labour by geo using a published policy (US tiers 1–3, EU, UK, rest of world).
+- Posted in the job ad.
+- Re-benchmarked annually.
+- Adjusted for cost-of-labour by geography using a published policy.
 
-Example senior engineer (mid-market US city, 2026):
-- Base: $170–$210k.
-- Equity: 0.1–0.4% depending on seniority and timing.
-- Signing bonus: role-dependent.
+Example Founding Product Engineer (EU / UK / mid-market US, 2026–2027):
 
-## 5. Equity philosophy
-
-- Meaningful equity for the first 30 employees (role-based bands).
+- Base: €75k–€110k (EU) / $140k–$180k (US).
+- Equity: 0.5%–1.5% (first non-founder engineer — meaningful).
 - 4-year vest with 1-year cliff.
-- Double-trigger acceleration on change of control for leadership.
-- Early-exercise options where tax beneficial.
-- Annual refresh grants based on performance + tenure.
+- Small signing bonus as needed.
 
-## 6. Offer process
+Founders' own compensation:
 
-1. Reference checks complete.
-2. Internal debrief and decision within 48 h of final interview.
-3. Offer call from hiring manager.
+- Year 0: $0.
+- Year 1: token draws of $1,000–$2,000 / month starting from month 9–12 when cash allows.
+- Year 2: half-market base salary.
+- Year 3: full market base salary if revenue permits.
+
+## 9. Equity philosophy
+
+- First 5 hires receive meaningful equity (0.5%–2%, role and timing dependent).
+- 4-year vest, 1-year cliff.
+- Double-trigger acceleration on change of control for founders and future leads.
+- Annual refresh grants based on performance and tenure.
+- We do not dilute out the founders' control while bootstrapping; the cap table stays simple.
+
+## 10. Offer process
+
+1. Reference checks complete (3 references, at least one prior direct manager).
+2. Both founders align within 48 h of final interview.
+3. Offer call from the hiring founder.
 4. Written offer within 24 h.
-5. Offer expiry: 7 days by default (flexible for complex life situations).
+5. Offer expiry: 7 days by default.
 
 No low-ball offers. Our first offer is our best offer.
 
-## 7. Interview process
+## 11. Interview process
 
-Consistent for every role. Length varies by seniority.
+Consistent for every role. Kept lean — two founders cannot afford 8-stage interview loops.
 
-### Phases
-1. **Recruiter screen** (30 min): motivation, experience, logistics.
-2. **Hiring manager** (45 min): deep dive on role fit, scope, ambition.
-3. **Craft interviews** (2–4): role-specific deep work. Examples:
-   - Engineer: take-home, code review, systems design, pair programming.
-   - Designer: portfolio + critique + design exercise.
-   - PM: product strategy + prioritisation + written exercise.
-   - AE: discovery roleplay + demo + commercial case.
-   - CSM: customer roleplay + written response to a real ticket.
-4. **Values & collaboration** (45 min): how they work, how they handle conflict, feedback.
-5. **Founder / executive chat** (30 min) for most roles.
-6. **Reference calls** (3 references, at least one prior direct manager).
+Phases:
 
-Decision: hiring manager recommends; panel votes "strong yes / yes / no / strong no"; unanimous yes required.
+1. **Founder screen** (30 min): motivation, experience, logistics.
+2. **Hiring founder deep dive** (60 min): role fit, scope, ambition.
+3. **Craft interview** (half-day take-home + 90-min walk-through): role-specific. For engineers: build a small slice against the real codebase. For DevRel: draft a blog post and a Discord response. For CS: respond to a real support ticket plus a customer roleplay.
+4. **Second founder chat** (45 min): values, collaboration, conflict handling.
+5. **Reference calls** (3 references).
 
-### Timing
-- Target: 2–3 weeks from first call to offer.
-- Candidate feedback: within 48 h of decision.
+Decision: both founders must say yes. Target: two weeks from first call to offer.
 
-## 8. What we assess
+## 12. What we assess
 
 - **Craft**: role-specific excellence.
 - **Ownership**: how they handle ambiguity and consequence.
-- **Judgement**: how they decide with limited info.
+- **Judgement**: how they decide with limited information.
 - **Collaboration**: how they make others better.
-- **Growth**: slope > current level.
-- **Mission alignment**: care for the problem and the customer.
+- **Growth trajectory**: slope > current level.
+- **Mission alignment**: they care about the problem and the customer.
 
-We explicitly do not value:
-- Pedigree over performance.
-- Bravado over substance.
-- "Culture fit" as a code word for sameness.
+We explicitly do not value pedigree over performance, bravado over substance, or "culture fit" as a synonym for sameness.
 
-## 9. Sourcing
+## 13. Sourcing
 
-- **Network-first**: founder and team referrals; $3–5k referral bonus.
-- **Community-driven**: people from the ontology, graph, data ecosystems.
-- **Public job board**: our website + Ashby / Gem.
-- **Targeted outbound**: by hiring manager + recruiter.
-- **Diversity-focused sources**: Diversify, Hiring for Tech, regional inclusive communities.
+- **Network-first**: founder and early-customer referrals; $2,000 referral bonus once we have cash to pay it.
+- **Community-driven**: people from the ontology, graph, data ecosystems (including our own Discord once it's healthy).
+- **Public job board**: our website (no ATS in year 1; Notion + email is enough).
+- **Targeted outbound**: by the hiring founder directly.
 
-Aim: diverse slate at every stage; no candidate progresses past phase 2 unless the slate is diverse.
+No external agencies before year 3 unless we're filling a genuinely specialist senior role.
 
-## 10. Recruiter model
+## 14. Candidate experience
 
-- Year 0: founders do sourcing + recruiter-ops contractor part-time.
-- Year 1: full-time recruiter (first People ops hire).
-- Year 2: 2 recruiters + talent ops.
-- Agencies used only for specialist senior roles.
-
-## 11. Candidate experience
-
-- Everyone gets a response within 5 business days.
+- Response within 5 business days to every application.
 - Rejections explain the reason (briefly and kindly).
-- Every candidate who does on-site receives a $150 thank-you / honorarium if they complete a take-home exceeding 2 hours.
+- Honorarium ($150) for candidates who complete a take-home exceeding 2 hours.
 - Interview feedback offered on request.
 
-## 12. Onboarding hand-off
+## 15. Onboarding hand-off
 
-Hiring closes with a handoff to People ops to trigger the [ONBOARDING.md](ONBOARDING.md) plan.
+Hiring closes with a hand-off to the [ONBOARDING.md](ONBOARDING.md) plan. The hiring founder is the onboarding buddy for the first 30 days.
 
-## 13. Probation
+## 16. Probation / orientation period
 
-- 90-day orientation period (not a "probation" in the HR sense; just explicit expectations).
-- Clear goals, weekly 1:1s, 30/60/90 feedback.
+- 90-day orientation (expectations, not a formal probation).
+- Weekly 1:1s with the hiring founder.
+- 30 / 60 / 90 check-ins with written feedback from both founders.
 - Mutual decision at day 90 to continue; honest if not a fit.
 
-## 14. Location strategy
+## 17. Location strategy
 
-- Remote-first across North America and Europe first.
-- APAC hires from year 2 through EORs.
-- No office-based roles required before $10M ARR.
-- Co-located team meetups 2–3 times per year.
+- Remote-first across Europe and North America.
+- Shared working hours overlap: at least 3 hours / day with Paris.
+- No office; occasional team meetup (1–2 times per year, modest budget).
 
-## 15. Hiring governance
+## 18. Contractor model
 
-- Hiring plan approved quarterly by CEO + leadership.
-- Open roles posted when budget is confirmed.
-- Every hire is entered in the headcount tracker before offer.
-- Monthly hiring scorecard shared with leadership.
-
-## 16. Contract & vendor model
-
-- Full-time preferred.
-- Contractors used for capacity or highly specialised short-term work.
-- EOR partners for international hires (Deel, Remote, Velocity Global).
+- Designer, writer, bookkeeper, legal are part-time / per-engagement.
 - All contracts include IP assignment and confidentiality.
-
-## 17. Diversity goals
-
-- Slate diversity targets by stage.
-- Annual pay-equity audit.
-- Sponsorship of industry DEI initiatives.
-- Inclusive interviewer training required for every panel member.
-
-## 18. Leadership hiring
-
-- Executive roles use search firms when internal sourcing is exhausted.
-- Longer interview runway (6–8 weeks).
-- 360° references including peers and direct reports.
-- On-site work-session to test collaboration.
+- Contractors can become full-time later if the relationship works.
 
 ## 19. Anti-patterns we avoid
 
-- Rushing to hire because pipeline looks hot for a week.
-- Hiring managers outrunning their own function (e.g. over-hiring sales before marketing delivers).
-- Offers made without reference checks.
+- Hiring "because the pipeline looks hot for a week".
+- Hiring sales before marketing produces inbound that sales can close.
+- Offers without reference checks.
 - Ghosting candidates.
-- "Fake urgency" hiring deadlines.
+- Hiring to signal growth to prospects or investors.
 
 ## 20. Review cadence
 
 - Hiring plan refreshed at the start of every quarter.
-- Function-level plan reviewed monthly.
-- Candidate experience survey every 6 months.
-- Exits reviewed quarterly to learn.
+- Monthly check: are we at or near the trigger conditions for the first full-time hire?
+- Exits reviewed honestly and quickly; learn and move on.
+
+---
 
 Related: [Onboarding](ONBOARDING.md) · [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Business Strategy](../07_business/BUSINESS_STRATEGY.md) · [Financial Projections](../08_finance/FINANCIAL_PROJECTIONS.md)

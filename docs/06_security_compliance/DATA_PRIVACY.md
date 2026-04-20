@@ -1,5 +1,8 @@
 # Data Privacy
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How Ontologia handles personal data, where it lives, who can access it, and how customers exercise their rights. Aligns with GDPR (EU/EEA) and CCPA/CPRA (California). This is an operational document; legal primary texts live at `ontologia.com/legal`.
 
 ---

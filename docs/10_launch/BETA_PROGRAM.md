@@ -1,5 +1,8 @@
 # Beta Program
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How we ran the closed and open betas that led to GA — what we offered, what we asked for, and how we turned beta customers into our first happy, paying base.
 
 ---

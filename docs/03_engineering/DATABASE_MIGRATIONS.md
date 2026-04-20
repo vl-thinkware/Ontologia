@@ -1,5 +1,8 @@
 # Database Migrations
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Both databases evolve — and both need disciplined migrations. This document covers Postgres (Drizzle) and Neo4j (bespoke Cypher migrator).
 
 ---

@@ -1,5 +1,8 @@
 # Support
 
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+
+
 How we support customers after they sign up — channels, SLAs, tooling, and the principles that keep support a place of trust rather than friction.
 
 ---

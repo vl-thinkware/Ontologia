@@ -1,5 +1,8 @@
 # Pre-Production Security Checklist
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 Actionable list to tick before we turn on a new environment, new feature or GA the product.
 
 ---

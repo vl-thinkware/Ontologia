@@ -1,5 +1,8 @@
 # Tech Stack
 
+**Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
+
+
 The "what we use and why" list. Each choice includes a brief justification, the version we target at launch, and a note on exit cost.
 
 ---
