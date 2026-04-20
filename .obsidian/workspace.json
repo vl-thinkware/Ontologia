@@ -1,0 +1,227 @@
+{
+  "main": {
+    "id": "39063a2ee38ef98d",
+    "type": "split",
+    "children": [
+      {
+        "id": "c3da513212055b81",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7c63810bd7f5ba53",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "docs/04_design/ACCESSIBILITY.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ACCESSIBILITY"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "2a54e1a4d5a6c2df",
+    "type": "split",
+    "children": [
+      {
+        "id": "f18653dfb38e924a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "930b3953df882079",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "4ae3e0dd1020b047",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "12d25ca01f7afc5a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "2996bf5f06ce2c10",
+    "type": "split",
+    "children": [
+      {
+        "id": "ee4513d5f28157c8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f7285bc62f9c83f3",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "docs/04_design/ACCESSIBILITY.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for ACCESSIBILITY"
+            }
+          },
+          {
+            "id": "53eef340e0367774",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "docs/04_design/ACCESSIBILITY.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from ACCESSIBILITY"
+            }
+          },
+          {
+            "id": "a94812ee7f4fe30d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "d1c2c283a86951c7",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "9d333d22a1f1cafd",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "docs/04_design/ACCESSIBILITY.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of ACCESSIBILITY"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "7c63810bd7f5ba53",
+  "lastOpenFiles": [
+    "mockup/vite.config.js.timestamp-1776713903845-1562f885f1ed5.mjs",
+    "mockup/vite.config.js.timestamp-1776713896079-5a0808116b751.mjs",
+    "mockup/node_modules/@rollup/rollup-android-arm-eabi",
+    "mockup/node_modules/@rollup/rollup-linux-arm64-gnu/rollup.linux-arm64-gnu.node",
+    "mockup/node_modules/@rollup/rollup-linux-arm64-gnu/package.json",
+    "mockup/node_modules/@rollup/rollup-linux-arm64-gnu/README.md",
+    "mockup/node_modules/@rollup/rollup-linux-arm64-gnu",
+    "mockup/node_modules/@rollup/rollup-win32-x64-gnu",
+    "mockup/node_modules/@rollup/rollup-win32-arm64-msvc",
+    "mockup/node_modules/@rollup/rollup-openbsd-x64",
+    "mockup/node_modules/@rollup/rollup-win32-x64-msvc",
+    "mockup/node_modules/@esbuild/darwin-x64",
+    "mockup/node_modules/@rollup/rollup-linux-arm64-musl/README.md",
+    "mockup/node_modules/@esbuild/linux-arm64/README.md",
+    "mockup/node_modules/@esbuild/darwin-arm64/README.md",
+    "mockup/node_modules/@rollup/rollup-darwin-arm64/README.md",
+    "mockup/node_modules/fsevents/README.md",
+    "mockup/README.md",
+    "mockup/dist/favicon.svg",
+    "mockup/node_modules/caniuse-lite/README.md",
+    "mockup/node_modules/esbuild/README.md",
+    "mockup/node_modules/esbuild/LICENSE.md",
+    "mockup/node_modules/commander/Readme.md",
+    "mockup/node_modules/commander/CHANGELOG.md",
+    "mockup/node_modules/tinyglobby/README.md",
+    "mockup/node_modules/pirates/README.md",
+    "mockup/node_modules/thenify/README.md",
+    "mockup/node_modules/any-promise/README.md",
+    "mockup/node_modules/thenify/History.md",
+    "mockup/node_modules/lucide-react/README.md",
+    "mockup/node_modules/typescript/SECURITY.md",
+    "mockup/node_modules/typescript/README.md",
+    "mockup/node_modules/tailwindcss/README.md",
+    "mockup/node_modules/@xyflow/react/README.md",
+    "mockup/node_modules/react-dom/README.md",
+    "mockup/node_modules/vite/README.md",
+    "mockup/node_modules/vite/LICENSE.md",
+    "mockup/public/favicon.svg"
+  ]
+}
