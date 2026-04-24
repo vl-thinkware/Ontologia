@@ -173,7 +173,7 @@ export default function NewConceptModal() {
     toast({
       kind: "success",
       title: `Concept "${resolvedName}" created`,
-      description: `${properties.length} properties, ${relations.length} relations. Added to E-commerce catalogue.`,
+      description: `${properties.length} properties, ${relations.length} relations. Added to the Cars ontology.`,
       action: {
         label: "View in history",
         onClick: () => {
@@ -544,7 +544,7 @@ export default function NewConceptModal() {
             <div className="flex items-center justify-between">
               <span className="font-semibold text-ink-800">Destination</span>
               <span className="chip bg-ink-100 text-ink-700">
-                E-commerce catalogue
+                Cars ontology
               </span>
             </div>
             <div className="mt-1 text-ink-500">

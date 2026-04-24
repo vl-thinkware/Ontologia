@@ -1,16 +1,18 @@
 # Ontologia
 
-**Primary owners**: Valentin Lemort (product, commercial) · Alexandre Delplace (engineering, CTO) · **Status**: Draft v2 (bootstrap-aligned)
+**Primary owners**: Valentin Lemort (product, commercial) · Alexandre Delplace (engineering, CTO) · **Status**: Draft v4 (ontology-only product)
 
-The ontology platform for teams building knowledge-rich AI products. A multi-tenant SaaS for designing, versioning and governing the controlled vocabularies that power RAG pipelines, agents, analytics and operations — built on Neo4j, Postgres, Redis and Cloudflare R2.
+**The source of truth for your concepts.** A multi-tenant SaaS for designing, versioning and governing **ontologies** — the typed concept graphs that power RAG pipelines, agents, analytics and operations. Built on Neo4j, Postgres, Redis and Cloudflare R2.
+
+Every artefact in Ontologia is an Ontology. The data model is two-layer: a T-Box of `ConceptClass` and `RelationType` entities, and an A-Box of `ConceptScheme` containers holding typed `Concept` nodes. Taxonomies are first-class citizens (schemes inside an ontology) — a single ontology can host many side-by-side on a shared T-Box. Standard-compliant exports ship on day one: **SKOS** (Turtle), **OWL / RDF/XML**, **JSON-LD**, CSV.
 
 This repository currently holds the **product, engineering, business and launch documentation** that will drive Ontologia from its bootstrapped MVP to general availability. The application source code will live in sibling repositories (monorepo, SDKs, examples).
 
 ## Posture
 
 - **Two founders, bootstrapped.** Valentin (PM + commercial + finance) and Alexandre (CTO + engineering). No fundraising planned. Default-alive by month 12.
-- **Workspace-based pricing.** Free · Team ($499/mo · $4,990/yr) · Business ($1,990/mo · $19,900/yr) · Enterprise (from $40k/yr). No per-seat tax. See [`docs/08_finance/PRICING_MODEL.md`](docs/08_finance/PRICING_MODEL.md).
-- **MVP scope intentionally trimmed.** Change-event log at concept and ontology level, plus revert and tags. The full git-like branches / commits / merges / reviews workflow is pre-designed but deferred to S1 / S2 (ships when two paying customers need it). See [`docs/02_architecture/VERSIONING_SYSTEM.md`](docs/02_architecture/VERSIONING_SYSTEM.md).
+- **Workspace-based pricing.** Free · Team ($499/mo · $4,990/yr) · Business ($1,990/mo · $19,900/yr) · Enterprise (from $40k/yr). Gated by concept count, API calls, workspaces and support tier — not by artefact type. No per-seat tax. See [`docs/08_finance/PRICING_MODEL.md`](docs/08_finance/PRICING_MODEL.md).
+- **MVP scope intentionally trimmed.** Change-event log at concept and ontology level, plus revert, tags and tag-to-tag diff. The full git-like branches / commits / merges / reviews workflow is pre-designed but deferred to S1 / S2 (ships when two paying customers need it). See [`docs/02_architecture/VERSIONING_SYSTEM.md`](docs/02_architecture/VERSIONING_SYSTEM.md).
 - **Infra under $300/mo until paying customers justify more.** Render + Neon + Neo4j Aura + Upstash + Cloudflare, mostly on free tiers through Phase 2.
 
 ## Where to start

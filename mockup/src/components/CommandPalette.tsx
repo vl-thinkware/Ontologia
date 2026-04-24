@@ -48,21 +48,36 @@ const tintStyles: Record<NonNullable<Item["tint"]>, string> = {
 };
 
 export default function CommandPalette() {
-  const { paletteOpen, closePalette, openNewConcept, toast } = useApp();
+  const {
+    paletteOpen,
+    paletteInitialQuery,
+    closePalette,
+    openNewConcept,
+    toast,
+  } = useApp();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Reset on open
+  // Reset on open. The initial query is supplied by `openPalette("foo")` —
+  // e.g. the topbar search forwards whatever the user started typing so the
+  // palette opens already filtering.
   useEffect(() => {
     if (paletteOpen) {
-      setQuery("");
+      setQuery(paletteInitialQuery ?? "");
       setActive(0);
-      requestAnimationFrame(() => inputRef.current?.focus());
+      requestAnimationFrame(() => {
+        const el = inputRef.current;
+        if (!el) return;
+        el.focus();
+        // Drop the caret at the end so the user can keep typing.
+        const len = el.value.length;
+        el.setSelectionRange(len, len);
+      });
     }
-  }, [paletteOpen]);
+  }, [paletteOpen, paletteInitialQuery]);
 
   // Build the full item list
   const allItems: Item[] = useMemo(() => {

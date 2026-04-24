@@ -1,9 +1,11 @@
 # Partnerships
 
-**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v3 (multi-artefact framing)
 
 
 How Ontologia grows with and through other companies — technology alliances, channel partners, systems integrators, communities, and academic ties.
+
+> **Three tracks, three partner neighbourhoods.** Partner strategy mirrors the three discovery tracks: ontology-track partners (graph DBs, AI/RAG platforms, semantic-web standards), taxonomy-track partners (CMS, DAM, PIM, search, e-commerce), glossary-track partners (data catalogs, data governance, BI). Each track has its own lighthouse alliances and its own conversation.
 
 ---
 
@@ -16,15 +18,16 @@ How Ontologia grows with and through other companies — technology alliances, c
 
 ## 2. Partner categories
 
-| Category | Examples | Purpose |
-|---|---|---|
-| Technology alliances | Neo4j, Stardog, Ontotext (GraphDB), AWS Neptune | Integrations, co-marketing, credibility |
-| Cloud marketplaces | AWS, Azure, GCP | Procurement ease, enterprise reach |
-| Systems integrators (SIs) | Thoughtworks, EPAM, Slalom, Capgemini, boutique data firms | Implementation, referrals, scale |
-| Data catalogue partners | Collibra, Atlan, Alation, DataHub | Complementary integrations |
-| Ontology / vocabulary communities | Schema.org, W3C, CIDOC-CRM, SNOMED International | Standards alignment, community trust |
-| Academic / research | Universities, research labs | Citations, talent pipeline |
-| Referral / affiliate | Independent consultants, niche agencies | Low-touch acquisition |
+| Category | Track | Examples | Purpose |
+|---|---|---|---|
+| Ontology-track tech alliances | Ontology | Neo4j, Stardog, Ontotext (GraphDB), AWS Neptune, TigerGraph | OWL/RDF/Turtle interop, AI/RAG story, enterprise graph credibility |
+| Taxonomy-track tech alliances | Taxonomy | Sitecore, Optimizely, Contentful, Bloomreach, Algolia, Coveo, Akeneo PIM | SKOS feeds into CMS/DAM/PIM/search; tree-first buyers |
+| Glossary-track tech alliances | Glossary | Collibra, Atlan, Alation, Secoda, DataHub, dbt Labs, Snowflake Horizon | Complementary integrations with data catalogs and governance |
+| Cloud marketplaces | All | AWS, Azure, GCP | Procurement ease, enterprise reach |
+| Systems integrators (SIs) | All | Thoughtworks, EPAM, Slalom, Capgemini, Semantic Arts, Enterprise Knowledge, boutique data firms | Implementation, referrals, scale |
+| Ontology / vocabulary communities | Ontology + Taxonomy | Schema.org, W3C, CIDOC-CRM, SNOMED International, ISKO | Standards alignment, community trust |
+| Academic / research | All | Universities, research labs | Citations, talent pipeline |
+| Referral / affiliate | All | Independent consultants, niche agencies (taxonomy consultancies, data-governance advisors) | Low-touch acquisition |
 
 ## 3. Partnership principles
 
@@ -95,15 +98,39 @@ We pursue marketplace listings primarily because enterprise buyers can burn comm
 - Jointly owned accounts with clear RACI.
 - Shared Slack or Teams channel per active account.
 
-## 8. Data catalogue and governance partners
+## 8. Data catalogue and governance partners (Glossary track)
 
 We coexist with data catalogues. Integration patterns:
 
-- Ontologia concepts visible in the catalogue with a backlink.
-- Catalogue assets taggable with Ontologia terms.
-- Events from Ontologia (commit, merge) can feed catalogue workflows.
+- Ontologia glossaries visible in the catalogue as a first-class vocabulary source, with JSON-LD backlinks.
+- Catalogue assets (tables, columns, dashboards) taggable with Ontologia terms.
+- Events from Ontologia (`change.created`, `tag.created`) feed catalogue workflows and lineage.
+- Reverse direction: Ontologia concepts can reference catalogue assets so a glossary term stays anchored to the real column it describes.
 
-Partnerships start as integrations. If both sides see pipeline benefit, we formalise co-marketing.
+Priority integrations: Collibra, Atlan, Alation, Secoda, DataHub. Partnerships start as integrations; if both sides see pipeline benefit, we formalise co-marketing. See also: [INTEGRATIONS.md](../02_architecture/INTEGRATIONS.md).
+
+## 8b. CMS / DAM / PIM / search partners (Taxonomy track)
+
+Taxonomy-track buyers want a tree that drives faceted navigation, product categorisation, and content tagging across the stack.
+
+- **CMS**: Sitecore, Optimizely, Contentful, Contentstack — Ontologia serves SKOS feeds that drive taxonomy terms and content tagging.
+- **DAM**: Bynder, Brandfolder, Adobe AEM Assets — tree-based asset taxonomies imported from Ontologia.
+- **PIM**: Akeneo, Salsify, inRiver — category trees, attribute taxonomies, variant models.
+- **Search / merchandising**: Algolia, Coveo, Bloomreach, Lucidworks — synonym lists, facet taxonomies, `broader`/`narrower` for query expansion.
+- **Translation / localisation**: Smartling, Lokalise — multilingual `prefLabel`/`altLabel` flows out of Ontologia into the translation pipeline.
+
+All of these are delivered via the SKOS export endpoint (`?format=skos`) plus webhooks. Priority first year: one CMS partner (Contentful or Sitecore), one PIM (Akeneo), one search (Algolia).
+
+## 8c. AI / RAG / knowledge-graph platform partners (Ontology track)
+
+Ontology-track buyers increasingly use Ontologia as the structured backbone of RAG pipelines, copilots, and knowledge-graph applications.
+
+- **RAG / LLM frameworks**: LangChain, LlamaIndex, Haystack — reference integrations that pull concept definitions into retrieval.
+- **Vector DBs**: Pinecone, Weaviate, Qdrant — hybrid retrieval over Ontologia concepts + embeddings.
+- **MLOps / observability**: Arize, LangSmith — ontology coverage as a first-class evaluation dimension.
+- **AI platforms**: AWS Bedrock, Azure AI Foundry, GCP Vertex — reference architectures for grounding LLMs in versioned ontologies.
+
+Deliverables: JSON-LD + OWL exports, a lightweight Python SDK (`ontologia-py`), and a LangChain/LlamaIndex connector as reference.
 
 ## 9. Standards bodies & communities
 
@@ -145,11 +172,12 @@ No pay-to-play; participation is via technical contribution and presence at comm
 
 ## 14. Metrics
 
-- Partner-sourced ARR.
-- Partner-influenced ARR.
-- Number of active partners (deal registrations in the last 90 days).
-- Joint pipeline velocity compared to direct.
+- Partner-sourced ARR (sliced per track: ontology / taxonomy / glossary).
+- Partner-influenced ARR (per track).
+- Number of active partners per track (deal registrations in the last 90 days).
+- Joint pipeline velocity compared to direct, per track.
 - Partner satisfaction (survey, twice a year).
+- Track coverage check: at least one lighthouse alliance active per track by end of Year 1 (default candidates: Neo4j for ontology, Algolia or Contentful for taxonomy, Atlan or Collibra for glossary).
 
 ## 15. Partner risks
 

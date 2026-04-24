@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Plus,
   MoreHorizontal,
@@ -9,8 +10,50 @@ import {
   Upload,
   Zap,
   TrendingUp,
+  BookOpen,
+  ListTree,
+  Layers,
+  FilePlus2,
+  FilePenLine,
+  FileMinus2,
+  Undo2,
+  Filter,
+  History,
 } from "lucide-react";
-import { ontologies, changeEvents, usage, members } from "../data/mock";
+import clsx from "clsx";
+import {
+  ontologies,
+  changeEvents,
+  usage,
+  members,
+  type ArtefactMode,
+} from "../data/mock";
+import { useApp } from "../app/AppContext";
+
+// Visual language per artefact mode — mirrors Editor.tsx.
+const MODE_META: Record<
+  ArtefactMode,
+  { label: string; icon: typeof BookOpen; pill: string; wash: string }
+> = {
+  glossary: {
+    label: "Glossary",
+    icon: BookOpen,
+    pill: "bg-violet-100 text-violet-700",
+    wash: "from-violet-100 to-violet-200 text-violet-700",
+  },
+  taxonomy: {
+    label: "Taxonomy",
+    icon: ListTree,
+    pill: "bg-emerald-100 text-emerald-700",
+    wash: "from-emerald-100 to-emerald-200 text-emerald-700",
+  },
+  ontology: {
+    label: "Ontology",
+    icon: Layers,
+    pill: "bg-sky-100 text-sky-700",
+    wash: "from-sky-100 to-sky-200 text-sky-700",
+  },
+};
 
 function formatNumber(n: number): string {
   return n.toLocaleString("en-US");
@@ -56,8 +99,74 @@ function UsageBar({
   );
 }
 
+type ActivityFilter = "all" | "create" | "update" | "delete" | "tag" | "bulk_import";
+
 export default function Dashboard() {
-  const recent = changeEvents.slice(0, 6);
+  const { openNewArtefact, tick } = useApp();
+  const navigate = useNavigate();
+  const [activityFilter, setActivityFilter] = useState<ActivityFilter>("all");
+  // Re-read events whenever the store mutates — imports, edits, deprecations
+  // all flow through here so the feed feels live.
+  const recent = useMemo(() => {
+    return changeEvents
+      .filter((e) =>
+        activityFilter === "all"
+          ? true
+          : activityFilter === "delete"
+          ? e.kind === "delete" || e.kind === "revert"
+          : e.kind === activityFilter
+      )
+      .slice(0, 10);
+  }, [activityFilter, tick]);
+
+  // Count unique contributors in the last 50 events — powers the "X people
+  // contributed this week" strip below the stats.
+  const weeklyContributors = useMemo(() => {
+    const names = new Set<string>();
+    changeEvents
+      .slice(0, 50)
+      .forEach((e) => names.add(e.author.name));
+    return names.size;
+  }, [tick]);
+
+  function hrefForEvent(e: (typeof changeEvents)[number]): string {
+    // Concept events land on the detail page inside the first ontology we
+    // find — good enough for the mock.
+    if (e.entityKind === "concept") {
+      const ont = ontologies.find((o) => o.id === "ont_cars") ?? ontologies[0];
+      return `/ontologies/${ont.id}/concepts/${e.entityId}`;
+    }
+    return `/ontologies/${ontologies[0].id}`;
+  }
+
+  function iconForEvent(e: (typeof changeEvents)[number]) {
+    switch (e.kind) {
+      case "create":
+        return FilePlus2;
+      case "update":
+        return FilePenLine;
+      case "delete":
+        return FileMinus2;
+      case "revert":
+        return Undo2;
+      case "tag":
+        return TagIcon;
+      case "bulk_import":
+        return Upload;
+      default:
+        return History;
+    }
+  }
+
+  function kindColor(k: string): string {
+    if (k === "create" || k === "bulk_import")
+      return "bg-emerald-100 text-emerald-700";
+    if (k === "update") return "bg-sky-100 text-sky-700";
+    if (k === "delete") return "bg-rose-100 text-rose-700";
+    if (k === "revert") return "bg-amber-100 text-amber-700";
+    if (k === "tag") return "bg-violet-100 text-violet-700";
+    return "bg-ink-100 text-ink-700";
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-8 py-8">
@@ -78,9 +187,9 @@ export default function Dashboard() {
             <Upload className="h-4 w-4" />
             Import
           </Link>
-          <button className="btn-primary">
+          <button className="btn-primary" onClick={openNewArtefact}>
             <Plus className="h-4 w-4" />
-            New ontology
+            New artefact
           </button>
         </div>
       </div>
@@ -171,115 +280,195 @@ export default function Dashboard() {
               <button className="btn-ghost text-xs">View all</button>
             </div>
             <ul>
-              {ontologies.map((o) => (
-                <li
-                  key={o.id}
-                  className="group flex items-center gap-4 border-b border-ink-100 px-5 py-4 last:border-b-0 hover:bg-ink-50/60"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand-100 to-brand-200 text-brand-700">
-                    <GitCommit className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <Link
-                        to={`/ontologies/${o.id}`}
-                        className="truncate text-sm font-semibold text-ink-900 hover:text-brand-700"
-                      >
-                        {o.name}
-                      </Link>
-                      {o.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="chip bg-brand-50 text-brand-700"
+              {ontologies.map((o) => {
+                const modeMeta = MODE_META[o.mode];
+                const ModeIcon = modeMeta.icon;
+                return (
+                  <li
+                    key={o.id}
+                    className="group flex items-center gap-4 border-b border-ink-100 px-5 py-4 last:border-b-0 hover:bg-ink-50/60"
+                  >
+                    <div
+                      className={clsx(
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br",
+                        modeMeta.wash
+                      )}
+                    >
+                      <ModeIcon className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <Link
+                          to={`/ontologies/${o.id}`}
+                          className="truncate text-sm font-semibold text-ink-900 hover:text-brand-700"
                         >
-                          <TagIcon className="h-3 w-3" />
-                          {t}
+                          {o.name}
+                        </Link>
+                        <span
+                          className={clsx("chip font-semibold", modeMeta.pill)}
+                        >
+                          {modeMeta.label}
                         </span>
-                      ))}
+                        {o.tags.map((t) => (
+                          <span
+                            key={t}
+                            className="chip bg-brand-50 text-brand-700"
+                          >
+                            <TagIcon className="h-3 w-3" />
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                      <p className="mt-0.5 truncate text-xs text-ink-500">
+                        {o.description}
+                      </p>
+                      <div className="mt-1 flex items-center gap-2 text-[11px] text-ink-500">
+                        <span className="inline-flex items-center gap-1">
+                          <Layers className="h-3 w-3 text-ink-400" />
+                          {o.classCount} class{o.classCount === 1 ? "" : "es"}
+                        </span>
+                        <span className="text-ink-300">·</span>
+                        <span>
+                          {o.relationTypeCount} relation type
+                          {o.relationTypeCount === 1 ? "" : "s"}
+                        </span>
+                        <span className="text-ink-300">·</span>
+                        <span>
+                          {o.schemeCount} scheme{o.schemeCount === 1 ? "" : "s"}
+                        </span>
+                      </div>
                     </div>
-                    <p className="mt-0.5 truncate text-xs text-ink-500">
-                      {o.description}
-                    </p>
-                  </div>
-                  <div className="hidden shrink-0 text-right md:block">
-                    <div className="text-xs font-semibold text-ink-800">
-                      {formatNumber(o.conceptCount)} concepts
+                    <div className="hidden shrink-0 text-right md:block">
+                      <div className="text-xs font-semibold text-ink-800">
+                        {formatNumber(o.conceptCount)} concepts
+                      </div>
+                      <div className="text-[11px] text-ink-500">
+                        {formatNumber(o.relationCount)} relations
+                      </div>
                     </div>
-                    <div className="text-[11px] text-ink-500">
-                      {formatNumber(o.relationCount)} relations
+                    <div className="hidden w-28 shrink-0 text-right lg:block">
+                      <div className="text-[11px] text-ink-500">
+                        {timeAgo(o.lastChange)}
+                      </div>
+                      <div className="truncate text-[11px] text-ink-400">
+                        {o.lastAuthor.split(" ")[0]}
+                      </div>
                     </div>
-                  </div>
-                  <div className="hidden w-28 shrink-0 text-right lg:block">
-                    <div className="text-[11px] text-ink-500">
-                      {timeAgo(o.lastChange)}
-                    </div>
-                    <div className="truncate text-[11px] text-ink-400">
-                      {o.lastAuthor.split(" ")[0]}
-                    </div>
-                  </div>
-                  <button className="rounded-md p-1.5 text-ink-400 opacity-0 transition-opacity hover:bg-ink-100 hover:text-ink-700 group-hover:opacity-100">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </button>
-                </li>
-              ))}
+                    <button className="rounded-md p-1.5 text-ink-400 opacity-0 transition-opacity hover:bg-ink-100 hover:text-ink-700 group-hover:opacity-100">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </section>
 
           {/* Activity feed */}
           <section className="card">
-            <div className="flex items-center justify-between border-b border-ink-100 px-5 py-3.5">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink-100 px-5 py-3.5">
               <div>
                 <h2 className="text-sm font-semibold text-ink-900">
                   Recent activity
                 </h2>
                 <p className="text-xs text-ink-500">
-                  Change events across every ontology
+                  {weeklyContributors} contributor
+                  {weeklyContributors === 1 ? "" : "s"} across every ontology —
+                  pulled live from the change log.
                 </p>
               </div>
               <Link
                 to={`/ontologies/${ontologies[0].id}`}
                 className="btn-ghost text-xs"
               >
+                <History className="h-3.5 w-3.5" />
                 Open history
               </Link>
             </div>
-            <ul className="divide-y divide-ink-100">
-              {recent.map((e) => (
-                <li key={e.id} className="flex items-start gap-3 px-5 py-3">
-                  <div
-                    className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
-                    style={{ background: e.author.color }}
-                  >
-                    {e.author.initials}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-sm text-ink-800">
-                      <span className="font-semibold">{e.author.name}</span>{" "}
-                      <span className="text-ink-500">
-                        {e.kind === "create" && "created"}
-                        {e.kind === "update" && "updated"}
-                        {e.kind === "delete" && "deleted"}
-                        {e.kind === "revert" && "reverted"}
-                        {e.kind === "tag" && "tagged"}
-                        {e.kind === "bulk_import" && "bulk-imported"}
-                      </span>{" "}
-                      <span className="font-medium text-ink-900">
-                        {e.entityName}
-                      </span>
-                    </div>
-                    {e.message && (
-                      <div className="mt-0.5 text-xs text-ink-600">
-                        {e.message}
-                      </div>
-                    )}
-                    <div className="mt-1 flex items-center gap-2 text-[11px] text-ink-500">
-                      <span>{timeAgo(e.at)}</span>
-                      <span className="text-ink-300">·</span>
-                      <span className="font-mono">{e.id}</span>
-                    </div>
-                  </div>
-                </li>
+
+            {/* Filter chips */}
+            <div className="flex flex-wrap items-center gap-1 border-b border-ink-100 bg-ink-50/50 px-5 py-2 text-[11px]">
+              <Filter className="h-3 w-3 text-ink-400" />
+              {(
+                ["all", "create", "update", "delete", "tag", "bulk_import"] as const
+              ).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setActivityFilter(f)}
+                  className={clsx(
+                    "rounded-md px-2 py-0.5 font-semibold capitalize transition-colors",
+                    activityFilter === f
+                      ? "bg-brand-600 text-white"
+                      : "bg-white text-ink-600 hover:bg-ink-100"
+                  )}
+                >
+                  {f === "bulk_import" ? "import" : f}
+                </button>
               ))}
+            </div>
+
+            <ul className="divide-y divide-ink-100">
+              {recent.length === 0 && (
+                <li className="px-5 py-8 text-center text-[12.5px] text-ink-500">
+                  No {activityFilter === "all" ? "" : activityFilter + " "}
+                  events yet.
+                </li>
+              )}
+              {recent.map((e) => {
+                const Icon = iconForEvent(e);
+                return (
+                  <li
+                    key={e.id}
+                    onClick={() => navigate(hrefForEvent(e))}
+                    className="flex cursor-pointer items-start gap-3 px-5 py-3 transition-colors hover:bg-ink-50"
+                  >
+                    <div
+                      className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
+                      style={{ background: e.author.color }}
+                    >
+                      {e.author.initials}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 text-sm text-ink-800">
+                        <span className="font-semibold">{e.author.name}</span>
+                        <span
+                          className={clsx(
+                            "chip text-[10px]",
+                            kindColor(e.kind)
+                          )}
+                        >
+                          <Icon className="h-2.5 w-2.5" />
+                          {e.kind === "bulk_import" ? "import" : e.kind}
+                        </span>
+                        <span className="truncate font-medium text-ink-900">
+                          {e.entityName}
+                        </span>
+                      </div>
+                      <div className="mt-0.5 truncate text-xs text-ink-600">
+                        {e.summary}
+                      </div>
+                      {e.message && (
+                        <div className="mt-1 rounded-md border border-ink-100 bg-white px-2 py-1 text-[11.5px] italic text-ink-600">
+                          “{e.message}”
+                        </div>
+                      )}
+                      <div className="mt-1 flex items-center gap-2 text-[11px] text-ink-500">
+                        <span>{timeAgo(e.at)}</span>
+                        <span className="text-ink-300">·</span>
+                        <span className="font-mono">{e.id}</span>
+                        {e.revertsEventId && (
+                          <>
+                            <span className="text-ink-300">·</span>
+                            <span className="font-mono text-amber-700">
+                              reverts {e.revertsEventId}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <ArrowUpRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-300" />
+                  </li>
+                );
+              })}
             </ul>
           </section>
         </div>
