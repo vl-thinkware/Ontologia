@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -7,20 +7,38 @@ import {
   Upload,
   Settings as SettingsIcon,
   ChevronsUpDown,
+  ChevronRight,
   Check,
   Search,
-  Bell,
   LogOut,
   HelpCircle,
   BookOpen,
   Sparkles,
   Plus,
+  Layers,
+  ListTree,
+  Table as TableIcon,
+  GitCommit,
 } from "lucide-react";
-import { currentUser, workspaces, activeWorkspaceId, ontologies } from "../data/mock";
+import {
+  currentUser,
+  workspaces,
+  activeWorkspaceId,
+  ontologies,
+  type Ontology,
+} from "../data/mock";
 import CommandPalette from "./CommandPalette";
 import NewConceptModal from "./NewConceptModal";
+import NewArtefactModal from "./NewArtefactModal";
+import DeprecateModal from "./DeprecateModal";
+import ExportModal from "./ExportModal";
+import RelationPickerModal from "./RelationPickerModal";
+import DiffModal from "./DiffModal";
+import PlaygroundModal from "./PlaygroundModal";
+import NotificationsBell from "./NotificationsBell";
 import Toaster from "./Toaster";
 import { useApp } from "../app/AppContext";
+import { usePresence } from "../app/PresenceProvider";
 
 function WorkspaceSwitcher() {
   const [open, setOpen] = useState(false);
@@ -102,6 +120,29 @@ function WorkspaceSwitcher() {
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+function OnlineAvatars() {
+  const { users } = usePresence();
+  return (
+    <div
+      className="hidden items-center md:flex"
+      title="Teammates currently online"
+    >
+      <div className="flex -space-x-2">
+        {users.map((u) => (
+          <div
+            key={u.id}
+            className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[10px] font-semibold text-white ring-1 ring-black/5"
+            style={{ background: u.color }}
+            title={u.name}
+          >
+            {u.initials}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -220,12 +261,160 @@ function SidebarLink({
   );
 }
 
+// -----------------------------------------------------------------------------
+// Ontology tree — one row per ontology, expandable into its views.
+// -----------------------------------------------------------------------------
+
+// Which view does each mode land on by default? Mirrors MODE_META.defaultView
+// in Editor.tsx — duplicated here so Shell stays independent of the Editor.
+const MODE_DEFAULT_VIEW: Record<Ontology["mode"], "canvas" | "tree" | "table"> =
+  {
+    ontology: "canvas",
+    taxonomy: "tree",
+    glossary: "table",
+  };
+
+// Mode decides whether Schema appears as a leaf. Glossary hides it because
+// the single implicit class doesn't warrant a schema view.
+const MODE_SHOWS_SCHEMA: Record<Ontology["mode"], boolean> = {
+  ontology: true,
+  taxonomy: true,
+  glossary: false,
+};
+
+function OntologyLeaf({
+  to,
+  icon: Icon,
+  label,
+}: {
+  to: string;
+  icon: React.ElementType;
+  label: string;
+}) {
+  return (
+    <NavLink
+      to={to}
+      end
+      className={({ isActive }) =>
+        clsx(
+          "ml-5 flex items-center gap-2 rounded-md px-2 py-1 text-[12.5px] transition-colors",
+          isActive
+            ? "bg-brand-50 font-semibold text-brand-700"
+            : "text-ink-600 hover:bg-ink-100 hover:text-ink-900"
+        )
+      }
+    >
+      <Icon className="h-3.5 w-3.5 shrink-0" />
+      <span className="truncate">{label}</span>
+    </NavLink>
+  );
+}
+
+function OntologyGroup({ ontology }: { ontology: Ontology }) {
+  const location = useLocation();
+  const isActive = location.pathname.startsWith(`/ontologies/${ontology.id}`);
+
+  // Current ontology auto-expands so the active leaf is visible. For the
+  // others, the user can click the chevron to peek without leaving where
+  // they are — their expanded state is preserved while they keep the tab
+  // open (but resets on full reload, which is fine for a mockup).
+  const [open, setOpen] = useState(isActive);
+  useEffect(() => {
+    if (isActive) setOpen(true);
+  }, [isActive]);
+
+  const defaultSegment = MODE_DEFAULT_VIEW[ontology.mode];
+  const showSchema = MODE_SHOWS_SCHEMA[ontology.mode];
+
+  return (
+    <div className="mb-0.5">
+      <div
+        className={clsx(
+          "group flex items-center rounded-lg transition-colors",
+          isActive ? "bg-brand-50" : "hover:bg-ink-100"
+        )}
+      >
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Collapse ontology" : "Expand ontology"}
+          className="flex h-7 w-6 shrink-0 items-center justify-center rounded-l-lg text-ink-400 hover:text-ink-700"
+        >
+          <ChevronRight
+            className={clsx(
+              "h-3.5 w-3.5 transition-transform",
+              open && "rotate-90"
+            )}
+          />
+        </button>
+        <Link
+          to={`/ontologies/${ontology.id}/${defaultSegment}`}
+          className={clsx(
+            "flex min-w-0 flex-1 items-center gap-1.5 py-1.5 pr-2 text-sm",
+            isActive
+              ? "font-semibold text-brand-700"
+              : "text-ink-700 group-hover:text-ink-900"
+          )}
+        >
+          <span
+            className={clsx(
+              "h-1.5 w-1.5 shrink-0 rounded-full",
+              isActive ? "bg-brand-500" : "bg-ink-300"
+            )}
+          />
+          <span className="truncate">{ontology.name}</span>
+          <span className="ml-auto shrink-0 text-[11px] text-ink-400">
+            {ontology.conceptCount}
+          </span>
+        </Link>
+      </div>
+
+      {open && (
+        <div className="mt-0.5 flex flex-col gap-0.5 pb-1">
+          <OntologyLeaf
+            to={`/ontologies/${ontology.id}/canvas`}
+            icon={Layers}
+            label="Canvas"
+          />
+          <OntologyLeaf
+            to={`/ontologies/${ontology.id}/tree`}
+            icon={ListTree}
+            label="Taxonomies"
+          />
+          <OntologyLeaf
+            to={`/ontologies/${ontology.id}/table`}
+            icon={TableIcon}
+            label="Tables"
+          />
+          {showSchema && (
+            <OntologyLeaf
+              to={`/ontologies/${ontology.id}/schema`}
+              icon={GitCommit}
+              label="Schema"
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Shell() {
   const location = useLocation();
-  const { openPalette } = useApp();
+  const { openPalette, openNewArtefact } = useApp();
   const topbarOntology = location.pathname.startsWith("/ontologies/")
     ? ontologies.find((o) => location.pathname.includes(`/ontologies/${o.id}`))
     : undefined;
+
+  // Last path segment, used to label which view is active in the top-bar
+  // breadcrumb. Falls back to "" (blank) for the bare ontology URL.
+  const lastSegment = location.pathname.split("/").filter(Boolean).pop() ?? "";
+  const viewLabel: Record<string, string> = {
+    canvas: "Canvas",
+    tree: "Taxonomies",
+    table: "Tables",
+    schema: "Schema",
+  };
+  const topbarView = viewLabel[lastSegment];
 
   return (
     <div className="flex h-full min-h-0 bg-ink-50">
@@ -255,26 +444,12 @@ export default function Shell() {
             Ontologies
           </div>
           {ontologies.map((o) => (
-            <NavLink
-              key={o.id}
-              to={`/ontologies/${o.id}`}
-              className={({ isActive }) =>
-                clsx(
-                  "group flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
-                  isActive
-                    ? "bg-brand-50 text-brand-700"
-                    : "text-ink-600 hover:bg-ink-100 hover:text-ink-900"
-                )
-              }
-            >
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-ink-300 group-hover:bg-brand-500" />
-              <span className="truncate">{o.name}</span>
-              <span className="ml-auto shrink-0 text-[11px] text-ink-400">
-                {o.conceptCount}
-              </span>
-            </NavLink>
+            <OntologyGroup key={o.id} ontology={o} />
           ))}
-          <button className="mt-1 flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm text-ink-500 hover:bg-ink-100 hover:text-ink-900">
+          <button
+            onClick={openNewArtefact}
+            className="mt-1 flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm text-ink-500 hover:bg-ink-100 hover:text-ink-900"
+          >
             <Plus className="h-3.5 w-3.5" />
             New ontology
           </button>
@@ -323,9 +498,26 @@ export default function Shell() {
                   Ontologies
                 </Link>
                 <span className="text-ink-300">/</span>
-                <span className="font-semibold text-ink-900">
+                <Link
+                  to={`/ontologies/${topbarOntology.id}/${
+                    MODE_DEFAULT_VIEW[topbarOntology.mode]
+                  }`}
+                  className={clsx(
+                    topbarView
+                      ? "text-ink-500 hover:text-ink-800"
+                      : "font-semibold text-ink-900"
+                  )}
+                >
                   {topbarOntology.name}
-                </span>
+                </Link>
+                {topbarView && (
+                  <>
+                    <span className="text-ink-300">/</span>
+                    <span className="font-semibold text-ink-900">
+                      {topbarView}
+                    </span>
+                  </>
+                )}
                 <span className="chip bg-ink-100 text-ink-600">
                   {topbarOntology.tags[0] ?? "draft"}
                 </span>
@@ -342,21 +534,27 @@ export default function Shell() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
-            <button
-              type="button"
-              onClick={openPalette}
-              className="relative hidden md:flex w-72 items-center gap-2 rounded-lg border border-ink-200 bg-ink-50 py-1.5 pl-8 pr-16 text-left text-sm text-ink-400 transition-colors hover:border-ink-300 hover:bg-white focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-500/15"
-            >
+            <OnlineAvatars />
+            <div className="relative hidden md:block">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
-              Search concepts, relations…
-              <kbd className="kbd absolute right-2 top-1/2 -translate-y-1/2">
+              <input
+                type="text"
+                onFocus={() => openPalette()}
+                onChange={(e) => {
+                  // Anything the user types flows straight into the palette
+                  // with that query pre-filled — prevents the weird two-step
+                  // of click → modal opens empty → retype.
+                  if (e.target.value) openPalette(e.target.value);
+                }}
+                value=""
+                placeholder="Search concepts, relations…"
+                className="w-72 rounded-lg border border-ink-200 bg-ink-50 py-1.5 pl-8 pr-16 text-sm placeholder:text-ink-400 transition-colors hover:border-ink-300 hover:bg-white focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-500/15"
+              />
+              <kbd className="kbd pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
                 ⌘K
               </kbd>
-            </button>
-            <button className="relative rounded-lg p-2 text-ink-500 hover:bg-ink-100 hover:text-ink-800">
-              <Bell className="h-4 w-4" />
-              <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-brand-500" />
-            </button>
+            </div>
+            <NotificationsBell />
             <div className="mx-1 h-5 w-px bg-ink-200" />
             <UserMenu />
           </div>
@@ -371,6 +569,12 @@ export default function Shell() {
       {/* Global overlays */}
       <CommandPalette />
       <NewConceptModal />
+      <NewArtefactModal />
+      <DeprecateModal />
+      <ExportModal />
+      <RelationPickerModal />
+      <DiffModal />
+      <PlaygroundModal />
       <Toaster />
     </div>
   );

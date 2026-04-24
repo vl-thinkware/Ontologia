@@ -14,6 +14,7 @@ import Members from "./screens/Members";
 import ApiKeys from "./screens/ApiKeys";
 import ConceptDetail from "./screens/ConceptDetail";
 import { AppProvider } from "./app/AppContext";
+import { PresenceProvider } from "./app/PresenceProvider";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,15 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: "dashboard", element: <Dashboard /> },
+      // Ontology views are path segments so the sidebar can deep-link
+      // straight into Canvas / Taxonomies / Tables / Schema. A bare
+      // /ontologies/:id redirects to the ontology's mode-default view via
+      // the <Navigate> branch inside Editor.
       { path: "ontologies/:id", element: <Editor /> },
+      { path: "ontologies/:id/canvas", element: <Editor /> },
+      { path: "ontologies/:id/tree", element: <Editor /> },
+      { path: "ontologies/:id/table", element: <Editor /> },
+      { path: "ontologies/:id/schema", element: <Editor /> },
       {
         path: "ontologies/:id/concepts/:conceptId",
         element: <ConceptDetail />,
@@ -43,7 +52,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppProvider>
-      <RouterProvider router={router} />
+      <PresenceProvider>
+        <RouterProvider router={router} />
+      </PresenceProvider>
     </AppProvider>
   </React.StrictMode>
 );

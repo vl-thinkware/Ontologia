@@ -1,10 +1,12 @@
 # Marketing Strategy
 
-**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v4 (ontology-only product)
 
 How two founders build awareness, educate the mid-market, and generate qualified pipeline without a marketing budget. Every dollar spent on marketing in Year 1 must be defensible against the cash-in-bank chart.
 
 > **Operating reality.** No paid ads in Year 1. No agency. No analyst relations. No DevRel hire. Two founders write everything, publish everything, and the company earns trust by being consistently useful on the public internet.
+>
+> **One product, one story.** Ontologia is an ontology editor. The story is "model your concept world at whatever depth you need — classes, relation types and as many taxonomies as you want on a single T-Box — with change history, an API, and SKOS / OWL / JSON-LD exports your pipelines already know how to read." We don't sell three tools in one; we sell one tool that makes the three-tools-in-one problem disappear.
 
 ---
 
@@ -24,7 +26,7 @@ Phase labels match [ROADMAP.md](../00_overview/ROADMAP.md).
 
 **Phase 2 — Paid launch (months 7–9)**
 - Public Free tier opens; Stripe self-serve Team tier live.
-- Product Hunt + Hacker News + LinkedIn launch moment.
+- Product Hunt + Hacker News + LinkedIn launch moment — the Cars-ontology demo is the hero.
 - 5,000 website visits / month by end of month 9.
 - 200 Free-tier signups per month; 5% Free → Team conversion.
 
@@ -32,7 +34,7 @@ Phase labels match [ROADMAP.md](../00_overview/ROADMAP.md).
 - 10,000 visits / month.
 - 500 Free signups / month.
 - ~20% of Business-tier pipeline originated from content or community (the rest from warm intros and founder outreach).
-- One flagship report ("State of Ontology & AI", our annual piece).
+- One flagship report ("State of Concept Infrastructure 2026").
 
 **Year 2 aspirational** (only if unit economics hold):
 - 40–60k visits / month.
@@ -43,12 +45,17 @@ We do not chase vanity traffic. A smaller audience of the right buyers beats 10�
 
 ## 2. Brand positioning
 
-**Tagline**: "The ontology platform for teams building knowledge-rich AI products."
+**Master tagline** (ontologia.com): "The source of truth for your concepts."
+
+**Sub-head**: "One ontology editor. Classes, relation types and as many taxonomies as you need — on a shared T-Box, with change history, a versioned API, and SKOS / OWL / JSON-LD exports."
+
+**Hero demo across the site**: the Cars ontology (9 classes, 13 relation types, 5 ConceptSchemes) rendered live on the landing page. It answers the question "what does this product actually do?" in a single scroll.
 
 **Supporting narrative**:
-- Knowledge deserves the same care and tooling as code — but without the cognitive weight of git for domain experts.
+- Concepts deserve the same care and tooling as code — but without the cognitive weight of git for domain experts.
 - Ontologies are living systems that need change history, revert, and a trustworthy API — not branches, merges, and pull requests. (At least not yet.)
-- AI doesn't solve the structure problem. Good structure makes AI work.
+- AI doesn't solve the structure problem. Good structure — a typed graph with classes, relation types and hierarchical schemes — makes AI work.
+- One ontology, many taxonomies, one T-Box. It's the shape of real-world catalogues (automotive, retail, media, pharma) and nothing else ships it as a first-class product.
 
 **Tone of voice**:
 - Clear, technical, confident, humble.
@@ -57,50 +64,68 @@ We do not chase vanity traffic. A smaller audience of the right buyers beats 10�
 - Quietly funny where warranted; never performative.
 
 **What we don't say**:
+- "Three tools in one" — we used to; we don't any more. It undersold the integrated model.
 - "Revolutionary". "10×". "Disruptor". "AI-native" without a concrete meaning.
 - "Enterprise-grade" before we're actually enterprise-grade.
-- Anything that a generic AI content farm could have written.
+- Anything a generic AI content farm could have written.
 
 See also: [BRAND_GUIDELINES.md](../04_design/BRAND_GUIDELINES.md).
 
 ## 3. Audience segments
 
-- **Practitioners**: ontologists, knowledge engineers, taxonomy and MDM folks, data modellers. Love depth, hate fluff. Primary consumers of long-form technical content.
-- **AI / data leaders** at mid-market companies (100–2,000 employees): Head of AI, Head of Data, occasionally CDO. Want ROI, control, and a short path from pilot to production.
-- **Builders**: AI engineers, RAG developers, platform engineers, indie hackers. Want API quality, speed, openness. Drive bottom-up adoption via the Free tier.
-- **Champions**: anyone senior enough to push a procurement cycle and defend a $5k or $20k line item.
+- **Data Architects** (primary authoring persona) — design the T-Box. Want Schema-view ergonomics, domain/range rigour, clean OWL / JSON-LD export.
+- **Catalogue Maintainers** (primary authoring persona) — run schemes day-to-day. Want Taxonomies tree, drag-drop reparent, bulk edits, AI-assisted curation, SKOS Turtle.
+- **Platform Engineers / LLM engineers** (consumer persona) — pull the ontology through the API. Want a versioned endpoint, webhook-on-change, JSON-LD/SKOS/OWL/CSV from the same place.
+- **Champions / buyers** — anyone senior enough to push a procurement cycle and defend a $5k or $20k line item. Head of AI, Head of Data, VP Content, VP Merchandising, CDO, Head of Data Strategy.
 
-One brand, different entry points. Not separate funnels.
+One brand, one product, multiple personas meeting inside it.
 
 ## 4. Positioning pillars
 
-1. **Figma for ontologies** — the experience argument. Visual, collaborative, browser-native.
-2. **Versioned like your code (without the complexity of git)** — the engineering argument. Change history, revert, tags, API. Branches-and-merges are explicitly deferred; we lean into that as a feature, not a gap.
-3. **Source of truth for AI** — the business argument. RAG pipelines and agents pin to a tag; the ontology becomes the team-owned structural layer AI products rely on.
+1. **Ontology-native.** Every artefact is an ontology. Taxonomies are first-class, but they're ConceptSchemes inside an ontology — so your schema lives in one place and your taxonomies reuse it.
+2. **One T-Box, many taxonomies.** The differentiator: in the Cars demo, 5 ConceptSchemes share 9 classes and 13 relation types. No other mid-market tool handles this shape in a modern UX.
+3. **Figma for concepts.** Visual, collaborative, browser-native. Four primary views — Schema, Canvas, Taxonomies tree, Tables — plus a full Concept detail. Canvas opens on Schema mode by default; flip to Taxonomies mode for A-Box work.
+4. **Versioned like your code (without the complexity of git).** Change history, revert, tags, tag-to-tag diff, validation panel, deprecation + replacement workflow. Branches-and-merges are explicitly deferred; we lean into that as a feature, not a gap.
+5. **API-first with an in-app Playground.** Any feature in the UI is available via REST. JSON-LD / SKOS Turtle / OWL RDF-XML / CSV exports from a single modal, scoped to the full ontology or a single scheme.
 
 Every campaign ties back to at least one pillar.
 
 ## 5. Content strategy
 
 ### Content hub: `ontologia.com/learn`
-- **Primers**: "What is an ontology?", "Property graphs vs RDF: which matters for AI teams", "Why taxonomy drift kills RAG".
-- **How-tos**: "Design your first SKU ontology in 30 minutes", "Import a controlled vocabulary from Excel", "Pin your RAG pipeline to an ontology tag".
-- **Deep dives (Alexandre)**: "Change events as an alternative to git-for-data", "Building an optimistic-concurrency editor on Neo4j + Postgres", "Why we deferred branches and merges".
-- **Market pieces (Valentin)**: "What mid-market AI teams actually pay for knowledge tooling", "The workspace-price pattern for collaboration SaaS".
-- **Case studies**: customer stories with concrete before/after outcomes. First two by month 9.
-- **Comparison pages**: factual, sourced, evenhanded. Protégé, TopBraid EDG, PoolParty, Stardog Studio, "build your own".
+
+Organised by **use case**, not by tool mode:
+
+**Designing a T-Box** (architect audience)
+- Primers: "What is an ontology T-Box?", "Classes vs relation types vs attributes", "When do you add a class?"
+- How-tos: "Designing the Cars T-Box from scratch", "Evolving a schema under a production scheme", "Migrating from Protégé / OWL", "Domain and range done right".
+- Deep dives (Alexandre): "Change events as an alternative to git-for-data", "Building an optimistic-concurrency editor on Neo4j + Postgres", "Why we deferred branches and merges".
+
+**Running a catalogue** (maintainer audience)
+- Primers: "SKOS in 15 minutes", "ConceptScheme patterns for product catalogues", "Hierarchical vs faceted classifications".
+- How-tos: "Moving a taxonomy off a spreadsheet", "Bulk rename without breaking downstream tagging", "Deprecate a concept with a replacement pointer", "Using AI suggestions without losing your mind".
+- Case studies: anonymised wins from design partners.
+
+**Pipelines & AI** (platform engineer audience)
+- Primers: "JSON-LD for people who only wrote JSON", "What is an ontology tag and why pin your RAG to it?"
+- How-tos: "Pin your RAG pipeline to an ontology tag", "Consume SKOS Turtle into a CMS / DAM", "Webhook fan-out to multiple downstream indices", "The API Playground as your first integration call".
+- Reference: API guide, SDKs, MCP server, webhooks spec.
+
+**Cross-cutting / shared**
+- Market pieces (Valentin): "What mid-market teams actually pay for knowledge tooling", "One T-Box, many taxonomies: why the shape matters", "The workspace-price pattern for collaboration SaaS".
+- Comparison pages (see [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)): Ontologia vs Protégé, vs TopBraid EDG, vs PoolParty, vs Collibra / Atlan / Alation glossaries, vs Graphwise, vs Semaphore, vs "rolling your own".
 
 ### Formats
 - Long-form articles (1,500–3,500 words). The backbone.
 - Short posts (500–800 words) for tactical pieces and weekly cadence.
 - 3–5 minute screencasts by Alexandre ("here's how we built X this week").
-- Sample ontologies repo on GitHub, with MIT licence.
-- Interactive demos embedded on key landing pages.
+- Sample ontologies repo on GitHub, with MIT licence. Cars is the anchor example; product-reference and a domain-ontology sample join later.
+- Interactive demos embedded on key landing pages — the Cars ontology runs live in the hero.
 
 ### Content calendar (founder-sustainable)
 - **1 long-form article per week** at steady state (alternating Valentin and Alexandre).
 - **1 short post per week** from the other founder.
-- **1 video per month** — not per week. Videos that are worth watching, not content farms.
+- **1 video per month** — not per week. Videos worth watching, not content farms.
 - **1 customer / use-case piece per month** once we have paying logos.
 - **1 seasonal campaign per quarter** tied to a conference, product launch, or report.
 
@@ -128,23 +153,28 @@ If a week goes by without content, that's acceptable — but we review it. The c
 - Organic traffic doubling QoQ for three consecutive quarters post-public launch, then normalising.
 
 ### Key clusters to build first
-- "Ontology authoring" (Protégé competitors, desktop-to-web migration).
-- "RAG + knowledge graph" (builder audience).
-- "Taxonomy / controlled vocabulary management" (MDM and practitioner audience).
-- "Mid-market data platform tooling" (buyer-side content).
+
+- **"Ontology editor"** / **"ontology management"** (mid-volume, moderate competition).
+- **"SKOS editor"** / **"SKOS management"** / **"PoolParty alternative"** / **"Synaptica alternative"** (highest intent, mid-volume).
+- **"Protégé alternative"** / **"TopBraid alternative"** (long tail, high intent).
+- **"RAG + knowledge graph"** / **"ontology for RAG"** (builder audience).
+- **"Taxonomy management for e-commerce / automotive / media / legal"** (vertical long tail).
+- **"Collibra alternative glossary"** / **"Alation alternative glossary"** (migration intent, at the glossary-only angle).
+- **"Modern data stack knowledge layer"** / **"AI grounding source of truth"** (emerging volume).
 
 ## 7. Community & developer relations
 
-- Public Slack community from month 1 of Phase 2. Hosted free tier. Channels: `#general`, `#showcase`, `#help`, `#feature-requests`, `#changelog`.
+- Public Slack community from month 1 of Phase 2. Hosted free tier. Channels: `#general`, `#showcase`, `#help`, `#architecture`, `#catalogues`, `#api-and-pipelines`, `#feature-requests`, `#changelog`.
 - Monthly community call at 30 minutes — product update, one community member's demo, open Q&A.
-- Open-source sample repos: `ontologia/examples` (sample ontologies), `ontologia/sdk-js`, `ontologia/import-cli`.
+- Open-source sample repos: `ontologia/examples` (Cars reference ontology, product-reference sample, vertical starters), `ontologia/sdk-js`, `ontologia/import-cli`.
 - Hackathons are deferred until we have a community of > 500. No point running one into an empty room.
 - Sponsorships: at most one event in Year 1 if it's a practitioner event with < $5k sponsorship tier. Otherwise attend as speakers only.
 
 ### Where we show up
-- Knowledge Graph Conference, Data Council, FOSDEM data/ML track, practitioner meetups.
-- Podcasts: TWIML, Data Engineering Podcast, The Machine Learning Podcast, Software Engineering Daily.
-- Newsletters: we pitch pieces to Ben Lorica's Gradient Flow, TheSequence, RAGtime, and a rotating list of practitioner newsletters.
+
+- **Conferences**: Knowledge Graph Conference, Data Council, FOSDEM data/ML track, Taxonomy Bootcamp, ISKO (International Society for Knowledge Organization) regional events, DAM Europe / DAM NY, CDOIQ Symposium, Data Governance Conference, practitioner meetups.
+- **Podcasts**: TWIML, Data Engineering Podcast, The Machine Learning Podcast, Software Engineering Daily, Taxonomy Talks, Information Architecture podcast, Content Strategy Podcast, Data Governance Today, Catalog & Cocktails.
+- **Newsletters**: Gradient Flow, TheSequence, RAGtime, Taxodiary, Enterprise Knowledge Insights, CDO Magazine, Data Governance Institute pieces, practitioner newsletters.
 
 ### DevRel staffing
 - Valentin + Alexandre are DevRel in Year 1. No hire.
@@ -152,11 +182,11 @@ If a week goes by without content, that's acceptable — but we review it. The c
 
 ## 8. Product marketing
 
-- Clear positioning docs for every major feature at launch — even the ones that feel small.
+- Clear positioning docs for every major feature at launch — even the ones that feel small (Export modal, API Playground, AI suggestions panel, Validation panel, tag-to-tag diff).
 - Launch rituals: blog post, 3-minute video, docs update, email to newsletter, LinkedIn post from both founders, Hacker News submission where it fits.
-- Annual "State of Ontology & AI" report — flagship data piece, targets an analyst-quality piece of writing. First edition by month 10.
-- Pricing page is a product surface: maintained, updated, with a live comparison table and a FAQ that covers the hard questions (workspace vs seat, annual discount, what counts as a workspace).
-- In-app education: tooltips, contextual guides, sample ontologies on first load, empty-state CTAs.
+- Annual "State of Concept Infrastructure" report — flagship data piece covering the maturity of glossary, taxonomy and ontology practice and the pattern of multi-taxonomy-on-one-T-Box as it shows up in the wild. First edition by month 10.
+- Pricing page is a product surface: maintained, updated, with a live comparison table and a FAQ that covers the hard questions (workspace vs seat, annual discount, what counts as a workspace, does tier X cover N schemes).
+- In-app education: tooltips, contextual guides, starter templates on first load, empty-state CTAs.
 
 ## 9. Campaign playbook
 
@@ -168,11 +198,15 @@ Each campaign has:
 - Post-mortem 30 days after end. Written. One page.
 
 ### Year-one candidate campaigns
-- **"Ontology fitness check"** — interactive tool evaluating an imported ontology's coverage, cycles, and duplicates. Requires sign-up. Gated download of the full report.
+
+- **"Ontology fitness check"** — interactive tool evaluating an imported ontology's coverage, cycles, duplicates, deprecated-still-referenced. Requires sign-up. Gated download of the full report.
 - **"Knowledge graphs make RAG smarter"** — evidence-based paper with reproducible benchmarks. Co-authored if we find a good partner.
-- **"Open ontologies we love"** — curated list with interviews of maintainers. Feeds our community.
 - **"Migrate from Protégé / TopBraid"** — technical tutorial + open-source migration script.
-- **"State of Ontology & AI 2026"** — our flagship annual report.
+- **"The SKOS audit"** — drop in a SKOS file, get a free report on missing `prefLabel`s, cycles, ambiguous alt labels, deprecated terms without replacement pointers.
+- **"Migrate from PoolParty"** — step-by-step tutorial + import script + commercial migration offer (first 3 taxonomy customers get free migration).
+- **"From Confluence to JSON-LD in one afternoon"** — guide + importer for teams with a glossary in Confluence.
+- **"Cars in 60 seconds"** — rapid demo video walking the hero ontology end-to-end on the landing page.
+- **"State of Concept Infrastructure 2026"** — flagship annual report. Published month 10.
 
 We run at most one campaign at a time. Founder bandwidth is the real constraint.
 
@@ -212,7 +246,7 @@ Budget and ROI tracked for every event. No "logo placement" sponsorships.
 - **LinkedIn**: primary for leaders, founders' voice, Valentin's commercial lens. Long-form 1–2× per week.
 - **X / Bluesky**: primary for engineers and researchers. Alexandre's voice. 3–5 posts per week at steady state.
 - **YouTube**: tutorials, conference talks, product walkthroughs. Monthly.
-- **LinkedIn Ontology group, r/LocalLLaMA, r/ragdev, Hacker News**: we participate, we don't spam.
+- **LinkedIn Ontology group, r/LocalLLaMA, r/ragdev, r/informationscience, r/taxonomy, Hacker News**: we participate, we don't spam.
 
 We do not buy followers, run engagement pods, automate "thought leadership" posts, or hire ghostwriters.
 
@@ -225,7 +259,7 @@ We do not buy followers, run engagement pods, automate "thought leadership" post
 
 - Fast, clean, accessible — we practise what we preach (see [ACCESSIBILITY.md](../04_design/ACCESSIBILITY.md)).
 - Pages: home, product, use cases, pricing, trust, docs, learn, customers, changelog, company, careers, blog.
-- Live, interactive demo near the fold on the home page.
+- Live, interactive Cars-ontology demo near the fold on the home page.
 - Pricing page linked from every page; comparison table with competitors updated quarterly.
 - Trust page with DPA, architecture overview, security posture, and a public roadmap snippet for SOC 2.
 - Everything hosted on Vercel free or hobby tier in Year 1.
@@ -239,15 +273,19 @@ We do not buy followers, run engagement pods, automate "thought leadership" post
 - Business-tier deals sourced by content or community (vs by warm intro).
 - Brand search volume (Google Search Console).
 
+### Product-depth signal
+- % of paying workspaces running more than one ConceptScheme (the multi-taxonomy value prop manifesting in the wild).
+- Median classes-per-ontology and schemes-per-ontology across the paid fleet.
+
 ### Attribution (lightweight)
-- Self-reported "how did you hear about us?" on signup.
+- Self-reported "how did you hear about us?" on signup, plus "what are you building today?" (open-ended, to avoid forcing a mode label).
 - UTMs on all campaigns.
 - PostHog for funnel analytics.
 - Google Sheet for monthly roll-up. No attribution platform in Year 1.
 
 ### Reporting cadence
-- Weekly scorecard (Monday).
-- Monthly review with both founders (second Friday of the month).
+- Weekly scorecard (Monday) — headline numbers.
+- Monthly review with both founders (second Friday of the month) — deep-dive into the weakest funnel that month.
 - Quarterly deep dive and content retrospective.
 
 ## 17. Anti-hype pledge

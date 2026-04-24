@@ -43,7 +43,7 @@ export default function Settings() {
             </label>
             <textarea
               className="input min-h-[64px] resize-y"
-              defaultValue="Internal workspace for Ontologia product development. Houses the e-commerce, CRM and knowledge-base ontologies."
+              defaultValue="Internal workspace for Ontologia product development. Houses the Cars reference ontology."
             />
           </div>
           <div>

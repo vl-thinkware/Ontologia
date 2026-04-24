@@ -1,6 +1,6 @@
 import { Handle, NodeProps, Position } from "@xyflow/react";
 import clsx from "clsx";
-import type { Concept } from "../data/mock";
+import { displayPropertyValue, type Concept } from "../data/mock";
 
 const colorMap: Record<NonNullable<Concept["color"]>, { bg: string; border: string; dot: string; text: string }> = {
   violet: {
@@ -75,7 +75,9 @@ export default function ConceptNode({ data, selected }: NodeProps) {
             className="flex items-baseline justify-between gap-2 py-0.5 leading-snug"
           >
             <span className="font-semibold text-ink-700">{p.key}</span>
-            <span className="truncate text-ink-500">{p.value}</span>
+            <span className="truncate text-ink-500">
+              {displayPropertyValue(p, "en")}
+            </span>
           </li>
         ))}
         {concept.properties.length > 4 && (

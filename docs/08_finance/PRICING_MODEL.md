@@ -1,6 +1,6 @@
 # Pricing Model
 
-**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v4 (ontology-only product)
 
 How Ontologia is packaged, priced, and evolved. This plan is built for a two-founder, bootstrapped company that must reach sustainability on revenue, not funding rounds.
 
@@ -10,7 +10,8 @@ How Ontologia is packaged, priced, and evolved. This plan is built for a two-fou
 
 ## 1. Packaging philosophy
 
-- **Workspace, not seats.** A single taxonomist can deliver most of the value; charging per editor penalises exactly the customer we want. The paid metric is the *workspace* (a knowledge domain shared by a team) plus soft volume limits (concepts and API calls).
+- **Workspace, not seats.** A small team can deliver most of the value; charging per editor penalises exactly the customer we want. The paid metric is the *workspace* (a knowledge domain shared by a team) plus soft volume limits on **concept count**, **API calls** and **support tier**.
+- **Gated by scale, not by artefact type.** Tiers limit how big the ontology can get and how hard it is used from the API — not whether the user is "in taxonomy mode" or "in ontology mode". The product only has one mode.
 - **Predictable.** Customers see three numbers on the pricing page and a clear Enterprise floor.
 - **Generous free tier.** Real work can be done on Free. It is the trial.
 - **Flat tiers, not complex usage bands.** Bootstrap-friendly: low operational overhead, no billing engineering debt.
@@ -19,12 +20,12 @@ How Ontologia is packaged, priced, and evolved. This plan is built for a two-fou
 
 ## 2. Plans at a glance
 
-| Plan | Price (USD) | Workspaces | Concepts (per org) | API calls / month | Audit retention | Support |
-|---|---|---|---|---|---|---|
-| **Free** | $0 | 1 | 500 | 5,000 | 30 days | Community |
-| **Team** | $499 / month · $4,990 / year (save ~17%) | 3 | 25,000 | 500,000 | 90 days | Email, 24 h first response |
-| **Business** | $1,990 / month · $19,900 / year (save ~17%) | Unlimited | 100,000 | 5,000,000 | 12 months | Chat + email, 8 h first response |
-| **Enterprise** | Custom, starting **$40,000 / year** | Unlimited | Custom | Custom | Up to 7 years | Named CSM, 1 h P1 response |
+| Plan | Price (USD) | Workspaces | Concepts (per org) | API calls / month | Seats | Audit retention | Support |
+|---|---|---|---|---|---|---|---|
+| **Free** | $0 | 1 | 500 | 5,000 | Unlimited viewers; up to 3 editors | 30 days | Community |
+| **Team** | $499 / month · $4,990 / year (save ~17%) | 3 | 25,000 | 500,000 | Unlimited | 90 days | Email, 24 h first response |
+| **Business** | $1,990 / month · $19,900 / year (save ~17%) | Unlimited | 100,000 | 5,000,000 | Unlimited | 12 months | Chat + email, 8 h first response |
+| **Enterprise** | Custom, starting **$40,000 / year** | Unlimited | Custom | Custom | Unlimited | Up to 7 years | Named CSM, 1 h P1 response |
 
 Unlimited viewers on every plan. Unlimited editors on every paid plan — we are not charging per person.
 
@@ -32,28 +33,28 @@ Unlimited viewers on every plan. Unlimited editors on every paid plan — we are
 
 ### Free — the trial
 - One workspace, one ontology, up to 500 concepts.
-- Unlimited collaborators at any role.
-- Core authoring, change history, revert, tags.
-- JSON-LD / JSON / CSV / TTL export.
-- 5,000 API calls / month via UI session; no long-lived API keys.
+- Up to 3 editors; unlimited viewers.
+- Full product surface: Schema, Canvas, Taxonomies tree, Tables, Concept detail, change events, revert, tags.
+- JSON-LD / SKOS Turtle / OWL RDF-XML / CSV export — all formats available on every tier.
+- 5,000 API calls / month via UI session; no long-lived API keys; API Playground is available for exploration.
 - Community support (Discord + GitHub discussions).
 
 ### Team — $499 / month (or $4,990 / year)
-- For a small team or a single domain expert running production taxonomies.
+- For a small team running a production ontology with one or two schemes, or an early multi-taxonomy setup.
 - Up to 3 workspaces, 25,000 concepts total.
 - Up to 500,000 API calls / month.
-- Long-lived API keys and webhooks.
+- Long-lived API keys and webhooks (Phase 2+).
 - OIDC SSO (Google Workspace, Microsoft Entra).
 - 90-day audit log.
 - Email support with a 24-hour first-response SLA on business days.
 - One onboarding call with a founder.
 
 ### Business — $1,990 / month (or $19,900 / year)
-- For organisations with multiple domains, compliance appetite, or high API usage.
+- For organisations running mid-to-large ontologies, often with multiple schemes sharing a single T-Box (the Cars-style shape).
 - Unlimited workspaces, up to 100,000 concepts.
 - 5,000,000 API calls / month.
 - SAML SSO, SCIM 2.0 provisioning.
-- Custom roles via CASL profiles.
+- Custom roles via CASL profiles; container-scoped roles on ontologies and schemes.
 - 12-month audit log.
 - EU *or* US region at provisioning.
 - Chat + email support, 8-hour first response.
@@ -71,7 +72,7 @@ Unlimited viewers on every plan. Unlimited editors on every paid plan — we are
 - Priority phone + chat support; 1-hour P1 first response.
 - Optional BYO KMS keys, customer-managed encryption.
 - HIPAA BAA on demand.
-- Custom ontology-volume and API ceilings.
+- Custom concept and API ceilings.
 
 ## 4. Add-ons
 
@@ -81,11 +82,13 @@ Kept deliberately short to limit bootstrap operational overhead.
 |---|---|
 | Extra 25,000 concepts (Team) | $200 / month |
 | Extra 2,000,000 API calls (Team / Business) | $99 / month |
-| AI suggestion pack (C2) | $199 / month, flat (any paid plan); included in Enterprise |
+| AI suggestion pack (advanced: relation candidates, class hierarchies, definition drafts) | $199 / month, flat (any paid plan); included in Enterprise |
 | Additional region, non-Enterprise (Business) | $400 / month |
 | Extended audit retention beyond plan default (Business) | $150 / month per extra year |
 
 Add-ons are priced to cover marginal cost + a simple margin; they are not a second product.
+
+Note: the baseline AI suggestions (altLabels, auto-translate prefLabel, duplicate detection, class suggestion) ship inside the per-concept AI panel on every paid tier — the add-on unlocks the deeper structural suggestions.
 
 ## 5. Billing mechanics
 
@@ -167,22 +170,32 @@ Fair-use caps apply; we do not subsidise commercial spin-offs.
 
 ## 13. Role policy (clarification, not a pricing metric)
 
-- **Editor**: users who create or modify content. Unlimited.
+- **Editor**: users who create or modify content. Unlimited on paid plans.
 - **Reviewer**: users who can comment and validate changes. Unlimited.
 - **Viewer**: read-only. Unlimited.
+- **Container-scoped roles**: a user can be granted write on specific ontologies or schemes only — useful for letting a product taxonomist maintain a scheme without touching the T-Box.
 - Roles exist for governance and audit; they do not drive billing.
 
-This is the most visible difference from PoolParty, Collibra, Atlan and TopBraid: a single taxonomist can run a fully-paid Ontologia organisation without negotiating over seats.
+This is the most visible difference from PoolParty, Collibra, Atlan and TopBraid: a single architect plus a maintainer can run a fully-paid Ontologia organisation without negotiating over seats.
 
 ## 14. How we arrived at these prices
 
 - **Market benchmarks**: PoolParty starts around €20k/year and scales to €100k–€150k; TopBraid EDG is commonly quoted at $100k+; Collibra and Atlan are in the same enterprise band. Protégé is free desktop software without collaboration.
-- **Positioning**: materially below the enterprise incumbents, materially above hobby tools, with an explicitly collaborative and web-native experience.
+- **Positioning**: materially below the enterprise incumbents, materially above hobby tools, with an explicitly collaborative and web-native experience and a multi-taxonomy story none of them can match on the same T-Box.
 - **Design-partner willingness-to-pay**: $400–$800 per month for Team was acceptable; $1,500–$2,500 for Business; $40k–$80k typical for a mid-market Enterprise deal.
 - **Cost envelope**: gross margin target >80% on Team and Business, >85% on Enterprise (dedicated infra adds cost but ACV covers it).
 - **Bootstrap math**: break-even needs approximately 5 Team + 1 Business customer (~$4,500 MRR / $54k ARR); see [FINANCIAL_PROJECTIONS.md](FINANCIAL_PROJECTIONS.md).
 
-## 15. Future pricing explorations (not yet shipped)
+## 15. Worked examples
+
+To make the gating concrete — all examples use the Cars ontology (9 classes, 13 relation types, 5 schemes, ~200 concepts across schemes):
+
+- **Indie builder** running the Cars ontology as a demo inside a RAG prototype, solo, a few hundred concepts, a few thousand API calls per month → **Free**. Room to grow.
+- **5-person e-commerce ops team** maintaining a live product catalogue with 18,000 concepts across 4 schemes, pulling SKOS Turtle into the CMS on every tag → **Team** ($499/mo).
+- **Mid-market AI platform team** running a 70,000-concept ontology with 11 schemes, hit by 3M API calls per month from two RAG indexes and a search service, needs SAML → **Business** ($1,990/mo).
+- **Regulated enterprise** needing 2-region data residency, dedicated Neo4j, HIPAA BAA, 7-year audit retention → **Enterprise** (custom, $60k+).
+
+## 16. Future pricing explorations (not yet shipped)
 
 - **Usage-based top-ups** for very-high API volumes beyond Business.
 - **Template marketplace** revenue share for published ontology templates.
@@ -191,23 +204,23 @@ This is the most visible difference from PoolParty, Collibra, Atlan and TopBraid
 
 Any of these ship only when the current plans are generating the cash to support them.
 
-## 16. Pricing page commitments
+## 17. Pricing page commitments
 
 - Public and scrapeable.
 - Plain English.
 - Per-plan FAQ.
-- ROI calculator based on saved taxonomist hours and data-quality incidents.
+- ROI calculator based on saved maintainer hours and avoided ETL rework.
 - Fact-checked comparison with the usual alternatives.
 - Contact-us only for Enterprise; we still publish the $40k/yr floor.
 
-## 17. Invoicing and procurement
+## 18. Invoicing and procurement
 
 - PO-based billing supported for Enterprise and for Business over $10k ACV.
 - NET 30 default; NET 45 on request; NET 60 rare and requires both founders' approval.
 - Payment via wire (USD, EUR, GBP), card, or cloud marketplace (once listed).
 - Marketplace listings (AWS / Azure / GCP) tracked in [PARTNERSHIPS.md](../07_business/PARTNERSHIPS.md).
 
-## 18. Financial controls
+## 19. Financial controls
 
 - Revenue recognised per ASC 606 / IFRS 15.
 - Annual prepaid revenue deferred and recognised monthly.
@@ -215,7 +228,7 @@ Any of these ship only when the current plans are generating the cash to support
 - Subscription and tax reporting automated via Stripe + Stripe Tax.
 - External audit only if required by a specific customer or once ARR exceeds $1M.
 
-## 19. Ownership
+## 20. Ownership
 
 - **Valentin** owns pricing strategy, the pricing page, discounts, invoicing, revenue recognition.
 - **Alexandre** owns billing instrumentation (Stripe integration, metering of concepts / API calls, usage data).
@@ -223,7 +236,7 @@ Any of these ship only when the current plans are generating the cash to support
 
 Monthly pricing review (Valentin + Alexandre, 30 minutes). Any change signed off before release.
 
-## 20. Anti-patterns we avoid
+## 21. Anti-patterns we avoid
 
 - Charging per person when one person can do the job.
 - Hidden overage fees.

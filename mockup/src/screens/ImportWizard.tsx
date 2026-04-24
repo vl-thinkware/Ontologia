@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -16,6 +16,12 @@ import {
   FileText,
   X,
 } from "lucide-react";
+import { useApp } from "../app/AppContext";
+import {
+  ontologies,
+  conceptClasses as allConceptClasses,
+  conceptSchemes as allSchemes,
+} from "../data/mock";
 
 type Step = 1 | 2 | 3;
 
@@ -51,15 +57,74 @@ export default function ImportWizard() {
   const [targetConcept, setTargetConcept] = useState("Product");
   const [importing, setImporting] = useState(false);
   const [done, setDone] = useState(false);
+  const [importedCount, setImportedCount] = useState(0);
+  const [importedEventId, setImportedEventId] = useState<string | null>(null);
+  const [targetOntologyId, setTargetOntologyId] = useState<string>(
+    ontologies[0]?.id ?? "ont_cars"
+  );
   const navigate = useNavigate();
+  const { importConcepts, toast } = useApp();
 
-  const totalRows = 248;
+  // Resolve the class the user picked (by display name) to an actual classId
+  // within the chosen ontology. If nothing matches we fall back to the first
+  // non-implicit class so the import still lands somewhere sensible.
+  const resolvedClass = useMemo(() => {
+    const ontClasses = allConceptClasses.filter(
+      (c) => c.ontologyId === targetOntologyId
+    );
+    return (
+      ontClasses.find(
+        (c) => c.name.toLowerCase() === targetConcept.toLowerCase()
+      ) ??
+      ontClasses.find((c) => !c.isImplicit) ??
+      ontClasses[0]
+    );
+  }, [targetOntologyId, targetConcept]);
+
+  // Pick the first scheme in the chosen ontology so the rows have somewhere
+  // to live. If the ontology has no schemes we pass "" and the store skips
+  // scheme assignment.
+  const resolvedSchemeId = useMemo(
+    () =>
+      allSchemes.find((s) => s.ontologyId === targetOntologyId)?.id ?? "",
+    [targetOntologyId]
+  );
+
+  const totalRows = SAMPLE_ROWS.length * 50; // pretend the file has 50× the preview
 
   function runImport() {
+    if (!resolvedClass) {
+      toast({
+        kind: "error",
+        title: "No class available",
+        description: "Pick an ontology that has at least one concept class.",
+      });
+      return;
+    }
     setImporting(true);
     setTimeout(() => {
+      // Build the row payload from the sample preview — in a real build we'd
+      // use the parsed CSV, but the wizard is faking the file anyway.
+      const rows = SAMPLE_ROWS.map((r) => ({
+        name: r.name,
+        description: `${r.category} · ${r.brand} · ${r.price}`,
+        classId: resolvedClass.id,
+      }));
+      const { concepts, event } = importConcepts({
+        ontologyId: targetOntologyId,
+        schemeId: resolvedSchemeId,
+        rows,
+        source: filename ?? "CSV wizard",
+      });
+      setImportedCount(concepts.length);
+      setImportedEventId(event.id);
       setImporting(false);
       setDone(true);
+      toast({
+        kind: "success",
+        title: `Imported ${concepts.length} concepts`,
+        description: `One ${"`bulk_import`"} change event was recorded.`,
+      });
     }, 1400);
   }
 
@@ -231,16 +296,33 @@ export default function ImportWizard() {
                 </span>
                 <div className="ml-auto flex items-center gap-3 text-[12px]">
                   <label className="flex items-center gap-2 text-ink-600">
-                    Target concept
+                    Target ontology
+                    <select
+                      value={targetOntologyId}
+                      onChange={(e) => setTargetOntologyId(e.target.value)}
+                      className="rounded-md border border-ink-200 bg-white px-2 py-1 text-[12px] font-medium text-ink-800 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15"
+                    >
+                      {ontologies.map((o) => (
+                        <option key={o.id} value={o.id}>
+                          {o.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="flex items-center gap-2 text-ink-600">
+                    Target class
                     <select
                       value={targetConcept}
                       onChange={(e) => setTargetConcept(e.target.value)}
                       className="rounded-md border border-ink-200 bg-white px-2 py-1 text-[12px] font-medium text-ink-800 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15"
                     >
-                      <option>Product</option>
-                      <option>Category</option>
-                      <option>Brand</option>
-                      <option>+ Create new concept…</option>
+                      {allConceptClasses
+                        .filter((c) => c.ontologyId === targetOntologyId)
+                        .map((c) => (
+                          <option key={c.id} value={c.name}>
+                            {c.name}
+                          </option>
+                        ))}
                     </select>
                   </label>
                 </div>
@@ -439,15 +521,24 @@ export default function ImportWizard() {
                   Import complete
                 </h3>
                 <p className="mt-1 text-sm text-ink-600">
-                  248 concepts and 486 relations added to{" "}
-                  <span className="font-semibold">E-commerce catalogue</span>.
+                  {importedCount} concept{importedCount === 1 ? "" : "s"}{" "}
+                  added to{" "}
+                  <span className="font-semibold">
+                    {ontologies.find((o) => o.id === targetOntologyId)?.name ??
+                      "this ontology"}
+                  </span>
+                  .
                 </p>
-                <div className="mt-3 rounded-lg border border-ink-200 bg-ink-50 px-3 py-2 font-mono text-[11px] text-ink-600">
-                  Change event ce_13 · bulk_import · by Valentin
-                </div>
+                {importedEventId && (
+                  <div className="mt-3 rounded-lg border border-ink-200 bg-ink-50 px-3 py-2 font-mono text-[11px] text-ink-600">
+                    Change event {importedEventId} · bulk_import · by Valentin
+                  </div>
+                )}
                 <div className="mt-5 flex items-center gap-2">
                   <button
-                    onClick={() => navigate("/ontologies/ont_ecom")}
+                    onClick={() =>
+                      navigate(`/ontologies/${targetOntologyId}`)
+                    }
                     className="btn-primary"
                   >
                     Open ontology
@@ -458,6 +549,8 @@ export default function ImportWizard() {
                       setStep(1);
                       setFilename(null);
                       setDone(false);
+                      setImportedCount(0);
+                      setImportedEventId(null);
                     }}
                     className="btn-secondary"
                   >
