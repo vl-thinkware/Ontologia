@@ -1,0 +1,2 @@
+Je n'ai pas l'impression que les specs initiales abordent le sujet mais la gestion multilangue est une feature qui a pas mal d'impactes.
+Est-ce que c'est un besoin auquel on veut répondre ? Et si oui est-ce que c'est nécessaire pour un mvp ?

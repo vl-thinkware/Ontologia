@@ -63,16 +63,6 @@ All Postgres tables carry an `org_id` column enforced via RLS. All Neo4j nodes a
   strict
 })
 
-// Typed relations between concepts — realised as a node to carry per-edge metadata
-(:ConceptRelation {
-  id,
-  orgId, ontologyId,
-  relationTypeId,
-  label, properties,
-  lastChangeEventId,
-  updatedAt
-})
-
 // Tags — named, immutable pointers into the change_event log
 (:Tag {
   id,
@@ -94,24 +84,26 @@ All Postgres tables carry an `org_id` column enforced via RLS. All Neo4j nodes a
 (:Ontology)-[:HAS_RELATION_TYPE]->(:RelationType)
 (:Ontology)-[:HAS_TAG]->(:Tag)
 
-// Typed relations between concepts
-(:Concept)-[:HAS_RELATION]->(:ConceptRelation)-[:TARGETS]->(:Concept)
+// Typed relation between concepts — properties carried directly on the relationship
+(:Concept)-[:RELATED_TO {
+  id,              // uuid — used in diffs to identify the edge
+  orgId, ontologyId,
+  relationTypeId,
+  label,
+  properties       // map (JSON) of custom keys
+}]->(:Concept)
 ```
-
-Why realise a relation as a node? To attach per-edge properties cleanly and version them independently via change events.
 
 ### 2.3 Indexes & constraints
 
 ```cypher
 CREATE CONSTRAINT ontology_id IF NOT EXISTS FOR (o:Ontology) REQUIRE o.id IS UNIQUE;
 CREATE CONSTRAINT concept_id IF NOT EXISTS FOR (c:Concept) REQUIRE c.id IS UNIQUE;
-CREATE CONSTRAINT relation_id IF NOT EXISTS FOR (r:ConceptRelation) REQUIRE r.id IS UNIQUE;
 CREATE CONSTRAINT relation_type_id IF NOT EXISTS FOR (r:RelationType) REQUIRE r.id IS UNIQUE;
 CREATE CONSTRAINT tag_id IF NOT EXISTS FOR (t:Tag) REQUIRE t.id IS UNIQUE;
 
 // Lookup by tenant
 CREATE INDEX concept_org_ontology IF NOT EXISTS FOR (c:Concept) ON (c.orgId, c.ontologyId);
-CREATE INDEX relation_org_ontology IF NOT EXISTS FOR (r:ConceptRelation) ON (r.orgId, r.ontologyId);
 
 // Full-text
 CREATE FULLTEXT INDEX concept_fts IF NOT EXISTS FOR (c:Concept) ON EACH [c.name, c.description, c.synonyms];
@@ -119,10 +111,11 @@ CREATE FULLTEXT INDEX concept_fts IF NOT EXISTS FOR (c:Concept) ON EACH [c.name,
 
 ### 2.4 Versioning invariants (MVP)
 
-1. Neo4j holds the **current** state. Edits mutate concept / relation nodes in place, and set `lastChangeEventId` to the id of the change event that produced the current state.
+1. Neo4j holds the **current** state. Edits mutate concept nodes (and their outgoing `RELATED_TO` relationships) in place, and set `lastChangeEventId` to the id of the change event that produced the current state.
 2. The authoritative history lives in Postgres as append-only `change_event` rows — see Section 3.2. Neo4j can be rebuilt from scratch by replaying events.
-3. Tags are immutable pointers into the change_event log.
-4. Revert is itself a new change event whose diff is the inverse of the target event.
+3. Adding, modifying, or removing a `RELATED_TO` relationship is recorded as a `change_event` on the **source concept** (`entity_type='concept'`). The diff includes the full relation state (id, relationTypeId, label, properties, target concept id).
+4. Tags are immutable pointers into the change_event log.
+5. Revert is itself a new change event whose diff is the inverse of the target event.
 
 More detail in [VERSIONING_SYSTEM.md](VERSIONING_SYSTEM.md).
 
@@ -184,7 +177,8 @@ CREATE TABLE change_event (
   ontology_id UUID NOT NULL,
   author_id UUID NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  entity_type TEXT NOT NULL CHECK (entity_type IN ('concept','relation','ontology','tag')),
+  entity_type TEXT NOT NULL CHECK (entity_type IN ('concept','ontology','tag')),
+  -- relation changes are recorded as concept changes (entity_type='concept', entity_id=source concept)
   entity_id UUID,
   operation TEXT NOT NULL CHECK (operation IN ('create','update','delete','revert','tag','bulk_import')),
   diff JSONB NOT NULL,
@@ -410,9 +404,8 @@ The following Neo4j nodes and Postgres tables are designed and documented but **
   createdAt
 })
 
-// A commit "sees" a set of concept/relation versions
+// A commit "sees" a set of concept versions (relations are owned by their source concept)
 (:Commit)-[:INCLUDES]->(:Concept)
-(:Commit)-[:INCLUDES]->(:ConceptRelation)
 (:Commit)-[:PARENT]->(:Commit)
 (:Commit)-[:MERGED_FROM]->(:Commit)
 (:Branch)-[:POINTS_TO]->(:Commit)

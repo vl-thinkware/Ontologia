@@ -1,0 +1,1 @@
+C'est un fonctionnalité qui paraît intéressante sur le papier mais est-ce qu'elle répond vraiment à un besoin et est-ce qu'elle n'est pas trop complexe à mettre en place

@@ -9,38 +9,38 @@ The "what we use and why" list. Each choice includes a brief justification, the 
 
 ## Summary table
 
-| Layer | Choice | Version | Rationale in one line | Exit cost |
-|---|---|---|---|---|
-| Frontend framework | React | 18.x | Ecosystem for canvas libs (React Flow), large talent pool | Low (components portable) |
-| Frontend build | Vite | 5.x | Fast DX; no bespoke webpack | Low |
-| Graph canvas | React Flow | 12.x | Best TS-first flow library; performant up to 10k nodes | Medium (custom nodes tied to API) |
-| Tree view | react-arborist / d3-hierarchy | latest | Virtualised, keyboardable | Low |
-| State (server) | TanStack Query | 5.x | Cache + refetch + optimistic updates | Low |
-| State (client) | Zustand | 4.x | Minimalist, no Redux ceremony | Low |
-| Styling | Tailwind CSS + Radix UI | 3.x / latest | Tokens + accessible primitives | Low |
-| Forms | React Hook Form + Zod | latest | Client/server schema parity | Low |
-| Backend runtime | Node.js | 20 LTS | Shared TS types, mature ecosystem | Low |
-| API framework | Fastify | 4.x | High throughput, first-class schema + OpenAPI | Medium |
-| Validation | Zod | 3.x | Single source of truth for types and runtime validation | Low |
-| Queue | BullMQ | 5.x | Mature Redis-based jobs | Medium |
-| Event bus | Redis Streams | 7.x | Simple, transactional, enough for our volume | Low |
-| Primary DB | PostgreSQL | 16.x | Default OLTP for SaaS; ubiquitous managed offerings | Low |
-| Graph DB | Neo4j Aura | 5.x | Native graph, managed, multi-region | **High** — product is graph-native |
-| Cache / rate limit | Redis | 7.x | Hot path and counters | Low |
-| Object storage | Cloudflare R2 | — | Zero egress; S3-compatible | Low |
-| Auth | Clerk | latest | Fastest path from 0 to SSO-ready B2B auth | Medium |
-| Billing | Stripe | latest | Self-serve + tax + invoicing | Low |
-| Email | Resend | latest | Simple API, good deliverability | Low |
-| Error tracking | Sentry | latest | BE + FE, perf traces | Low |
-| Logs | Logtail (Better Stack) | latest | JSON logs, cheap at our scale | Low |
-| Metrics | Grafana Cloud | latest | Prometheus + Loki + Tempo in one place | Low |
-| LLM | OpenAI primary, Anthropic fallback | latest | Quality + cost routing behind our own port | Low |
-| IaC | Terraform | 1.x | Standard; works across all listed providers | Medium |
-| CI | GitHub Actions | — | Standard | Low |
-| FE hosting | Vercel | — | Preview per PR, edge cache | Medium |
-| BE hosting | Fly.io or Render | — | Cheap start, global footprint | Medium |
-| CDN / WAF | Cloudflare | — | Free tier covers perimeter | Low |
-| Container runtime (later) | AWS ECS / Fargate | — | Future migration target | Medium |
+| Layer                     | Choice                             | Version      | Rationale in one line                                     | Exit cost                          |
+| ------------------------- | ---------------------------------- | ------------ | --------------------------------------------------------- | ---------------------------------- |
+| Frontend framework        | React                              | 18.x         | Ecosystem for canvas libs (React Flow), large talent pool | Low (components portable)          |
+| Frontend build            | Vite                               | 5.x          | Fast DX; no bespoke webpack                               | Low                                |
+| Graph canvas              | React Flow                         | 12.x         | Best TS-first flow library; performant up to 10k nodes    | Medium (custom nodes tied to API)  |
+| Tree view                 | react-arborist / d3-hierarchy      | latest       | Virtualised, keyboardable                                 | Low                                |
+| State (server)            | TanStack Query                     | 5.x          | Cache + refetch + optimistic updates                      | Low                                |
+| State (client)            | Zustand                            | 4.x          | Minimalist, no Redux ceremony                             | Low                                |
+| Styling                   | Tailwind CSS + Radix UI            | 3.x / latest | Tokens + accessible primitives                            | Low                                |
+| Forms                     | React Hook Form + Zod              | latest       | Client/server schema parity                               | Low                                |
+| Backend runtime           | Node.js                            | 20 LTS       | Shared TS types, mature ecosystem                         | Low                                |
+| API framework             | Fastify                            | 4.x          | High throughput, first-class schema + OpenAPI             | Medium                             |
+| Validation                | Zod                                | 3.x          | Single source of truth for types and runtime validation   | Low                                |
+| Queue                     | BullMQ                             | 5.x          | Mature Redis-based jobs                                   | Medium                             |
+| Event bus                 | Redis Streams                      | 7.x          | Simple, transactional, enough for our volume              | Low                                |
+| Primary DB                | PostgreSQL                         | 16.x         | Default OLTP for SaaS; ubiquitous managed offerings       | Low                                |
+| Graph DB                  | Neo4j Aura                         | 5.x          | Native graph, managed, multi-region                       | **High** — product is graph-native |
+| Cache / rate limit        | Redis                              | 7.x          | Hot path and counters                                     | Low                                |
+| Object storage            | Cloudflare R2                      | —            | Zero egress; S3-compatible                                | Low                                |
+| Auth                      | Clerk                              | latest       | Fastest path from 0 to SSO-ready B2B auth                 | Medium                             |
+| Billing                   | Stripe                             | latest       | Self-serve + tax + invoicing                              | Low                                |
+| Email                     | Resend                             | latest       | Simple API, good deliverability                           | Low                                |
+| Error tracking            | Sentry                             | latest       | BE + FE, perf traces                                      | Low                                |
+| Logs                      | Logtail (Better Stack)             | latest       | JSON logs, cheap at our scale                             | Low                                |
+| Metrics                   | Grafana Cloud                      | latest       | Prometheus + Loki + Tempo in one place                    | Low                                |
+| LLM                       | OpenAI primary, Anthropic fallback | latest       | Quality + cost routing behind our own port                | Low                                |
+| IaC                       | Terraform                          | 1.x          | Standard; works across all listed providers               | Medium                             |
+| CI                        | GitHub Actions                     | —            | Standard                                                  | Low                                |
+| FE hosting                | Vercel                             | —            | Preview per PR, edge cache                                | Medium                             |
+| BE hosting                | Fly.io or Render                   | —            | Cheap start, global footprint                             | Medium                             |
+| CDN / WAF                 | Cloudflare                         | —            | Free tier covers perimeter                                | Low                                |
+| Container runtime (later) | AWS ECS / Fargate                  | —            | Future migration target                                   | Medium                             |
 
 ---
 
