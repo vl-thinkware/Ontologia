@@ -1,5 +1,11 @@
 import { useMemo, useState } from "react";
-import clsx from "clsx";
+import {
+  Box,
+  Button,
+  Flex,
+  SegmentedControl,
+  Text,
+} from "@radix-ui/themes";
 import {
   Download,
   Copy,
@@ -20,12 +26,6 @@ import {
 
 type Format = "jsonld" | "skos" | "owl" | "csv";
 
-/**
- * Export modal — the actual "what does my ontology look like outside
- * Ontologia" surface. Generates the four formats on the fly from live
- * state (so edits / deprecations show up immediately), with a preview
- * pane, copy-to-clipboard, and a download-as-file stub.
- */
 export default function ExportModal() {
   const { exportTarget, closeExport, concepts, relations, toast } = useApp();
   const [format, setFormat] = useState<Format>("jsonld");
@@ -43,7 +43,6 @@ export default function ExportModal() {
     [ontologyId]
   );
 
-  // Scope predicate applied to concepts / relations.
   const scopedConcepts = useMemo(() => {
     if (!ontologyId) return [];
     return concepts.filter(
@@ -55,9 +54,7 @@ export default function ExportModal() {
 
   const scopedRelations = useMemo(() => {
     const ids = new Set(scopedConcepts.map((c) => c.id));
-    return relations.filter(
-      (r) => ids.has(r.from) && ids.has(r.to)
-    );
+    return relations.filter((r) => ids.has(r.from) && ids.has(r.to));
   }, [scopedConcepts, relations]);
 
   const payload = useMemo(() => {
@@ -139,7 +136,9 @@ export default function ExportModal() {
         onClose={closeExport}
         title="Export ontology"
       >
-        <p className="text-sm text-ink-500">Ontology not found.</p>
+        <Text size="2" color="gray">
+          Ontology not found.
+        </Text>
       </Modal>
     );
   }
@@ -153,121 +152,149 @@ export default function ExportModal() {
       width="max-w-4xl"
       footer={
         <>
-          <button onClick={closeExport} className="btn-ghost py-1.5 px-3">
+          <Button variant="ghost" color="gray" onClick={closeExport}>
             Close
-          </button>
-          <button
-            onClick={copyToClipboard}
-            className="btn-secondary py-1.5 px-3"
-          >
+          </Button>
+          <Button variant="surface" color="gray" onClick={copyToClipboard}>
             {copied ? (
-              <Check className="h-3.5 w-3.5 text-emerald-600" />
+              <Check
+                className="h-3.5 w-3.5"
+                style={{ color: "var(--green-11)" }}
+              />
             ) : (
               <Copy className="h-3.5 w-3.5" />
             )}
             {copied ? "Copied" : "Copy"}
-          </button>
-          <button onClick={download} className="btn-primary py-1.5 px-3">
+          </Button>
+          <Button onClick={download}>
             <Download className="h-3.5 w-3.5" />
             Download .{formatMeta[format].ext}
-          </button>
+          </Button>
         </>
       }
     >
-      <div className="space-y-3">
+      <Flex direction="column" gap="3">
         {/* Format tabs */}
-        <div className="flex items-center gap-1.5 rounded-lg border border-ink-200 bg-ink-50/50 p-1">
+        <SegmentedControl.Root
+          value={format}
+          onValueChange={(v) => setFormat(v as Format)}
+          size="2"
+        >
           {(Object.keys(formatMeta) as Format[]).map((f) => {
             const Icon = formatMeta[f].icon;
-            const active = format === f;
             return (
-              <button
-                key={f}
-                onClick={() => setFormat(f)}
-                className={clsx(
-                  "flex flex-1 items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-[12px] font-semibold transition-colors",
-                  active
-                    ? "bg-white text-ink-900 shadow-sm"
-                    : "text-ink-500 hover:text-ink-800"
-                )}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                {formatMeta[f].label}
-              </button>
+              <SegmentedControl.Item key={f} value={f}>
+                <Flex align="center" gap="2">
+                  <Icon className="h-3.5 w-3.5" />
+                  {formatMeta[f].label}
+                </Flex>
+              </SegmentedControl.Item>
             );
           })}
-        </div>
+        </SegmentedControl.Root>
 
         {/* Scope */}
-        <div className="flex flex-wrap items-center gap-2 text-[12px] text-ink-600">
-          <span className="font-semibold text-ink-700">Scope</span>
-          <button
+        <Flex wrap="wrap" align="center" gap="2">
+          <Text size="1" weight="bold" color="gray">
+            Scope
+          </Text>
+          <Button
+            variant={scope === "ontology" ? "soft" : "surface"}
+            color={scope === "ontology" ? "violet" : "gray"}
+            size="1"
             onClick={() => setScope("ontology")}
-            className={clsx(
-              "rounded-md border px-2 py-1 transition-colors",
-              scope === "ontology"
-                ? "border-brand-500 bg-brand-50 text-brand-800"
-                : "border-ink-200 bg-white hover:bg-ink-50"
-            )}
           >
-            Full ontology ({concepts.filter((c) => c.ontologyId === ontologyId).length})
-          </button>
+            Full ontology (
+            {concepts.filter((c) => c.ontologyId === ontologyId).length})
+          </Button>
           {schemesForOntology.length > 0 && (
             <>
-              <span className="text-ink-400">·</span>
-              <span className="font-semibold text-ink-700">Scheme</span>
+              <Text size="1" color="gray">
+                ·
+              </Text>
+              <Text size="1" weight="bold" color="gray">
+                Scheme
+              </Text>
               {schemesForOntology.map((s) => {
-                const active = scope === "scheme" && selectedSchemeId === s.id;
+                const active =
+                  scope === "scheme" && selectedSchemeId === s.id;
                 return (
-                  <button
+                  <Button
                     key={s.id}
+                    variant={active ? "soft" : "surface"}
+                    color={active ? "violet" : "gray"}
+                    size="1"
                     onClick={() => {
                       setScope("scheme");
                       setSelectedSchemeId(s.id);
                     }}
-                    className={clsx(
-                      "rounded-md border px-2 py-1 transition-colors",
-                      active
-                        ? "border-brand-500 bg-brand-50 text-brand-800"
-                        : "border-ink-200 bg-white hover:bg-ink-50"
-                    )}
                   >
                     {s.name}
-                  </button>
+                  </Button>
                 );
               })}
             </>
           )}
-        </div>
+        </Flex>
 
         {/* Preview */}
-        <div className="rounded-lg border border-ink-200 bg-ink-950">
-          <div className="flex items-center justify-between gap-2 border-b border-ink-800 px-3 py-1.5 text-[11px] text-ink-300">
-            <span className="font-mono">
+        <Box
+          style={{
+            border: "1px solid var(--gray-a4)",
+            borderRadius: "var(--radius-3)",
+            overflow: "hidden",
+            background: "var(--gray-12)",
+          }}
+        >
+          <Flex
+            align="center"
+            justify="between"
+            gap="2"
+            px="3"
+            py="2"
+            style={{
+              borderBottom: "1px solid rgba(255,255,255,0.10)",
+              color: "var(--gray-3)",
+            }}
+          >
+            <Text
+              size="1"
+              className="font-mono"
+              style={{ color: "var(--gray-3)" }}
+            >
               {ontology.id}.{formatMeta[format].ext}
-            </span>
-            <span>
+            </Text>
+            <Text size="1" style={{ color: "var(--gray-3)" }}>
               {payload.split("\n").length} lines · {payload.length} chars
-            </span>
-          </div>
-          <pre className="max-h-[360px] overflow-auto p-3 text-[11.5px] leading-[1.55] text-ink-100">
-            <code className="font-mono">{payload}</code>
+            </Text>
+          </Flex>
+          <pre
+            style={{
+              maxHeight: 360,
+              overflow: "auto",
+              padding: 12,
+              fontSize: 11.5,
+              lineHeight: 1.55,
+              color: "var(--gray-1)",
+              fontFamily: "var(--code-font-family)",
+            }}
+          >
+            <code>{payload}</code>
           </pre>
-        </div>
+        </Box>
 
-        <p className="text-[11px] text-ink-500">
+        <Text size="1" color="gray">
           Preview is generated from the live workspace — any deprecations,
           edits, or new relations you've made in this session are already
           reflected above.
-        </p>
-      </div>
+        </Text>
+      </Flex>
     </Modal>
   );
 }
 
 // -----------------------------------------------------------------------------
-// Serializers. Quick-and-readable rather than spec-perfect — the mockup's
-// goal is to make the exports feel believable to a prospect in a demo.
+// Serializers — same as before; quick-and-readable rather than spec-perfect.
 // -----------------------------------------------------------------------------
 
 function lang(l: { lang: string; value: string }): string {
@@ -347,12 +374,22 @@ function renderSkosTurtle(
     id: string;
     name: string;
     schemeId: string;
-    labels: { prefLabel: Array<{ lang: string; value: string }>; altLabel: Array<{ lang: string; value: string }>; hiddenLabel: Array<{ lang: string; value: string }> };
+    labels: {
+      prefLabel: Array<{ lang: string; value: string }>;
+      altLabel: Array<{ lang: string; value: string }>;
+      hiddenLabel: Array<{ lang: string; value: string }>;
+    };
     definitions: Array<{ lang: string; value: string }>;
     deprecated?: boolean;
     replacedBy?: string;
   }>,
-  r: Array<{ id: string; from: string; to: string; label: string; relationTypeId: string }>
+  r: Array<{
+    id: string;
+    from: string;
+    to: string;
+    label: string;
+    relationTypeId: string;
+  }>
 ): string {
   const lines: string[] = [
     `@prefix skos: <http://www.w3.org/2004/02/skos/core#> .`,
@@ -380,7 +417,6 @@ function renderSkosTurtle(
         lines.push(`  dct:isReplacedBy :${concept.replacedBy} ;`);
       }
     }
-    // Trailing "." replacing last ";".
     const last = lines[lines.length - 1];
     lines[lines.length - 1] = last.replace(/;\s*$/, ".");
     lines.push("");
@@ -412,25 +448,37 @@ function renderOwlXml(
   ];
   for (const concept of c) {
     out.push(`  <owl:NamedIndividual rdf:about="${base}/${concept.id}">`);
-    out.push(`    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>`);
-    out.push(`    <skos:inScheme rdf:resource="${base}/${concept.schemeId}"/>`);
+    out.push(
+      `    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>`
+    );
+    out.push(
+      `    <skos:inScheme rdf:resource="${base}/${concept.schemeId}"/>`
+    );
     for (const l of concept.labels.prefLabel) {
       out.push(
-        `    <skos:prefLabel xml:lang="${l.lang}">${escapeXml(l.value)}</skos:prefLabel>`
+        `    <skos:prefLabel xml:lang="${l.lang}">${escapeXml(
+          l.value
+        )}</skos:prefLabel>`
       );
     }
     for (const l of concept.labels.altLabel) {
       out.push(
-        `    <skos:altLabel xml:lang="${l.lang}">${escapeXml(l.value)}</skos:altLabel>`
+        `    <skos:altLabel xml:lang="${l.lang}">${escapeXml(
+          l.value
+        )}</skos:altLabel>`
       );
     }
     for (const l of concept.definitions) {
       out.push(
-        `    <skos:definition xml:lang="${l.lang}">${escapeXml(l.value)}</skos:definition>`
+        `    <skos:definition xml:lang="${l.lang}">${escapeXml(
+          l.value
+        )}</skos:definition>`
       );
     }
     if (concept.deprecated) {
-      out.push(`    <owl:deprecated rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:deprecated>`);
+      out.push(
+        `    <owl:deprecated rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:deprecated>`
+      );
       if (concept.replacedBy) {
         out.push(
           `    <dct:isReplacedBy rdf:resource="${base}/${concept.replacedBy}"/>`
@@ -502,6 +550,5 @@ function escapeXml(s: string) {
     .replace(/"/g, "&quot;");
 }
 
-// Silence unused-import warnings for types we only reach through generics above
 void conceptClasses;
 void relationTypes;

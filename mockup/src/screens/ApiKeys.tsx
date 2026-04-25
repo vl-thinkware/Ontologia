@@ -1,3 +1,15 @@
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  Code,
+  Flex,
+  Heading,
+  IconButton,
+  Table,
+  Text,
+} from "@radix-ui/themes";
 import { Plus, Copy, Trash2, BookOpen } from "lucide-react";
 import SettingsLayout from "../components/SettingsLayout";
 import { apiKeys } from "../data/mock";
@@ -8,128 +20,173 @@ export default function ApiKeys() {
       title="API keys"
       description="Server-side keys for reading and writing ontologies from your pipelines."
       actions={
-        <button className="btn-primary">
+        <Button>
           <Plus className="h-3.5 w-3.5" />
           Create key
-        </button>
+        </Button>
       }
     >
-      <section className="card p-5">
-        <div className="flex items-start gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+      <Card size="3">
+        <Flex align="start" gap="3">
+          <Flex
+            align="center"
+            justify="center"
+            className="h-9 w-9 rounded-[var(--radius-3)]"
+            style={{
+              background: "var(--accent-3)",
+              color: "var(--accent-11)",
+            }}
+          >
             <BookOpen className="h-4 w-4" />
-          </div>
-          <div className="flex-1">
-            <h2 className="text-sm font-semibold text-ink-900">
+          </Flex>
+          <Box className="flex-1">
+            <Heading size="2" weight="bold">
               Authenticate requests
-            </h2>
-            <p className="mt-1 text-xs text-ink-600">
-              Pass the key in the <code>Authorization</code> header. Keys are
+            </Heading>
+            <Text as="p" size="1" color="gray" mt="1">
+              Pass the key in the <Code>Authorization</Code> header. Keys are
               scoped per workspace and never expire unless revoked.
-            </p>
-            <pre className="mt-3 overflow-x-auto rounded-lg border border-ink-200 bg-ink-900 px-3 py-2 font-mono text-[11.5px] leading-relaxed text-ink-100">
+            </Text>
+            <Box
+              mt="3"
+              p="3"
+              style={{
+                background: "var(--gray-12)",
+                color: "var(--gray-1)",
+                borderRadius: "var(--radius-3)",
+                fontFamily: "var(--code-font-family)",
+                fontSize: 11.5,
+                lineHeight: 1.5,
+                overflowX: "auto",
+              }}
+            >
+              <pre style={{ margin: 0 }}>
 {`curl https://api.ontologia.app/v1/ontologies \\
   -H "Authorization: Bearer ont_live_8f2a…"`}
-            </pre>
-          </div>
-        </div>
-      </section>
+              </pre>
+            </Box>
+          </Box>
+        </Flex>
+      </Card>
 
-      <section className="card">
-        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-3.5">
-          <div>
-            <h2 className="text-sm font-semibold text-ink-900">
+      <Card size="3" style={{ padding: 0 }}>
+        <Flex
+          align="center"
+          justify="between"
+          px="5"
+          py="3"
+          style={{ borderBottom: "1px solid var(--gray-a4)" }}
+        >
+          <Box>
+            <Heading size="2" weight="bold">
               Active keys ({apiKeys.length})
-            </h2>
-            <p className="text-xs text-ink-500">
+            </Heading>
+            <Text size="1" color="gray">
               Rotate keys at least every 90 days.
-            </p>
-          </div>
-        </div>
-        <table className="w-full text-sm">
-          <thead className="bg-ink-50/60 text-[11px] font-semibold uppercase tracking-wider text-ink-500">
-            <tr>
-              <th className="px-5 py-2.5 text-left">Name</th>
-              <th className="px-5 py-2.5 text-left">Key</th>
-              <th className="px-5 py-2.5 text-left">Scopes</th>
-              <th className="px-5 py-2.5 text-left">Last used</th>
-              <th className="px-5 py-2.5 text-left">Created</th>
-              <th className="w-0" />
-            </tr>
-          </thead>
-          <tbody>
-            {apiKeys.map((k, i) => (
-              <tr
-                key={k.id}
-                className={i !== 0 ? "border-t border-ink-100" : ""}
-              >
-                <td className="px-5 py-3">
-                  <div className="text-[13px] font-semibold text-ink-900">
+            </Text>
+          </Box>
+        </Flex>
+        <Table.Root size="2" variant="ghost">
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Key</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Scopes</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Last used</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Created</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell />
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {apiKeys.map((k) => (
+              <Table.Row key={k.id}>
+                <Table.Cell>
+                  <Text size="2" weight="bold">
                     {k.name}
-                  </div>
-                  <div className="text-[11.5px] text-ink-500">
+                  </Text>
+                  <Text as="div" size="1" color="gray">
                     by {k.createdBy}
-                  </div>
-                </td>
-                <td className="px-5 py-3">
-                  <div className="flex items-center gap-1.5">
-                    <code className="rounded-md border border-ink-200 bg-ink-50 px-2 py-0.5 font-mono text-[11.5px] text-ink-700">
+                  </Text>
+                </Table.Cell>
+                <Table.Cell>
+                  <Flex align="center" gap="2">
+                    <Code variant="soft" size="1">
                       {k.prefix}••••••••
-                    </code>
-                    <button
+                    </Code>
+                    <IconButton
+                      variant="ghost"
+                      color="gray"
+                      size="1"
                       title="Copy prefix"
-                      className="rounded-md p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-700"
                     >
                       <Copy className="h-3 w-3" />
-                    </button>
-                  </div>
-                </td>
-                <td className="px-5 py-3">
-                  <div className="flex flex-wrap gap-1">
+                    </IconButton>
+                  </Flex>
+                </Table.Cell>
+                <Table.Cell>
+                  <Flex wrap="wrap" gap="1">
                     {k.scopes.map((s) => (
-                      <span
+                      <Badge
                         key={s}
-                        className="chip bg-ink-100 text-ink-700 font-mono text-[10px]"
+                        color="gray"
+                        variant="soft"
+                        size="1"
+                        style={{ fontFamily: "var(--code-font-family)" }}
                       >
                         {s}
-                      </span>
+                      </Badge>
                     ))}
-                  </div>
-                </td>
-                <td className="px-5 py-3 text-[12px] text-ink-600">
-                  {k.lastUsed}
-                </td>
-                <td className="px-5 py-3 text-[12px] text-ink-600">
-                  {k.createdAt}
-                </td>
-                <td className="px-5 py-3 text-right">
-                  <button className="rounded-md p-1.5 text-ink-400 hover:bg-red-50 hover:text-red-600">
+                  </Flex>
+                </Table.Cell>
+                <Table.Cell>
+                  <Text size="1" color="gray">
+                    {k.lastUsed}
+                  </Text>
+                </Table.Cell>
+                <Table.Cell>
+                  <Text size="1" color="gray">
+                    {k.createdAt}
+                  </Text>
+                </Table.Cell>
+                <Table.Cell justify="end">
+                  <IconButton variant="ghost" color="red" size="1">
                     <Trash2 className="h-4 w-4" />
-                  </button>
-                </td>
-              </tr>
+                  </IconButton>
+                </Table.Cell>
+              </Table.Row>
             ))}
-          </tbody>
-        </table>
-      </section>
+          </Table.Body>
+        </Table.Root>
+      </Card>
 
-      <section className="card p-5">
-        <h2 className="text-sm font-semibold text-ink-900">Webhooks</h2>
-        <p className="mt-0.5 text-xs text-ink-500">
+      <Card size="3">
+        <Heading size="2" weight="bold">
+          Webhooks
+        </Heading>
+        <Text as="p" size="1" color="gray" mt="1">
           Push change events to your own infrastructure.
-        </p>
-        <div className="mt-4 rounded-lg border border-dashed border-ink-300 bg-ink-50/50 p-6 text-center">
-          <p className="text-[12.5px] text-ink-600">
+        </Text>
+        <Box
+          mt="4"
+          p="6"
+          style={{
+            border: "1px dashed var(--gray-a6)",
+            background: "var(--gray-2)",
+            borderRadius: "var(--radius-3)",
+            textAlign: "center",
+          }}
+        >
+          <Text size="2" color="gray">
             No webhooks configured yet.{" "}
             <a
               href="#"
-              className="font-semibold text-brand-700 hover:text-brand-800"
+              style={{ color: "var(--accent-11)", fontWeight: 600 }}
             >
               Add your first endpoint →
             </a>
-          </p>
-        </div>
-      </section>
+          </Text>
+        </Box>
+      </Card>
     </SettingsLayout>
   );
 }

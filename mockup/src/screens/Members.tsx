@@ -1,3 +1,17 @@
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Card,
+  Flex,
+  Heading,
+  IconButton,
+  Select,
+  Table,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
 import { UserPlus, MoreHorizontal, Mail } from "lucide-react";
 import SettingsLayout from "../components/SettingsLayout";
 import { members } from "../data/mock";
@@ -8,154 +22,195 @@ export default function Members() {
       title="Members"
       description="Unlimited seats on the Team plan. Invite anyone on your team."
       actions={
-        <button className="btn-primary">
+        <Button>
           <UserPlus className="h-3.5 w-3.5" />
           Invite people
-        </button>
+        </Button>
       }
     >
-      <section className="card p-5">
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+      <Card size="3">
+        <Flex align="center" gap="2">
+          <Flex
+            align="center"
+            justify="center"
+            className="h-9 w-9 rounded-[var(--radius-3)]"
+            style={{
+              background: "var(--accent-3)",
+              color: "var(--accent-11)",
+            }}
+          >
             <Mail className="h-4 w-4" />
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-ink-900">
+          </Flex>
+          <Box>
+            <Text size="2" weight="bold">
               Invite by email
-            </div>
-            <p className="text-xs text-ink-500">
+            </Text>
+            <Text as="p" size="1" color="gray">
               New teammates receive an email to join <strong>Thinkware</strong>.
-            </p>
-          </div>
-        </div>
-        <div className="mt-4 flex items-center gap-2">
-          <input
-            placeholder="name@company.com, another@company.com…"
-            className="input flex-1"
-          />
-          <select className="input w-40">
-            <option>Editor</option>
-            <option>Viewer</option>
-            <option>Owner</option>
-          </select>
-          <button className="btn-primary">Send invites</button>
-        </div>
-      </section>
-
-      <section className="card">
-        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-3.5">
-          <div>
-            <h2 className="text-sm font-semibold text-ink-900">
-              {members.length} members
-            </h2>
-            <p className="text-xs text-ink-500">
-              Includes 1 pending invitation
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <select className="input w-36 py-1.5 text-[12px]">
-              <option>All roles</option>
-              <option>Owners</option>
-              <option>Editors</option>
-              <option>Viewers</option>
-            </select>
-            <input
-              placeholder="Search…"
-              className="input w-48 py-1.5 text-[12px]"
+            </Text>
+          </Box>
+        </Flex>
+        <Flex align="center" gap="2" mt="4">
+          <Box className="flex-1">
+            <TextField.Root
+              placeholder="name@company.com, another@company.com…"
+              size="2"
             />
-          </div>
-        </div>
-        <table className="w-full text-sm">
-          <thead className="bg-ink-50/60 text-[11px] font-semibold uppercase tracking-wider text-ink-500">
-            <tr>
-              <th className="px-5 py-2.5 text-left">Member</th>
-              <th className="px-5 py-2.5 text-left">Role</th>
-              <th className="px-5 py-2.5 text-left">Last active</th>
-              <th className="px-5 py-2.5 text-left">Invited</th>
-              <th className="w-0" />
-            </tr>
-          </thead>
-          <tbody>
-            {members.map((m, i) => (
-              <tr
-                key={m.email}
-                className={i !== 0 ? "border-t border-ink-100" : ""}
-              >
-                <td className="px-5 py-3">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-semibold text-white"
-                      style={{ background: m.color }}
-                    >
-                      {m.initials}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="truncate text-[13px] font-semibold text-ink-900">
+          </Box>
+          <Box width="160px">
+            <Select.Root defaultValue="editor" size="2">
+              <Select.Trigger className="w-full" />
+              <Select.Content>
+                <Select.Item value="editor">Editor</Select.Item>
+                <Select.Item value="viewer">Viewer</Select.Item>
+                <Select.Item value="owner">Owner</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          </Box>
+          <Button>Send invites</Button>
+        </Flex>
+      </Card>
+
+      <Card size="3" style={{ padding: 0 }}>
+        <Flex
+          align="center"
+          justify="between"
+          px="5"
+          py="3"
+          style={{ borderBottom: "1px solid var(--gray-a4)" }}
+        >
+          <Box>
+            <Heading size="2" weight="bold">
+              {members.length} members
+            </Heading>
+            <Text size="1" color="gray">
+              Includes 1 pending invitation
+            </Text>
+          </Box>
+          <Flex align="center" gap="2">
+            <Box width="140px">
+              <Select.Root defaultValue="all" size="1">
+                <Select.Trigger className="w-full" />
+                <Select.Content>
+                  <Select.Item value="all">All roles</Select.Item>
+                  <Select.Item value="owners">Owners</Select.Item>
+                  <Select.Item value="editors">Editors</Select.Item>
+                  <Select.Item value="viewers">Viewers</Select.Item>
+                </Select.Content>
+              </Select.Root>
+            </Box>
+            <Box width="180px">
+              <TextField.Root placeholder="Search…" size="1" />
+            </Box>
+          </Flex>
+        </Flex>
+        <Table.Root size="2" variant="ghost">
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeaderCell>Member</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Role</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Last active</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Invited</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell />
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {members.map((m) => (
+              <Table.Row key={m.email}>
+                <Table.Cell>
+                  <Flex align="center" gap="3">
+                    <Avatar
+                      size="2"
+                      radius="full"
+                      fallback={m.initials}
+                      style={{ background: m.color, color: "white" }}
+                    />
+                    <Box className="min-w-0">
+                      <Text size="2" weight="bold" className="block truncate">
                         {m.name}
-                      </div>
-                      <div className="truncate text-[11.5px] text-ink-500">
+                      </Text>
+                      <Text size="1" color="gray" className="block truncate">
                         {m.email}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-5 py-3">
-                  <select
-                    defaultValue={m.role}
-                    className={`rounded-md border px-2 py-1 text-[12px] font-semibold focus:outline-none focus:ring-4 focus:ring-brand-500/15 ${
-                      m.role === "Owner"
-                        ? "border-brand-200 bg-brand-50 text-brand-700"
-                        : "border-ink-200 bg-white text-ink-700"
-                    }`}
+                      </Text>
+                    </Box>
+                  </Flex>
+                </Table.Cell>
+                <Table.Cell>
+                  <Select.Root
+                    defaultValue={m.role.toLowerCase()}
+                    size="1"
                   >
-                    <option>Owner</option>
-                    <option>Editor</option>
-                    <option>Viewer</option>
-                  </select>
-                </td>
-                <td className="px-5 py-3 text-[12px] text-ink-600">
-                  {m.lastActive}
-                </td>
-                <td className="px-5 py-3 text-[12px] text-ink-600">
-                  {m.invitedAt}
-                </td>
-                <td className="px-5 py-3 text-right">
-                  <button className="rounded-md p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-700">
+                    <Select.Trigger
+                      variant={m.role === "Owner" ? "soft" : "surface"}
+                      color={m.role === "Owner" ? "violet" : "gray"}
+                    />
+                    <Select.Content>
+                      <Select.Item value="owner">Owner</Select.Item>
+                      <Select.Item value="editor">Editor</Select.Item>
+                      <Select.Item value="viewer">Viewer</Select.Item>
+                    </Select.Content>
+                  </Select.Root>
+                </Table.Cell>
+                <Table.Cell>
+                  <Text size="1" color="gray">
+                    {m.lastActive}
+                  </Text>
+                </Table.Cell>
+                <Table.Cell>
+                  <Text size="1" color="gray">
+                    {m.invitedAt}
+                  </Text>
+                </Table.Cell>
+                <Table.Cell justify="end">
+                  <IconButton variant="ghost" color="gray" size="1">
                     <MoreHorizontal className="h-4 w-4" />
-                  </button>
-                </td>
-              </tr>
+                  </IconButton>
+                </Table.Cell>
+              </Table.Row>
             ))}
-            <tr className="border-t border-ink-100">
-              <td className="px-5 py-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-200 text-[11px] font-semibold text-ink-500">
-                    ?
-                  </div>
-                  <div>
-                    <div className="text-[13px] font-semibold text-ink-900">
+            <Table.Row>
+              <Table.Cell>
+                <Flex align="center" gap="3">
+                  <Avatar
+                    size="2"
+                    radius="full"
+                    fallback="?"
+                    color="gray"
+                  />
+                  <Box>
+                    <Text size="2" weight="bold">
                       sofia@thinkware.fr
-                    </div>
-                    <div className="text-[11.5px] text-ink-500">
+                    </Text>
+                    <Text as="div" size="1" color="gray">
                       Invitation sent · awaiting acceptance
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td className="px-5 py-3">
-                <span className="chip bg-amber-50 text-amber-700">Pending</span>
-              </td>
-              <td className="px-5 py-3 text-[12px] text-ink-400">—</td>
-              <td className="px-5 py-3 text-[12px] text-ink-600">2026-04-19</td>
-              <td className="px-5 py-3 text-right">
-                <button className="text-[12px] font-semibold text-brand-700 hover:text-brand-800">
+                    </Text>
+                  </Box>
+                </Flex>
+              </Table.Cell>
+              <Table.Cell>
+                <Badge color="amber" variant="soft">
+                  Pending
+                </Badge>
+              </Table.Cell>
+              <Table.Cell>
+                <Text size="1" color="gray">
+                  —
+                </Text>
+              </Table.Cell>
+              <Table.Cell>
+                <Text size="1" color="gray">
+                  2026-04-19
+                </Text>
+              </Table.Cell>
+              <Table.Cell justify="end">
+                <Button variant="ghost" size="1">
                   Resend
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+                </Button>
+              </Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table.Root>
+      </Card>
     </SettingsLayout>
   );
 }

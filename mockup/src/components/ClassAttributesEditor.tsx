@@ -1,5 +1,18 @@
 import { useState } from "react";
-import clsx from "clsx";
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Code,
+  Flex,
+  IconButton,
+  Select,
+  Text,
+  TextArea,
+  TextField,
+} from "@radix-ui/themes";
 import {
   Languages,
   BookOpen,
@@ -11,7 +24,6 @@ import {
   Info,
   Check,
   X,
-  ChevronDown,
   Type,
   FileText,
   ListChecks,
@@ -19,16 +31,6 @@ import {
 import { useApp } from "../app/AppContext";
 import type { ClassProperty, ConceptClass } from "../data/mock";
 
-// -----------------------------------------------------------------------------
-// ClassAttributesEditor — shows everything that an instance of this class will
-// carry. Top section documents the SKOS-inspired built-in attributes that
-// every concept gets for free; bottom section is the editable custom
-// properties array stored on the ConceptClass.
-// -----------------------------------------------------------------------------
-
-// The six built-in attribute slots that every Concept has by virtue of being
-// a SKOS Concept — not stored on the class but always rendered in the editor
-// so users understand what their instances will carry.
 const SKOS_BUILTINS: Array<{
   key: string;
   label: string;
@@ -107,6 +109,18 @@ const VALUE_TYPES: Array<{
   { id: "money", label: "money", hint: "amount + currency" },
 ];
 
+const CLASS_COLORS: Array<{
+  id: NonNullable<ConceptClass["color"]>;
+  bg: string;
+}> = [
+  { id: "violet", bg: "var(--violet-9)" },
+  { id: "emerald", bg: "var(--green-9)" },
+  { id: "amber", bg: "var(--amber-9)" },
+  { id: "sky", bg: "var(--sky-9)" },
+  { id: "rose", bg: "var(--ruby-9)" },
+  { id: "ink", bg: "var(--gray-11)" },
+];
+
 export default function ClassAttributesEditor({
   cls,
   onClose,
@@ -139,10 +153,7 @@ export default function ClassAttributesEditor({
 
   function saveProperty(draft: ClassProperty, originalKey?: string) {
     if (!draft.key.trim()) {
-      toast({
-        kind: "error",
-        title: "Attribute key is required",
-      });
+      toast({ kind: "error", title: "Attribute key is required" });
       return;
     }
     const keyExists = props.some(
@@ -173,118 +184,169 @@ export default function ClassAttributesEditor({
   }
 
   return (
-    <div className="space-y-5">
+    <Flex direction="column" gap="5">
       {onClose && (
-        <div className="flex items-center justify-between">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+        <Flex align="center" justify="between">
+          <Text
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wider"
+          >
             Editing class
-          </div>
-          <button
+          </Text>
+          <IconButton
+            variant="ghost"
+            color="gray"
+            size="1"
             onClick={onClose}
-            className="rounded-md p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-700"
             title="Collapse"
           >
             <X className="h-3.5 w-3.5" />
-          </button>
-        </div>
+          </IconButton>
+        </Flex>
       )}
 
-      {/* Class identity — name + description inline editable */}
       <ClassIdentityForm cls={cls} />
 
       {/* Built-in SKOS attributes */}
-      <section>
-        <header className="mb-2 flex items-center gap-2">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
-            Built-in attributes
-          </div>
-          <span
-            className="chip bg-violet-50 text-violet-700"
-            title="Every SKOS Concept carries these out of the box."
+      <Box>
+        <Flex align="center" gap="2" mb="2">
+          <Text
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wider"
           >
+            Built-in attributes
+          </Text>
+          <Badge color="violet" variant="soft" size="1">
             SKOS-aligned
-          </span>
-          <Info className="h-3 w-3 text-ink-400" />
-          <span className="text-[11px] text-ink-500">
-            Present on every instance of <code>{cls.name}</code>
-          </span>
-        </header>
-        <ul className="overflow-hidden rounded-lg border border-ink-200">
+          </Badge>
+          <Info
+            className="h-3 w-3"
+            style={{ color: "var(--gray-9)" }}
+          />
+          <Text size="1" color="gray">
+            Present on every instance of <Code>{cls.name}</Code>
+          </Text>
+        </Flex>
+        <Box
+          style={{
+            border: "1px solid var(--gray-a4)",
+            borderRadius: "var(--radius-3)",
+            overflow: "hidden",
+          }}
+        >
           {SKOS_BUILTINS.map((b, i) => {
             const Icon = b.icon;
             return (
-              <li
+              <Flex
                 key={b.key}
-                className={clsx(
-                  "flex items-start gap-3 px-3 py-2.5",
-                  i !== 0 && "border-t border-ink-100",
-                  "bg-gradient-to-r from-violet-50/40 to-white"
-                )}
+                align="start"
+                gap="3"
+                px="3"
+                py="2"
+                style={{
+                  borderTop: i !== 0 ? "1px solid var(--gray-a3)" : "none",
+                  background:
+                    "linear-gradient(90deg, var(--violet-2), var(--color-panel-solid))",
+                }}
               >
-                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-violet-100 text-violet-700">
+                <Flex
+                  align="center"
+                  justify="center"
+                  className="mt-0.5 h-6 w-6 shrink-0 rounded-[var(--radius-2)]"
+                  style={{
+                    background: "var(--violet-3)",
+                    color: "var(--violet-11)",
+                  }}
+                >
                   <Icon className="h-3.5 w-3.5" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <code className="text-[12.5px] font-semibold text-ink-900">
+                </Flex>
+                <Box className="min-w-0 flex-1">
+                  <Flex wrap="wrap" align="center" gap="2">
+                    <Code size="1" variant="ghost" weight="bold">
                       {b.key}
-                    </code>
-                    <span className="text-[12px] text-ink-600">
+                    </Code>
+                    <Text size="1" color="gray">
                       — {b.label}
-                    </span>
-                    <span className="chip bg-ink-100 text-ink-600 text-[10px]">
+                    </Text>
+                    <Badge color="gray" variant="soft" size="1">
                       {b.cardinality}
-                    </span>
+                    </Badge>
                     {b.languageAware && (
-                      <span className="chip bg-brand-50 text-brand-700 text-[10px]">
+                      <Badge color="violet" variant="soft" size="1">
                         <Languages className="h-2.5 w-2.5" />
                         per language
-                      </span>
+                      </Badge>
                     )}
-                  </div>
-                  <p className="mt-0.5 text-[11.5px] leading-snug text-ink-600">
+                  </Flex>
+                  <Text as="p" size="1" color="gray" mt="1">
                     {b.description}
-                  </p>
-                </div>
-              </li>
+                  </Text>
+                </Box>
+              </Flex>
             );
           })}
-        </ul>
-      </section>
+        </Box>
+      </Box>
 
       {/* Custom attributes */}
-      <section>
-        <header className="mb-2 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+      <Box>
+        <Flex align="center" justify="between" mb="2">
+          <Flex align="center" gap="2">
+            <Text
+              size="1"
+              weight="bold"
+              color="gray"
+              className="uppercase tracking-wider"
+            >
               Custom attributes
-            </div>
-            <span className="chip bg-ink-100 text-ink-600">{props.length}</span>
-          </div>
-          <button
+            </Text>
+            <Badge color="gray" variant="soft" size="1">
+              {props.length}
+            </Badge>
+          </Flex>
+          <Button
+            variant="surface"
+            color="gray"
+            size="1"
             onClick={() => {
               setAdding(true);
               setEditingKey(null);
             }}
-            className="btn-secondary py-1 px-2 text-[11.5px]"
           >
             <Plus className="h-3 w-3" />
             Add attribute
-          </button>
-        </header>
+          </Button>
+        </Flex>
 
-        <ul className="space-y-1.5">
+        <Flex direction="column" gap="2">
           {props.length === 0 && !adding && (
-            <li className="rounded-lg border border-dashed border-ink-300 bg-white px-3 py-4 text-center text-[12px] text-ink-500">
-              No custom attributes yet — add fields specific to{" "}
-              <span className="font-semibold">{cls.name}</span> (e.g. SKU, ISO
-              code, rating).
-            </li>
+            <Box
+              px="3"
+              py="4"
+              style={{
+                border: "1px dashed var(--gray-a5)",
+                background: "var(--color-panel-solid)",
+                borderRadius: "var(--radius-3)",
+                textAlign: "center",
+              }}
+            >
+              <Text size="1" color="gray">
+                No custom attributes yet — add fields specific to{" "}
+                <strong style={{ color: "var(--gray-12)" }}>
+                  {cls.name}
+                </strong>{" "}
+                (e.g. SKU, ISO code, rating).
+              </Text>
+            </Box>
           )}
           {props.map((p) => {
             const isEditing = editingKey === p.key;
             return (
-              <li key={p.key}>
+              <Box key={p.key}>
                 {isEditing ? (
                   <PropertyForm
                     initial={p}
@@ -301,26 +363,24 @@ export default function ClassAttributesEditor({
                     onDelete={() => removeProperty(p.key)}
                   />
                 )}
-              </li>
+              </Box>
             );
           })}
           {adding && (
-            <li>
-              <PropertyForm
-                initial={{
-                  key: "",
-                  valueType: "string",
-                  required: false,
-                  localizable: false,
-                }}
-                onCancel={() => setAdding(false)}
-                onSave={(d) => saveProperty(d)}
-              />
-            </li>
+            <PropertyForm
+              initial={{
+                key: "",
+                valueType: "string",
+                required: false,
+                localizable: false,
+              }}
+              onCancel={() => setAdding(false)}
+              onSave={(d) => saveProperty(d)}
+            />
           )}
-        </ul>
-      </section>
-    </div>
+        </Flex>
+      </Box>
+    </Flex>
   );
 }
 
@@ -358,75 +418,90 @@ function ClassIdentityForm({ cls }: { cls: ConceptClass }) {
   }
 
   return (
-    <div className="rounded-xl border border-ink-200 bg-white p-3">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_max-content]">
-        <label className="block">
-          <span className="block text-[11px] font-semibold uppercase tracking-wide text-ink-500">
+    <Card size="2">
+      <Box className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_max-content]">
+        <Box>
+          <Text
+            as="label"
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wide block"
+          >
             Class name
-          </span>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-1 w-full rounded-md border border-ink-200 bg-white px-2 py-1 text-[13px] font-semibold focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-          />
-        </label>
-        <label className="block">
-          <span className="block text-[11px] font-semibold uppercase tracking-wide text-ink-500">
+          </Text>
+          <Box mt="1">
+            <TextField.Root
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              size="2"
+            />
+          </Box>
+        </Box>
+        <Box>
+          <Text
+            as="label"
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wide block"
+          >
             Colour
-          </span>
-          <div className="mt-1 flex items-center gap-1.5">
-            {(
-              ["violet", "emerald", "amber", "sky", "rose", "ink"] as const
-            ).map((c) => (
+          </Text>
+          <Flex align="center" gap="2" mt="1">
+            {CLASS_COLORS.map((c) => (
               <button
-                key={c}
-                onClick={() => setColor(c)}
-                className={clsx(
-                  "h-6 w-6 rounded-full border-2 transition-transform",
-                  color === c
-                    ? "border-ink-900 scale-110"
-                    : "border-transparent",
-                  c === "violet" && "bg-violet-500",
-                  c === "emerald" && "bg-emerald-500",
-                  c === "amber" && "bg-amber-500",
-                  c === "sky" && "bg-sky-500",
-                  c === "rose" && "bg-rose-500",
-                  c === "ink" && "bg-ink-500"
-                )}
-                title={c}
+                key={c.id}
+                onClick={() => setColor(c.id)}
+                title={c.id}
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 999,
+                  background: c.bg,
+                  border:
+                    color === c.id
+                      ? "2px solid var(--gray-12)"
+                      : "2px solid transparent",
+                  transform: color === c.id ? "scale(1.10)" : "none",
+                  transition: "transform 120ms ease",
+                  cursor: "pointer",
+                }}
               />
             ))}
-          </div>
-        </label>
-      </div>
-      <label className="mt-3 block">
-        <span className="block text-[11px] font-semibold uppercase tracking-wide text-ink-500">
-          Description
-        </span>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="What kind of thing is this class? How will it be used?"
-          className="mt-1 min-h-[60px] w-full resize-y rounded-md border border-ink-200 bg-white px-2 py-1.5 text-[12.5px] focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-        />
-      </label>
-      <div className="mt-3 flex items-center justify-end gap-2">
-        <span className="text-[11px] text-ink-500">
-          <code>{cls.id}</code>
-        </span>
-        <button
-          disabled={!dirty}
-          onClick={save}
-          className={clsx(
-            "btn-primary py-1 px-2 text-[11.5px]",
-            !dirty && "cursor-not-allowed opacity-60"
-          )}
+          </Flex>
+        </Box>
+      </Box>
+      <Box mt="3">
+        <Text
+          as="label"
+          size="1"
+          weight="bold"
+          color="gray"
+          className="uppercase tracking-wide block"
         >
+          Description
+        </Text>
+        <Box mt="1">
+          <TextArea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="What kind of thing is this class? How will it be used?"
+            size="2"
+            style={{ minHeight: 60 }}
+          />
+        </Box>
+      </Box>
+      <Flex align="center" justify="end" gap="2" mt="3">
+        <Code variant="ghost" size="1">
+          {cls.id}
+        </Code>
+        <Button disabled={!dirty} onClick={save} size="1">
           <Check className="h-3 w-3" />
           Save identity
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Flex>
+    </Card>
   );
 }
 
@@ -442,68 +517,87 @@ function PropertyRow({
   onDelete: () => void;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg border border-ink-200 bg-white px-3 py-2.5 hover:border-brand-300 hover:bg-brand-50/30">
-      <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-ink-100 text-ink-600">
+    <Flex
+      align="start"
+      gap="3"
+      px="3"
+      py="2"
+      className="hover:bg-[var(--accent-2)]"
+      style={{
+        background: "var(--color-panel-solid)",
+        border: "1px solid var(--gray-a4)",
+        borderRadius: "var(--radius-3)",
+      }}
+    >
+      <Flex
+        align="center"
+        justify="center"
+        className="mt-0.5 h-6 w-6 shrink-0 rounded-[var(--radius-2)]"
+        style={{ background: "var(--gray-a3)", color: "var(--gray-11)" }}
+      >
         <Type className="h-3.5 w-3.5" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <code className="text-[12.5px] font-semibold text-ink-900">
+      </Flex>
+      <Box className="min-w-0 flex-1">
+        <Flex wrap="wrap" align="center" gap="2">
+          <Code size="1" variant="ghost" weight="bold">
             {p.key}
-          </code>
-          <span className="chip bg-ink-100 text-ink-700 font-mono text-[10px]">
+          </Code>
+          <Badge color="gray" variant="soft" size="1">
             {p.valueType}
-          </span>
+          </Badge>
           {p.required && (
-            <span className="chip bg-rose-50 text-rose-700 text-[10px]">
+            <Badge color="ruby" variant="soft" size="1">
               required
-            </span>
+            </Badge>
           )}
           {p.localizable && (
-            <span className="chip bg-brand-50 text-brand-700 text-[10px]">
+            <Badge color="violet" variant="soft" size="1">
               <Languages className="h-2.5 w-2.5" />
               i18n
-            </span>
+            </Badge>
           )}
           {p.hint && (
-            <span className="text-[10.5px] italic text-ink-400">
+            <Text size="1" color="gray" className="italic">
               {p.hint}
-            </span>
+            </Text>
           )}
-        </div>
+        </Flex>
         {p.description && (
-          <p className="mt-0.5 text-[11.5px] text-ink-600">{p.description}</p>
+          <Text as="p" size="1" color="gray" mt="1">
+            {p.description}
+          </Text>
         )}
-        {p.valueType === "enum" && p.enumValues && p.enumValues.length > 0 && (
-          <div className="mt-1.5 flex flex-wrap items-center gap-1">
-            <ListChecks className="h-3 w-3 text-ink-400" />
-            {p.enumValues.map((v) => (
-              <span
-                key={v}
-                className="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[10px] text-ink-700"
-              >
-                {v}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="flex shrink-0 items-center gap-1">
-        <button
-          onClick={onEdit}
-          className="rounded-md px-2 py-1 text-[11px] font-semibold text-ink-600 hover:bg-ink-100 hover:text-ink-900"
-        >
+        {p.valueType === "enum" &&
+          p.enumValues &&
+          p.enumValues.length > 0 && (
+            <Flex wrap="wrap" align="center" gap="1" mt="2">
+              <ListChecks
+                className="h-3 w-3"
+                style={{ color: "var(--gray-9)" }}
+              />
+              {p.enumValues.map((v) => (
+                <Code key={v} size="1" variant="soft">
+                  {v}
+                </Code>
+              ))}
+            </Flex>
+          )}
+      </Box>
+      <Flex align="center" gap="1" className="shrink-0">
+        <Button variant="ghost" color="gray" size="1" onClick={onEdit}>
           Edit
-        </button>
-        <button
+        </Button>
+        <IconButton
+          variant="ghost"
+          color="red"
+          size="1"
           onClick={onDelete}
-          className="rounded-md p-1 text-ink-400 hover:bg-rose-50 hover:text-rose-700"
           title="Remove attribute"
         >
           <Trash2 className="h-3.5 w-3.5" />
-        </button>
-      </div>
-    </div>
+        </IconButton>
+      </Flex>
+    </Flex>
   );
 }
 
@@ -531,107 +625,159 @@ function PropertyForm({
   );
 
   return (
-    <div className="rounded-lg border-2 border-brand-400 bg-white p-3 shadow-sm">
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-[minmax(0,1fr)_max-content_max-content]">
-        <label className="block">
-          <span className="block text-[10.5px] font-semibold uppercase tracking-wide text-ink-500">
+    <Card
+      size="2"
+      style={{
+        border: "2px solid var(--accent-9)",
+      }}
+    >
+      <Box className="grid grid-cols-1 gap-2 md:grid-cols-[minmax(0,1fr)_max-content_max-content]">
+        <Box>
+          <Text
+            as="label"
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wide block"
+          >
             Key
-          </span>
-          <input
-            autoFocus
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-            placeholder="e.g. horsepower"
-            className="mt-0.5 w-full rounded-md border border-ink-200 bg-white px-2 py-1 text-[12.5px] font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-          />
-        </label>
-        <label className="block">
-          <span className="block text-[10.5px] font-semibold uppercase tracking-wide text-ink-500">
+          </Text>
+          <Box mt="1">
+            <TextField.Root
+              autoFocus
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              placeholder="e.g. horsepower"
+              size="1"
+              style={{ fontFamily: "var(--code-font-family)" }}
+            />
+          </Box>
+        </Box>
+        <Box>
+          <Text
+            as="label"
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wide block"
+          >
             Type
-          </span>
-          <div className="relative mt-0.5">
-            <select
+          </Text>
+          <Box mt="1">
+            <Select.Root
               value={valueType}
-              onChange={(e) =>
-                setValueType(e.target.value as ClassProperty["valueType"])
+              onValueChange={(v) =>
+                setValueType(v as ClassProperty["valueType"])
               }
-              className="appearance-none rounded-md border border-ink-200 bg-white px-2 py-1 pr-7 text-[12.5px] focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+              size="1"
             >
-              {VALUE_TYPES.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 text-ink-400" />
-          </div>
-        </label>
-        <div className="flex items-end gap-3 pb-1 text-[11.5px] text-ink-600">
-          <label className="inline-flex items-center gap-1.5">
-            <input
-              type="checkbox"
-              checked={required}
-              onChange={(e) => setRequired(e.target.checked)}
-              className="h-3.5 w-3.5 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
-            />
-            Required
-          </label>
-          <label className="inline-flex items-center gap-1.5">
-            <input
-              type="checkbox"
-              checked={localizable}
-              onChange={(e) => setLocalizable(e.target.checked)}
-              className="h-3.5 w-3.5 rounded border-ink-300 text-brand-600 focus:ring-brand-500"
-            />
-            <Languages className="h-3 w-3" />
-            Localizable
-          </label>
-        </div>
-      </div>
+              <Select.Trigger />
+              <Select.Content>
+                {VALUE_TYPES.map((t) => (
+                  <Select.Item key={t.id} value={t.id}>
+                    {t.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          </Box>
+        </Box>
+        <Flex align="end" gap="3" pb="1">
+          <Flex asChild align="center" gap="2">
+            <label>
+              <Checkbox
+                checked={required}
+                onCheckedChange={(v) => setRequired(!!v)}
+              />
+              <Text size="1" color="gray">
+                Required
+              </Text>
+            </label>
+          </Flex>
+          <Flex asChild align="center" gap="2">
+            <label>
+              <Checkbox
+                checked={localizable}
+                onCheckedChange={(v) => setLocalizable(!!v)}
+              />
+              <Languages className="h-3 w-3" />
+              <Text size="1" color="gray">
+                Localizable
+              </Text>
+            </label>
+          </Flex>
+        </Flex>
+      </Box>
 
-      <label className="mt-2 block">
-        <span className="block text-[10.5px] font-semibold uppercase tracking-wide text-ink-500">
+      <Box mt="2">
+        <Text
+          as="label"
+          size="1"
+          weight="bold"
+          color="gray"
+          className="uppercase tracking-wide block"
+        >
           Description
-        </span>
-        <input
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Optional — what does this attribute capture?"
-          className="mt-0.5 w-full rounded-md border border-ink-200 bg-white px-2 py-1 text-[12.5px] focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-        />
-      </label>
+        </Text>
+        <Box mt="1">
+          <TextField.Root
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Optional — what does this attribute capture?"
+            size="1"
+          />
+        </Box>
+      </Box>
 
-      <label className="mt-2 block">
-        <span className="block text-[10.5px] font-semibold uppercase tracking-wide text-ink-500">
+      <Box mt="2">
+        <Text
+          as="label"
+          size="1"
+          weight="bold"
+          color="gray"
+          className="uppercase tracking-wide block"
+        >
           Hint
-        </span>
-        <input
-          value={hint}
-          onChange={(e) => setHint(e.target.value)}
-          placeholder="Optional — e.g. “HP”, “ISO 4217”, “integer, required”"
-          className="mt-0.5 w-full rounded-md border border-ink-200 bg-white px-2 py-1 text-[12.5px] focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-        />
-      </label>
+        </Text>
+        <Box mt="1">
+          <TextField.Root
+            value={hint}
+            onChange={(e) => setHint(e.target.value)}
+            placeholder='Optional — e.g. "HP", "ISO 4217", "integer, required"'
+            size="1"
+          />
+        </Box>
+      </Box>
 
       {valueType === "enum" && (
-        <label className="mt-2 block">
-          <span className="block text-[10.5px] font-semibold uppercase tracking-wide text-ink-500">
+        <Box mt="2">
+          <Text
+            as="label"
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wide block"
+          >
             Enum values
-          </span>
-          <input
-            value={enumValuesRaw}
-            onChange={(e) => setEnumValuesRaw(e.target.value)}
-            placeholder="comma-separated, e.g. active, draft, archived"
-            className="mt-0.5 w-full rounded-md border border-ink-200 bg-white px-2 py-1 text-[12.5px] font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-          />
-        </label>
+          </Text>
+          <Box mt="1">
+            <TextField.Root
+              value={enumValuesRaw}
+              onChange={(e) => setEnumValuesRaw(e.target.value)}
+              placeholder="comma-separated, e.g. active, draft, archived"
+              size="1"
+              style={{ fontFamily: "var(--code-font-family)" }}
+            />
+          </Box>
+        </Box>
       )}
 
-      <div className="mt-3 flex items-center justify-end gap-2">
-        <button onClick={onCancel} className="btn-ghost py-1 px-2 text-[11.5px]">
+      <Flex align="center" justify="end" gap="2" mt="3">
+        <Button variant="ghost" color="gray" size="1" onClick={onCancel}>
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
+          size="1"
           onClick={() =>
             onSave({
               key: key.trim(),
@@ -649,12 +795,11 @@ function PropertyForm({
                   : undefined,
             })
           }
-          className="btn-primary py-1 px-2 text-[11.5px]"
         >
           <Check className="h-3 w-3" />
           Save attribute
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Flex>
+    </Card>
   );
 }

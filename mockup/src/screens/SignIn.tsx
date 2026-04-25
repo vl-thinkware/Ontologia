@@ -1,5 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  Flex,
+  Heading,
+  Separator,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
 import { Network, Loader2, Github, ArrowRight } from "lucide-react";
 
 export default function SignIn() {
@@ -15,184 +26,261 @@ export default function SignIn() {
   }
 
   return (
-    <div className="flex min-h-full bg-ink-50">
+    <Flex
+      className="min-h-full"
+      style={{ background: "var(--gray-2)" }}
+    >
       {/* Left: form */}
-      <div className="flex flex-1 flex-col px-6 py-10 sm:px-10">
+      <Flex
+        direction="column"
+        px={{ initial: "6", sm: "9" }}
+        py="9"
+        className="flex-1"
+      >
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-sm">
+          <Flex
+            align="center"
+            justify="center"
+            className="h-8 w-8 rounded-[var(--radius-3)] text-white"
+            style={{
+              background:
+                "linear-gradient(135deg, var(--accent-9), var(--accent-11))",
+            }}
+          >
             <Network className="h-4 w-4" />
-          </div>
-          <span className="text-sm font-bold tracking-tight text-ink-900">
+          </Flex>
+          <Text size="2" weight="bold">
             Ontologia
-          </span>
+          </Text>
         </Link>
 
-        <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center">
-          <h1 className="text-2xl font-bold tracking-tight text-ink-900">
+        <Box className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center">
+          <Heading size="6" weight="bold" mb="2">
             Sign in to your workspace
-          </h1>
-          <p className="mt-1.5 text-sm text-ink-600">
+          </Heading>
+          <Text size="2" color="gray">
             Welcome back. Enter your credentials to access your ontologies.
-          </p>
+          </Text>
 
-          <div className="mt-6 grid grid-cols-2 gap-2">
-            <button className="btn-secondary">
-              <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden>
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.07 5.07 0 0 1-2.2 3.33v2.77h3.56c2.08-1.92 3.28-4.74 3.28-8.11Z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.99.66-2.25 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.07H2.18a11 11 0 0 0 0 9.86l3.66-2.83Z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 4.75c1.62 0 3.06.56 4.2 1.64l3.15-3.15C17.45 1.46 14.97.5 12 .5A11 11 0 0 0 2.18 7.07l3.66 2.83C6.71 6.68 9.14 4.75 12 4.75Z"
-                />
-              </svg>
-              Google
-            </button>
-            <button className="btn-secondary">
-              <Github className="h-4 w-4" />
-              GitHub
-            </button>
-          </div>
+          <Box mt="5">
+            <Flex gap="2" className="grid grid-cols-2">
+              <Button variant="surface" color="gray" size="2">
+                <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden>
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.07 5.07 0 0 1-2.2 3.33v2.77h3.56c2.08-1.92 3.28-4.74 3.28-8.11Z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.99.66-2.25 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.07H2.18a11 11 0 0 0 0 9.86l3.66-2.83Z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 4.75c1.62 0 3.06.56 4.2 1.64l3.15-3.15C17.45 1.46 14.97.5 12 .5A11 11 0 0 0 2.18 7.07l3.66 2.83C6.71 6.68 9.14 4.75 12 4.75Z"
+                  />
+                </svg>
+                Google
+              </Button>
+              <Button variant="surface" color="gray" size="2">
+                <Github className="h-4 w-4" />
+                GitHub
+              </Button>
+            </Flex>
+          </Box>
 
-          <div className="my-5 flex items-center gap-3">
-            <div className="h-px flex-1 bg-ink-200" />
-            <span className="text-xs font-medium uppercase tracking-wider text-ink-400">
+          <Flex align="center" gap="3" my="5">
+            <Separator size="4" />
+            <Text size="1" color="gray" weight="medium" className="uppercase tracking-wider">
               or
-            </span>
-            <div className="h-px flex-1 bg-ink-200" />
-          </div>
+            </Text>
+            <Separator size="4" />
+          </Flex>
 
-          <form onSubmit={submit} className="space-y-3.5">
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-ink-700">
-                Work email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input"
-                autoComplete="email"
-              />
-            </div>
-            <div>
-              <div className="mb-1 flex items-center justify-between">
-                <label className="block text-xs font-semibold text-ink-700">
-                  Password
-                </label>
-                <a
-                  href="#"
-                  className="text-xs font-medium text-brand-700 hover:text-brand-800"
-                >
-                  Forgot?
-                </a>
-              </div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input"
-                autoComplete="current-password"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full"
-            >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  Sign in
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </button>
+          <form onSubmit={submit}>
+            <Flex direction="column" gap="3">
+              <Box>
+                <Text as="label" size="1" weight="bold" color="gray" mb="1" className="block">
+                  Work email
+                </Text>
+                <TextField.Root
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  size="2"
+                />
+              </Box>
+              <Box>
+                <Flex align="center" justify="between" mb="1">
+                  <Text as="label" size="1" weight="bold" color="gray">
+                    Password
+                  </Text>
+                  <a
+                    href="#"
+                    className="text-xs font-medium"
+                    style={{ color: "var(--accent-11)" }}
+                  >
+                    Forgot?
+                  </a>
+                </Flex>
+                <TextField.Root
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  size="2"
+                />
+              </Box>
+              <Button
+                type="submit"
+                size="3"
+                disabled={loading}
+                className="w-full"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    Sign in
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </Flex>
           </form>
 
-          <p className="mt-5 text-center text-sm text-ink-600">
+          <Text size="2" color="gray" mt="5" align="center" as="p">
             New to Ontologia?{" "}
             <a
               href="#"
-              className="font-semibold text-brand-700 hover:text-brand-800"
+              className="font-semibold"
+              style={{ color: "var(--accent-11)" }}
             >
               Create a workspace
             </a>
-          </p>
-        </div>
+          </Text>
+        </Box>
 
-        <div className="mx-auto flex w-full max-w-sm items-center justify-between text-xs text-ink-400">
-          <span>© 2026 Thinkware SAS</span>
-          <div className="flex gap-3">
-            <a href="#" className="hover:text-ink-600">
-              Privacy
-            </a>
-            <a href="#" className="hover:text-ink-600">
-              Terms
-            </a>
-            <a href="#" className="hover:text-ink-600">
-              Status
-            </a>
-          </div>
-        </div>
-      </div>
+        <Flex
+          align="center"
+          justify="between"
+          className="mx-auto w-full max-w-sm"
+        >
+          <Text size="1" color="gray">
+            © 2026 Thinkware SAS
+          </Text>
+          <Flex gap="3">
+            <Text size="1" color="gray" asChild>
+              <a href="#" className="hover:underline">
+                Privacy
+              </a>
+            </Text>
+            <Text size="1" color="gray" asChild>
+              <a href="#" className="hover:underline">
+                Terms
+              </a>
+            </Text>
+            <Text size="1" color="gray" asChild>
+              <a href="#" className="hover:underline">
+                Status
+              </a>
+            </Text>
+          </Flex>
+        </Flex>
+      </Flex>
 
       {/* Right: marketing panel */}
-      <div className="relative hidden flex-1 overflow-hidden bg-gradient-to-br from-brand-700 via-brand-800 to-brand-950 lg:block">
+      <Box
+        className="relative hidden flex-1 overflow-hidden lg:block"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--violet-10), var(--violet-12) 70%, var(--violet-12))",
+        }}
+      >
         {/* subtle grid */}
-        <div
-          className="absolute inset-0 opacity-30"
+        <Box
+          className="absolute inset-0"
           style={{
+            opacity: 0.3,
             backgroundImage:
               "radial-gradient(circle at 1px 1px, rgba(255,255,255,.15) 1px, transparent 0)",
             backgroundSize: "28px 28px",
           }}
         />
-        <div className="relative flex h-full flex-col justify-between p-12 text-white">
-          <div className="max-w-md">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+        <Flex
+          direction="column"
+          justify="between"
+          className="relative h-full text-white"
+          p="9"
+        >
+          <Box className="max-w-md">
+            <Badge color="green" variant="surface" size="2" radius="full">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--green-9)]" />
               Private beta — April 2026
-            </div>
-            <h2 className="mt-6 text-3xl font-bold leading-tight tracking-tight">
-              The ontology platform for teams building knowledge-rich AI
-              products.
-            </h2>
-            <p className="mt-4 text-brand-100/90">
+            </Badge>
+            <Heading
+              size="8"
+              weight="bold"
+              mt="5"
+              style={{ color: "white", lineHeight: 1.15 }}
+            >
+              The ontology platform for teams building knowledge-rich AI products.
+            </Heading>
+            <Text size="3" mt="4" as="p" style={{ color: "var(--violet-3)" }}>
               Version your concepts and relations, review changes, and ship the
               right schema to your RAG pipeline — without the enterprise
               graph-DB tax.
-            </p>
-          </div>
+            </Text>
+          </Box>
 
-          <figure className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-            <blockquote className="text-sm leading-relaxed text-brand-50">
-              “We consolidated four scattered Google Sheets into a single source
-              of truth for our product taxonomy. Ontologia is the first tool
-              that feels built for AI teams, not database admins.”
-            </blockquote>
-            <figcaption className="mt-3 flex items-center gap-3 text-xs">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 font-semibold">
-                CM
-              </div>
-              <div>
-                <div className="font-semibold">Claire Moreau</div>
-                <div className="text-brand-200">Head of AI, Aurelia Retail</div>
-              </div>
-            </figcaption>
-          </figure>
-        </div>
-      </div>
-    </div>
+          <Card
+            variant="surface"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.10)",
+              backdropFilter: "blur(8px)",
+            }}
+          >
+            <Box p="3">
+              <Text
+                as="p"
+                size="2"
+                style={{ color: "var(--violet-1)", lineHeight: 1.5 }}
+              >
+                "We consolidated four scattered Google Sheets into a single source
+                of truth for our product taxonomy. Ontologia is the first tool
+                that feels built for AI teams, not database admins."
+              </Text>
+              <Flex align="center" gap="3" mt="3">
+                <Flex
+                  align="center"
+                  justify="center"
+                  className="h-7 w-7 rounded-full font-semibold text-white"
+                  style={{ background: "var(--green-9)" }}
+                >
+                  CM
+                </Flex>
+                <Box>
+                  <Text size="1" weight="bold" style={{ color: "white" }}>
+                    Claire Moreau
+                  </Text>
+                  <Text
+                    as="p"
+                    size="1"
+                    style={{ color: "var(--violet-3)" }}
+                  >
+                    Head of AI, Aurelia Retail
+                  </Text>
+                </Box>
+              </Flex>
+            </Box>
+          </Card>
+        </Flex>
+      </Box>
+    </Flex>
   );
 }

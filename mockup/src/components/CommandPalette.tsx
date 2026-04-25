@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
+import { Box, Flex, Kbd, Text, TextField } from "@radix-ui/themes";
 import {
   Search,
   GitCommit,
@@ -26,25 +27,28 @@ import {
   members,
 } from "../data/mock";
 
+type Tint = "violet" | "emerald" | "amber" | "sky" | "rose" | "ink";
+
 type Item = {
   id: string;
   label: string;
   sublabel?: string;
   group: string;
   icon: React.ElementType;
-  tint?: "violet" | "emerald" | "amber" | "sky" | "rose" | "ink";
+  tint?: Tint;
   action: () => void;
   keywords?: string;
   shortcut?: string[];
 };
 
-const tintStyles: Record<NonNullable<Item["tint"]>, string> = {
-  violet: "bg-violet-50 text-violet-700",
-  emerald: "bg-emerald-50 text-emerald-700",
-  amber: "bg-amber-50 text-amber-700",
-  sky: "bg-sky-50 text-sky-700",
-  rose: "bg-rose-50 text-rose-700",
-  ink: "bg-ink-100 text-ink-700",
+// Tint backgrounds resolved through Radix tokens so dark mode (later) is free.
+const tintStyles: Record<Tint, { bg: string; fg: string }> = {
+  violet: { bg: "var(--violet-3)", fg: "var(--violet-11)" },
+  emerald: { bg: "var(--green-3)", fg: "var(--green-11)" },
+  amber: { bg: "var(--amber-3)", fg: "var(--amber-11)" },
+  sky: { bg: "var(--sky-3)", fg: "var(--sky-11)" },
+  rose: { bg: "var(--ruby-3)", fg: "var(--ruby-11)" },
+  ink: { bg: "var(--gray-a3)", fg: "var(--gray-12)" },
 };
 
 export default function CommandPalette() {
@@ -72,7 +76,6 @@ export default function CommandPalette() {
         const el = inputRef.current;
         if (!el) return;
         el.focus();
-        // Drop the caret at the end so the user can keep typing.
         const len = el.value.length;
         el.setSelectionRange(len, len);
       });
@@ -280,9 +283,7 @@ export default function CommandPalette() {
     return allItems.filter((it) => {
       const haystack =
         `${it.label} ${it.sublabel ?? ""} ${it.keywords ?? ""} ${it.group}`.toLowerCase();
-      return q
-        .split(/\s+/)
-        .every((tok) => haystack.includes(tok));
+      return q.split(/\s+/).every((tok) => haystack.includes(tok));
     });
   }, [allItems, query]);
 
@@ -341,18 +342,30 @@ export default function CommandPalette() {
   return (
     <div className="fixed inset-0 z-[55] flex items-start justify-center pt-[10vh]">
       <div
-        className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"
-        style={{ animation: "fadeIn 180ms ease" }}
+        className="absolute inset-0 backdrop-blur-sm"
+        style={{
+          animation: "fadeIn 180ms ease",
+          background: "rgba(0, 0, 0, 0.40)",
+        }}
         onClick={closePalette}
       />
-      <div
-        className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-pop"
-        style={{ animation: "popIn 220ms cubic-bezier(0.25, 1, 0.5, 1)" }}
+      <Box
+        className="relative w-full max-w-xl overflow-hidden"
+        style={{
+          animation: "popIn 220ms cubic-bezier(0.25, 1, 0.5, 1)",
+          background: "var(--color-panel-solid)",
+          border: "1px solid var(--gray-a5)",
+          borderRadius: "var(--radius-5)",
+          boxShadow: "var(--shadow-5)",
+        }}
       >
         {/* Input */}
-        <div className="flex items-center gap-2 border-b border-ink-100 px-4">
-          <Search className="h-4 w-4 shrink-0 text-ink-400" />
-          <input
+        <Box
+          px="3"
+          py="2"
+          style={{ borderBottom: "1px solid var(--gray-a4)" }}
+        >
+          <TextField.Root
             ref={inputRef}
             value={query}
             onChange={(e) => {
@@ -360,10 +373,19 @@ export default function CommandPalette() {
               setActive(0);
             }}
             placeholder="Search concepts, ontologies, actions…"
-            className="w-full border-0 bg-transparent py-3.5 text-[14px] placeholder:text-ink-400 focus:outline-none"
-          />
-          <kbd className="kbd">ESC</kbd>
-        </div>
+            size="3"
+            variant="soft"
+            color="gray"
+            radius="medium"
+          >
+            <TextField.Slot>
+              <Search className="h-4 w-4" />
+            </TextField.Slot>
+            <TextField.Slot side="right">
+              <Kbd>ESC</Kbd>
+            </TextField.Slot>
+          </TextField.Root>
+        </Box>
 
         {/* Results */}
         <div
@@ -371,27 +393,46 @@ export default function CommandPalette() {
           className="max-h-[50vh] overflow-y-auto scroll-thin py-1"
         >
           {filtered.length === 0 ? (
-            <div className="px-4 py-10 text-center text-sm text-ink-500">
-              <Sparkles className="mx-auto mb-2 h-4 w-4 text-ink-300" />
-              No results for{" "}
-              <span className="font-mono font-semibold text-ink-700">
-                "{query}"
-              </span>
-              <div className="mt-1 text-[11px] text-ink-400">
+            <Box px="4" py="9" className="text-center">
+              <Sparkles
+                className="mx-auto mb-2 h-4 w-4"
+                style={{ color: "var(--gray-9)" }}
+              />
+              <Text size="2" color="gray">
+                No results for{" "}
+                <Text
+                  size="2"
+                  weight="bold"
+                  className="font-mono"
+                  style={{ color: "var(--gray-12)" }}
+                >
+                  "{query}"
+                </Text>
+              </Text>
+              <Text as="p" size="1" color="gray" mt="1">
                 Try "product", "v1.2", "invite" or press ESC.
-              </div>
-            </div>
+              </Text>
+            </Box>
           ) : (
             grouped.map(([groupName, items]) => (
-              <div key={groupName} className="py-1">
-                <div className="px-4 py-1 text-[10.5px] font-semibold uppercase tracking-wider text-ink-400">
-                  {groupName}
-                </div>
+              <Box key={groupName} py="1">
+                <Box px="4" py="1">
+                  <Text
+                    size="1"
+                    weight="bold"
+                    color="gray"
+                    className="block uppercase tracking-wider"
+                    style={{ fontSize: 10.5 }}
+                  >
+                    {groupName}
+                  </Text>
+                </Box>
                 {items.map((it) => {
                   flatIdx += 1;
                   const thisIdx = flatIdx;
                   const isActive = thisIdx === active;
                   const Icon = it.icon;
+                  const tint = tintStyles[it.tint ?? "ink"];
                   return (
                     <button
                       key={it.id}
@@ -399,75 +440,104 @@ export default function CommandPalette() {
                       onMouseEnter={() => setActive(thisIdx)}
                       onClick={it.action}
                       className={clsx(
-                        "flex w-full items-center gap-3 px-4 py-2 text-left",
-                        isActive ? "bg-brand-50" : "hover:bg-ink-50"
+                        "flex w-full items-center gap-3 px-4 py-2 text-left transition-colors"
                       )}
+                      style={{
+                        background: isActive
+                          ? "var(--accent-3)"
+                          : "transparent",
+                      }}
                     >
                       <div
-                        className={clsx(
-                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
-                          tintStyles[it.tint ?? "ink"]
-                        )}
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-3)]"
+                        style={{ background: tint.bg, color: tint.fg }}
                       >
                         <Icon className="h-3.5 w-3.5" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div
-                          className={clsx(
-                            "truncate text-[13px] font-semibold",
-                            isActive ? "text-brand-800" : "text-ink-900"
-                          )}
+                        <Text
+                          size="2"
+                          weight="bold"
+                          className="block truncate"
+                          style={{
+                            color: isActive
+                              ? "var(--accent-12)"
+                              : "var(--gray-12)",
+                          }}
                         >
                           {it.label}
-                        </div>
+                        </Text>
                         {it.sublabel && (
-                          <div className="truncate text-[11.5px] text-ink-500">
+                          <Text
+                            size="1"
+                            color="gray"
+                            className="block truncate"
+                          >
                             {it.sublabel}
-                          </div>
+                          </Text>
                         )}
                       </div>
                       {it.shortcut && (
-                        <div className="flex items-center gap-1">
+                        <Flex align="center" gap="1">
                           {it.shortcut.map((k) => (
-                            <kbd key={k} className="kbd">
-                              {k}
-                            </kbd>
+                            <Kbd key={k}>{k}</Kbd>
                           ))}
-                        </div>
+                        </Flex>
                       )}
                       {isActive && (
-                        <ArrowRight className="h-3.5 w-3.5 shrink-0 text-brand-500" />
+                        <ArrowRight
+                          className="h-3.5 w-3.5 shrink-0"
+                          style={{ color: "var(--accent-9)" }}
+                        />
                       )}
                     </button>
                   );
                 })}
-              </div>
+              </Box>
             ))
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between gap-2 border-t border-ink-100 bg-ink-50/70 px-4 py-2 text-[11px] text-ink-500">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <kbd className="kbd">↑</kbd>
-              <kbd className="kbd">↓</kbd>
-              navigate
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="kbd">
+        <Flex
+          align="center"
+          justify="between"
+          gap="2"
+          px="4"
+          py="2"
+          style={{
+            borderTop: "1px solid var(--gray-a4)",
+            background: "var(--gray-2)",
+          }}
+        >
+          <Flex align="center" gap="3">
+            <Flex align="center" gap="1">
+              <Kbd>↑</Kbd>
+              <Kbd>↓</Kbd>
+              <Text size="1" color="gray">
+                navigate
+              </Text>
+            </Flex>
+            <Flex align="center" gap="1">
+              <Kbd>
                 <CornerDownLeft className="h-2.5 w-2.5" />
-              </kbd>
-              open
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="kbd">ESC</kbd>
-              close
-            </span>
-          </div>
-          <span>{filtered.length} results</span>
-        </div>
-      </div>
+              </Kbd>
+              <Text size="1" color="gray">
+                open
+              </Text>
+            </Flex>
+            <Flex align="center" gap="1">
+              <Kbd>ESC</Kbd>
+              <Text size="1" color="gray">
+                close
+              </Text>
+            </Flex>
+          </Flex>
+          <Text size="1" color="gray">
+            {filtered.length} results
+          </Text>
+        </Flex>
+      </Box>
     </div>
   );
 }

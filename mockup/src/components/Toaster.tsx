@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { Box, Card, Flex, IconButton, Text } from "@radix-ui/themes";
 import { CheckCircle2, AlertTriangle, Info, X } from "lucide-react";
 import { useApp, type Toast } from "../app/AppContext";
 
@@ -8,61 +9,101 @@ const iconFor = {
   error: AlertTriangle,
 } as const;
 
-const styleFor = {
-  success: "border-emerald-200 bg-emerald-50 text-emerald-900",
-  info: "border-ink-200 bg-white text-ink-900",
-  error: "border-red-200 bg-red-50 text-red-900",
-} as const;
+const variantFor: Record<Toast["kind"], "surface" | "classic"> = {
+  success: "surface",
+  info: "surface",
+  error: "surface",
+};
 
-const accentFor = {
-  success: "text-emerald-600",
-  info: "text-brand-600",
-  error: "text-red-600",
-} as const;
+const accentFor: Record<Toast["kind"], string> = {
+  success: "var(--green-11)",
+  info: "var(--accent-11)",
+  error: "var(--red-11)",
+};
+
+const tintFor: Record<Toast["kind"], string> = {
+  success: "var(--green-2)",
+  info: "var(--color-panel-solid)",
+  error: "var(--red-2)",
+};
+
+const borderFor: Record<Toast["kind"], string> = {
+  success: "var(--green-a5)",
+  info: "var(--gray-a4)",
+  error: "var(--red-a5)",
+};
 
 function ToastCard({ toast }: { toast: Toast }) {
   const { dismissToast } = useApp();
   const Icon = iconFor[toast.kind];
   return (
     <div
-      className={clsx(
-        "pointer-events-auto flex w-80 items-start gap-2.5 rounded-xl border px-3.5 py-3 shadow-pop backdrop-blur-sm",
-        styleFor[toast.kind],
-        "animate-[slideIn_250ms_cubic-bezier(0.25,1,0.5,1)]"
-      )}
       role="status"
+      style={{
+        animation: "slideIn 250ms cubic-bezier(0.25,1,0.5,1)",
+        background: tintFor[toast.kind],
+        border: `1px solid ${borderFor[toast.kind]}`,
+        borderRadius: "var(--radius-4)",
+        boxShadow: "var(--shadow-4)",
+        width: 320,
+      }}
+      className="pointer-events-auto"
     >
-      <Icon className={clsx("mt-0.5 h-4 w-4 shrink-0", accentFor[toast.kind])} />
-      <div className="min-w-0 flex-1">
-        <div className="text-[13px] font-semibold leading-tight">
-          {toast.title}
-        </div>
-        {toast.description && (
-          <p className="mt-0.5 text-[12px] leading-snug opacity-80">
-            {toast.description}
-          </p>
-        )}
-        {toast.action && (
-          <button
-            onClick={() => {
-              toast.action!.onClick();
-              dismissToast(toast.id);
-            }}
-            className={clsx(
-              "mt-1.5 text-[12px] font-semibold underline-offset-2 hover:underline",
-              accentFor[toast.kind]
-            )}
-          >
-            {toast.action.label}
-          </button>
-        )}
-      </div>
-      <button
-        onClick={() => dismissToast(toast.id)}
-        className="rounded-md p-1 opacity-50 transition-opacity hover:opacity-100"
+      <Card
+        variant={variantFor[toast.kind]}
+        size="2"
+        style={{ background: "transparent", border: "none", boxShadow: "none" }}
       >
-        <X className="h-3.5 w-3.5" />
-      </button>
+        <Flex align="start" gap="2">
+          <Icon
+            className="mt-0.5 h-4 w-4 shrink-0"
+            style={{ color: accentFor[toast.kind] }}
+          />
+          <Box className="min-w-0 flex-1">
+            <Text
+              size="2"
+              weight="bold"
+              className="block leading-tight"
+            >
+              {toast.title}
+            </Text>
+            {toast.description && (
+              <Text
+                as="p"
+                size="1"
+                color="gray"
+                mt="1"
+                className="leading-snug"
+              >
+                {toast.description}
+              </Text>
+            )}
+            {toast.action && (
+              <button
+                onClick={() => {
+                  toast.action!.onClick();
+                  dismissToast(toast.id);
+                }}
+                className={clsx(
+                  "mt-1.5 text-[12px] font-semibold underline-offset-2 hover:underline"
+                )}
+                style={{ color: accentFor[toast.kind] }}
+              >
+                {toast.action.label}
+              </button>
+            )}
+          </Box>
+          <IconButton
+            variant="ghost"
+            color="gray"
+            size="1"
+            onClick={() => dismissToast(toast.id)}
+            aria-label="Dismiss"
+          >
+            <X className="h-3.5 w-3.5" />
+          </IconButton>
+        </Flex>
+      </Card>
     </div>
   );
 }

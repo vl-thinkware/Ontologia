@@ -1,5 +1,13 @@
 import { useMemo } from "react";
-import clsx from "clsx";
+import {
+  Badge,
+  Box,
+  Button,
+  Code,
+  Flex,
+  Heading,
+  Text,
+} from "@radix-ui/themes";
 import {
   Sparkles,
   Plus,
@@ -17,9 +25,6 @@ import {
   type LangTag,
 } from "../data/mock";
 
-// Small hand-curated synonym dictionary used to seed the "Suggest altLabels"
-// rule. A real build would call an LLM — for the mockup, a lookup keyed by
-// stemmed words is more than enough to show the UX.
 const SYNONYM_DICT: Record<string, string[]> = {
   product: ["article", "item", "sku", "good"],
   category: ["taxon", "section", "group", "class"],
@@ -40,7 +45,6 @@ const SYNONYM_DICT: Record<string, string[]> = {
   brass: ["copper-alloy"],
 };
 
-// Tiny FR translation hints so the "Auto-translate" suggestion looks real.
 const FR_TRANSLATIONS: Record<string, string> = {
   Product: "Produit",
   Category: "Catégorie",
@@ -70,6 +74,16 @@ type Suggestion = {
   accept: () => void;
 };
 
+const TINTS: Record<
+  Suggestion["kind"],
+  { bg: string; fg: string; color: "green" | "sky" | "amber" | "violet" }
+> = {
+  synonym: { bg: "var(--green-3)", fg: "var(--green-11)", color: "green" },
+  translation: { bg: "var(--sky-3)", fg: "var(--sky-11)", color: "sky" },
+  duplicate: { bg: "var(--amber-3)", fg: "var(--amber-11)", color: "amber" },
+  class: { bg: "var(--violet-3)", fg: "var(--violet-11)", color: "violet" },
+};
+
 export default function AiSuggestionsPanel({
   conceptId,
   ontologyId,
@@ -77,8 +91,6 @@ export default function AiSuggestionsPanel({
 }: {
   conceptId: string;
   ontologyId: string;
-  // "embedded" lives inside the right rail; "card" adds a shadow and padding
-  // so it can sit standalone on ConceptDetail.
   layout?: "embedded" | "card";
 }) {
   const { tick, updateConcept, toast } = useApp();
@@ -87,15 +99,10 @@ export default function AiSuggestionsPanel({
   const ontology =
     allOntologies.find((o) => o.id === ontologyId) ?? allOntologies[0];
 
-  // Build the suggestion list from simple heuristics. Every suggestion
-  // ultimately calls updateConcept so accepting one records a normal
-  // ChangeEvent — the AI path is just a fancy way of calling the same
-  // API an editor would reach for manually.
   const suggestions: Suggestion[] = useMemo(() => {
     if (!concept) return [];
     const out: Suggestion[] = [];
 
-    // --- Synonyms -----------------------------------------------------
     const existingAlts = new Set(
       concept.labels.altLabel.map((l) => l.value.toLowerCase())
     );
@@ -108,7 +115,7 @@ export default function AiSuggestionsPanel({
         id: "syn",
         kind: "synonym",
         title: "Add synonyms",
-        body: `Based on “${concept.name}”, these altLabels are commonly used synonyms.`,
+        body: `Based on "${concept.name}", these altLabels are commonly used synonyms.`,
         preview: suggestedSynonyms.slice(0, 4).join(", "),
         accept: () => {
           const merged = [
@@ -135,16 +142,21 @@ export default function AiSuggestionsPanel({
       });
     }
 
-    // --- Translations -------------------------------------------------
     const defaultLang = (ontology.defaultLanguage ?? "en") as LangTag;
     const targetLangs = ontology.languages.filter(
       (l) => l !== defaultLang
     );
     targetLangs.forEach((lang) => {
-      const alreadyHas = concept.labels.prefLabel.some((l) => l.lang === lang);
+      const alreadyHas = concept.labels.prefLabel.some(
+        (l) => l.lang === lang
+      );
       if (alreadyHas) return;
       const dict =
-        lang === "fr" ? FR_TRANSLATIONS : lang === "de" ? DE_TRANSLATIONS : null;
+        lang === "fr"
+          ? FR_TRANSLATIONS
+          : lang === "de"
+          ? DE_TRANSLATIONS
+          : null;
       const hint = dict?.[concept.name];
       if (!hint) return;
       out.push({
@@ -173,12 +185,8 @@ export default function AiSuggestionsPanel({
       });
     });
 
-    // --- Duplicate detection ------------------------------------------
-    // Jaccard-on-altLabels with every other concept in the same ontology,
-    // plus a simple name match — lightweight but visible.
     const sameOntology = allConcepts.filter(
-      (c) =>
-        c.ontologyId === concept.ontologyId && c.id !== concept.id
+      (c) => c.ontologyId === concept.ontologyId && c.id !== concept.id
     );
     const myTokens = tokens(concept.name, concept.labels.altLabel);
     const likelyDupes = sameOntology
@@ -195,9 +203,9 @@ export default function AiSuggestionsPanel({
         id: `dup-${dupe.c.id}`,
         kind: "duplicate",
         title: "Possible duplicate",
-        body: `Overlap score ${(dupe.score * 100).toFixed(0)}% with “${
+        body: `Overlap score ${(dupe.score * 100).toFixed(0)}% with "${
           dupe.c.name
-        }”. Merge them with dct:isReplacedBy if they refer to the same thing.`,
+        }". Merge them with dct:isReplacedBy if they refer to the same thing.`,
         preview: dupe.c.name,
         accept: () => {
           updateConcept({
@@ -215,7 +223,7 @@ export default function AiSuggestionsPanel({
           });
           toast({
             kind: "info",
-            title: `Added “${dupe.c.name}” as altLabel`,
+            title: `Added "${dupe.c.name}" as altLabel`,
             description:
               "To fully merge, deprecate one and set its replacedBy to the other.",
           });
@@ -223,9 +231,6 @@ export default function AiSuggestionsPanel({
       });
     }
 
-    // --- Class suggestion ---------------------------------------------
-    // If the concept has no class (edge case, created outside the flow)
-    // pick the first non-implicit class in the ontology.
     const hasValidClass =
       !!concept.classId &&
       allConceptClasses.some((c) => c.id === concept.classId);
@@ -240,7 +245,7 @@ export default function AiSuggestionsPanel({
           id: "cls",
           kind: "class",
           title: `Classify as ${candidate.name}`,
-          body: `This concept has no class assigned. Based on its labels, the most likely class in ${ontology.name} is “${candidate.name}”.`,
+          body: `This concept has no class assigned. Based on its labels, the most likely class in ${ontology.name} is "${candidate.name}".`,
           preview: candidate.name,
           accept: () => {
             updateConcept({
@@ -262,102 +267,146 @@ export default function AiSuggestionsPanel({
 
   if (!concept) {
     return (
-      <div className="p-4 text-[12px] text-ink-500">Concept not found.</div>
+      <Box p="4">
+        <Text size="1" color="gray">
+          Concept not found.
+        </Text>
+      </Box>
     );
   }
 
-  const wrapper = clsx(
-    "flex h-full min-h-0 flex-col",
-    layout === "card" && "rounded-xl border border-ink-200 bg-white shadow-sm"
-  );
+  const wrapperStyle =
+    layout === "card"
+      ? {
+          background: "var(--color-panel-solid)",
+          border: "1px solid var(--gray-a4)",
+          borderRadius: "var(--radius-4)",
+          boxShadow: "var(--shadow-2)",
+        }
+      : undefined;
 
   return (
-    <div className={wrapper}>
-      <div className="border-b border-ink-100 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-violet-600" />
-          <h3 className="text-sm font-semibold text-ink-900">AI suggestions</h3>
-          <span className="chip bg-violet-50 text-violet-700">
+    <Flex direction="column" className="h-full min-h-0" style={wrapperStyle}>
+      <Box
+        px="4"
+        py="3"
+        style={{ borderBottom: "1px solid var(--gray-a4)" }}
+      >
+        <Flex align="center" gap="2">
+          <Sparkles
+            className="h-4 w-4"
+            style={{ color: "var(--violet-11)" }}
+          />
+          <Heading size="2" weight="bold">
+            AI suggestions
+          </Heading>
+          <Badge color="violet" variant="soft" size="1">
             {suggestions.length}
-          </span>
-        </div>
-        <p className="mt-1 text-[11.5px] text-ink-500">
-          Heuristic suggestions for “{concept.name}”. Each accepted suggestion
+          </Badge>
+        </Flex>
+        <Text as="p" size="1" color="gray" mt="1">
+          Heuristic suggestions for "{concept.name}". Each accepted suggestion
           records a normal change event — you can revert it from the history.
-        </p>
-      </div>
-      <div className="min-h-0 flex-1 overflow-y-auto">
+        </Text>
+      </Box>
+      <Box className="min-h-0 flex-1 overflow-y-auto">
         {suggestions.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center px-6 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-violet-100 text-violet-700">
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            px="6"
+            className="h-full text-center"
+          >
+            <Flex
+              align="center"
+              justify="center"
+              className="h-12 w-12 rounded-full"
+              style={{
+                background: "var(--violet-3)",
+                color: "var(--violet-11)",
+              }}
+            >
               <Sparkles className="h-5 w-5" />
-            </div>
-            <h4 className="mt-3 text-sm font-semibold text-ink-900">
+            </Flex>
+            <Heading size="2" weight="bold" mt="3">
               Nothing obvious to suggest
-            </h4>
-            <p className="mt-1 max-w-[240px] text-[12px] text-ink-500">
+            </Heading>
+            <Text size="1" color="gray" mt="1" style={{ maxWidth: 240 }}>
               Try adding altLabels or translations manually, or let editors
               fill in more context for the AI to work with.
-            </p>
-          </div>
+            </Text>
+          </Flex>
         ) : (
-          <ul className="divide-y divide-ink-100">
-            {suggestions.map((s) => {
-              const icon =
-                s.kind === "synonym"
-                  ? Copy
-                  : s.kind === "translation"
-                  ? Languages
-                  : s.kind === "duplicate"
-                  ? TagIcon
-                  : Layers;
-              const Icon = icon;
-              return (
-                <li key={s.id} className="px-4 py-3">
-                  <div className="flex items-start gap-2">
-                    <div
-                      className={clsx(
-                        "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md",
-                        s.kind === "synonym" && "bg-emerald-50 text-emerald-700",
-                        s.kind === "translation" && "bg-sky-50 text-sky-700",
-                        s.kind === "duplicate" && "bg-amber-50 text-amber-700",
-                        s.kind === "class" && "bg-violet-50 text-violet-700"
-                      )}
-                    >
-                      <Icon className="h-3.5 w-3.5" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[12.5px] font-semibold text-ink-900">
-                        {s.title}
-                      </div>
-                      <p className="mt-0.5 text-[11.5px] text-ink-600">
-                        {s.body}
-                      </p>
-                      {s.preview && (
-                        <div className="mt-1.5 rounded-md bg-ink-50 px-2 py-1 font-mono text-[11.5px] text-ink-800">
-                          {s.preview}
-                        </div>
-                      )}
-                      <button
-                        onClick={s.accept}
-                        className="mt-2 btn-primary py-1 px-2 text-[11.5px]"
-                      >
-                        <Plus className="h-3 w-3" />
-                        Accept
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <Flex direction="column" asChild>
+            <ul>
+              {suggestions.map((s, i) => {
+                const tint = TINTS[s.kind];
+                const Icon =
+                  s.kind === "synonym"
+                    ? Copy
+                    : s.kind === "translation"
+                    ? Languages
+                    : s.kind === "duplicate"
+                    ? TagIcon
+                    : Layers;
+                return (
+                  <Box
+                    asChild
+                    key={s.id}
+                    px="4"
+                    py="3"
+                    style={{
+                      borderTop:
+                        i !== 0 ? "1px solid var(--gray-a3)" : "none",
+                    }}
+                  >
+                    <li>
+                      <Flex align="start" gap="2">
+                        <Flex
+                          align="center"
+                          justify="center"
+                          className="mt-0.5 h-6 w-6 shrink-0 rounded-[var(--radius-2)]"
+                          style={{
+                            background: tint.bg,
+                            color: tint.fg,
+                          }}
+                        >
+                          <Icon className="h-3.5 w-3.5" />
+                        </Flex>
+                        <Box className="min-w-0 flex-1">
+                          <Text size="1" weight="bold">
+                            {s.title}
+                          </Text>
+                          <Text as="p" size="1" color="gray" mt="1">
+                            {s.body}
+                          </Text>
+                          {s.preview && (
+                            <Box mt="2">
+                              <Code variant="soft" size="1">
+                                {s.preview}
+                              </Code>
+                            </Box>
+                          )}
+                          <Box mt="2">
+                            <Button size="1" onClick={s.accept}>
+                              <Plus className="h-3 w-3" />
+                              Accept
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Flex>
+                    </li>
+                  </Box>
+                );
+              })}
+            </ul>
+          </Flex>
         )}
-      </div>
-    </div>
+      </Box>
+    </Flex>
   );
 }
-
-// -- helpers ----------------------------------------------------------------
 
 function tokens(name: string, altLabels: { value: string }[]): Set<string> {
   const s = new Set<string>();
@@ -383,6 +432,4 @@ function jaccard(a: Set<string>, b: Set<string>): number {
   return inter.size / uni.size;
 }
 
-// Unused var kept to pass noUnusedLocals when Concept is imported but only
-// for typing — reference it here harmlessly.
 void null as unknown as Concept;

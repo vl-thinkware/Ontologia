@@ -1,13 +1,26 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  Popover,
+  Text,
+} from "@radix-ui/themes";
+import {
+  Bell,
+  Check,
+  CheckCircle2,
+  History,
+  AlertTriangle,
+  MessageSquare,
+} from "lucide-react";
 import clsx from "clsx";
-import { Bell, Check, CheckCircle2, History, AlertTriangle, MessageSquare } from "lucide-react";
 import { useApp } from "../app/AppContext";
 import { currentUser, ontologies } from "../data/mock";
 
-// A tiny read/unread tracker — keys off ChangeEvent ids. The set is module-
-// scoped so "dismiss" survives closing + reopening the popover within the
-// same session. (Full persistence would need the real API.)
 const readEventIds = new Set<string>();
 
 type NotificationItem = {
@@ -21,8 +34,6 @@ type NotificationItem = {
   meta?: { background: string; initials: string };
 };
 
-// A few static non-change notifications to round out the feed. In a real
-// build these would come from the server.
 const STATIC_ITEMS: NotificationItem[] = [
   {
     id: "nt_review_1",
@@ -39,7 +50,7 @@ const STATIC_ITEMS: NotificationItem[] = [
     kind: "comment",
     title: "Marie commented on Toyota Camry",
     subtitle:
-      "“Should we keep hasDrive → AWD here? The AWD trim is US-only in 2026.”",
+      '"Should we keep hasDrive → AWD here? The AWD trim is US-only in 2026."',
     time: "1h ago",
     icon: MessageSquare,
     href: "/ontologies/ont_cars/concepts/c_model_camry",
@@ -49,7 +60,8 @@ const STATIC_ITEMS: NotificationItem[] = [
     id: "nt_review_2",
     kind: "review",
     title: "CSV import dry-run ready",
-    subtitle: "32 new 2026 model-year rows staged from catalogue.csv — needs approval.",
+    subtitle:
+      "32 new 2026 model-year rows staged from catalogue.csv — needs approval.",
     time: "2h ago",
     icon: AlertTriangle,
     href: "/import",
@@ -60,13 +72,9 @@ export default function NotificationsBell() {
   const { events, tick } = useApp();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  // A dummy state to re-render when we dismiss (since readEventIds is a Set).
   const [, forceRerender] = useState(0);
   void tick;
 
-  // Take the most recent 10 events authored by someone else. Filtering out
-  // our own entries keeps the feed useful — you don't need to be notified
-  // about something you literally just did.
   const items: NotificationItem[] = useMemo(() => {
     const fromEvents: NotificationItem[] = events
       .filter((e) => e.author.initials !== currentUser.initials)
@@ -97,138 +105,191 @@ export default function NotificationsBell() {
   }
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Notifications"
-        className="relative rounded-lg p-2 text-ink-500 hover:bg-ink-100 hover:text-ink-800"
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger>
+        <IconButton
+          variant="ghost"
+          color="gray"
+          size="2"
+          aria-label="Notifications"
+          className="relative"
+        >
+          <Bell className="h-4 w-4" />
+          {unreadCount > 0 && (
+            <span
+              className="absolute right-0 top-0 flex min-h-[14px] min-w-[14px] items-center justify-center rounded-full px-[3px] text-[9px] font-bold leading-none text-white"
+              style={{
+                background: "var(--accent-9)",
+                boxShadow: "0 0 0 2px var(--color-panel-solid)",
+              }}
+              aria-label={`${unreadCount} unread`}
+            >
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
+          )}
+        </IconButton>
+      </Popover.Trigger>
+      <Popover.Content
+        size="2"
+        align="end"
+        sideOffset={6}
+        style={{ width: 380, padding: 0 }}
       >
-        <Bell className="h-4 w-4" />
-        {unreadCount > 0 && (
-          <span
-            className="absolute right-1 top-1 flex min-h-[14px] min-w-[14px] items-center justify-center rounded-full bg-brand-600 px-[3px] text-[9px] font-bold leading-none text-white ring-2 ring-white"
-            aria-label={`${unreadCount} unread`}
-          >
-            {unreadCount > 9 ? "9+" : unreadCount}
-          </span>
-        )}
-      </button>
+        <Flex
+          align="center"
+          justify="between"
+          px="3"
+          py="2"
+          style={{
+            borderBottom: "1px solid var(--gray-a4)",
+            background: "var(--gray-2)",
+          }}
+        >
+          <Box>
+            <Text
+              size="1"
+              weight="bold"
+              color="gray"
+              className="uppercase tracking-wider"
+            >
+              Notifications
+            </Text>
+            <Text as="div" size="2" weight="bold">
+              {unreadCount > 0
+                ? `${unreadCount} unread`
+                : "You're all caught up"}
+            </Text>
+          </Box>
+          {unreadCount > 0 && (
+            <Button variant="ghost" size="1" onClick={markAllRead}>
+              Mark all read
+            </Button>
+          )}
+        </Flex>
 
-      {open && (
-        <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setOpen(false)}
-          />
-          <div className="absolute right-0 top-[calc(100%+6px)] z-20 w-[380px] overflow-hidden rounded-xl border border-ink-200 bg-white shadow-pop">
-            <div className="flex items-center justify-between border-b border-ink-100 bg-ink-50/60 px-3 py-2">
-              <div>
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
-                  Notifications
-                </div>
-                <div className="text-[12.5px] font-semibold text-ink-900">
-                  {unreadCount > 0
-                    ? `${unreadCount} unread`
-                    : "You're all caught up"}
-                </div>
-              </div>
-              {unreadCount > 0 && (
-                <button
-                  onClick={markAllRead}
-                  className="text-[11.5px] font-semibold text-brand-700 hover:underline"
-                >
-                  Mark all read
-                </button>
-              )}
-            </div>
-
-            <ul className="max-h-[440px] overflow-y-auto divide-y divide-ink-100">
-              {items.length === 0 && (
-                <li className="px-4 py-8 text-center text-[12px] text-ink-500">
-                  Nothing new.
-                </li>
-              )}
-              {items.map((n) => {
-                const unread = !readEventIds.has(n.id);
-                const Icon = n.icon;
-                return (
-                  <li
-                    key={n.id}
-                    className={clsx(
-                      "flex cursor-pointer items-start gap-2.5 px-3 py-2.5 transition-colors hover:bg-ink-50",
-                      unread && "bg-brand-50/40"
-                    )}
-                    onClick={() => {
-                      markRead(n.id);
-                      if (n.href) {
-                        setOpen(false);
-                        navigate(n.href);
-                      }
+        <Box style={{ maxHeight: 440, overflowY: "auto" }}>
+          {items.length === 0 && (
+            <Box px="4" py="9" style={{ textAlign: "center" }}>
+              <Text size="1" color="gray">
+                Nothing new.
+              </Text>
+            </Box>
+          )}
+          {items.map((n, i) => {
+            const unread = !readEventIds.has(n.id);
+            const Icon = n.icon;
+            return (
+              <Flex
+                key={n.id}
+                align="start"
+                gap="2"
+                px="3"
+                py="2"
+                onClick={() => {
+                  markRead(n.id);
+                  if (n.href) {
+                    setOpen(false);
+                    navigate(n.href);
+                  }
+                }}
+                className={clsx("cursor-pointer hover:bg-[var(--gray-a3)]")}
+                style={{
+                  borderTop: i !== 0 ? "1px solid var(--gray-a3)" : "none",
+                  background: unread ? "var(--accent-2)" : "transparent",
+                }}
+              >
+                {n.meta ? (
+                  <Avatar
+                    size="1"
+                    radius="full"
+                    fallback={n.meta.initials}
+                    style={{ background: n.meta.background, color: "white" }}
+                  />
+                ) : (
+                  <Flex
+                    align="center"
+                    justify="center"
+                    className="h-7 w-7 shrink-0 rounded-full"
+                    style={{
+                      background: "var(--gray-a3)",
+                      color: "var(--gray-11)",
                     }}
                   >
-                    {n.meta ? (
-                      <div
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
-                        style={{ background: n.meta.background }}
-                      >
-                        {n.meta.initials}
-                      </div>
-                    ) : (
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink-100 text-ink-600">
-                        <Icon className="h-3.5 w-3.5" />
-                      </div>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className={clsx(
-                            "truncate text-[12.5px]",
-                            unread
-                              ? "font-semibold text-ink-900"
-                              : "text-ink-700"
-                          )}
-                        >
-                          {n.title}
-                        </span>
-                        {unread && (
-                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
-                        )}
-                      </div>
-                      {n.subtitle && (
-                        <p className="mt-0.5 line-clamp-2 text-[11.5px] text-ink-500">
-                          {n.subtitle}
-                        </p>
-                      )}
-                      <div className="mt-1 text-[10.5px] text-ink-400">
-                        {n.time}
-                      </div>
-                    </div>
+                    <Icon className="h-3.5 w-3.5" />
+                  </Flex>
+                )}
+                <Box className="min-w-0 flex-1">
+                  <Flex align="center" gap="2">
+                    <Text
+                      size="1"
+                      weight={unread ? "bold" : "regular"}
+                      className="truncate"
+                    >
+                      {n.title}
+                    </Text>
                     {unread && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          markRead(n.id);
-                        }}
-                        className="mt-0.5 rounded p-1 text-ink-300 hover:bg-ink-200 hover:text-ink-700"
-                        title="Mark read"
-                      >
-                        <Check className="h-3 w-3" />
-                      </button>
+                      <span
+                        className="h-1.5 w-1.5 shrink-0 rounded-full"
+                        style={{ background: "var(--accent-9)" }}
+                      />
                     )}
-                  </li>
-                );
-              })}
-            </ul>
+                  </Flex>
+                  {n.subtitle && (
+                    <Text
+                      as="p"
+                      size="1"
+                      color="gray"
+                      mt="1"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {n.subtitle}
+                    </Text>
+                  )}
+                  <Text size="1" color="gray" mt="1" className="block">
+                    {n.time}
+                  </Text>
+                </Box>
+                {unread && (
+                  <IconButton
+                    variant="ghost"
+                    color="gray"
+                    size="1"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      markRead(n.id);
+                    }}
+                    title="Mark read"
+                  >
+                    <Check className="h-3 w-3" />
+                  </IconButton>
+                )}
+              </Flex>
+            );
+          })}
+        </Box>
 
-            <div className="border-t border-ink-100 bg-ink-50/40 px-3 py-2 text-center text-[11px] text-ink-500">
-              Notifications pull from the live change log across{" "}
-              {ontologies.length} ontolog
-              {ontologies.length === 1 ? "y" : "ies"}.
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+        <Box
+          px="3"
+          py="2"
+          style={{
+            borderTop: "1px solid var(--gray-a4)",
+            background: "var(--gray-2)",
+            textAlign: "center",
+          }}
+        >
+          <Text size="1" color="gray">
+            Notifications pull from the live change log across{" "}
+            {ontologies.length} ontolog
+            {ontologies.length === 1 ? "y" : "ies"}.
+          </Text>
+        </Box>
+      </Popover.Content>
+    </Popover.Root>
   );
 }
 
@@ -236,9 +297,6 @@ function findHrefForEvent(
   entityKind: string,
   entityId: string
 ): string | undefined {
-  // Point concept events at the detail page under the first ontology we
-  // guess the concept lives in — the mock only has a couple so it's usually
-  // right. For anything else fall through to the dashboard.
   if (entityKind === "concept") {
     return `/ontologies/ont_cars/concepts/${entityId}`;
   }

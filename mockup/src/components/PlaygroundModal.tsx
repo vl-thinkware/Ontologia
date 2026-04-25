@@ -1,5 +1,16 @@
 import { useMemo, useState } from "react";
-import clsx from "clsx";
+import {
+  Badge,
+  Box,
+  Button,
+  Code,
+  Flex,
+  IconButton,
+  Select,
+  Text,
+  TextArea,
+  TextField,
+} from "@radix-ui/themes";
 import {
   Play,
   Terminal,
@@ -17,10 +28,6 @@ import {
   conceptSchemes as allSchemes,
 } from "../data/mock";
 
-// Endpoint shapes the API playground can simulate. Kept small on purpose —
-// the real Ontologia API has more surface, but this is enough for a demo
-// that covers the distribution story (pull concepts, pull schema, pull
-// tagged snapshot, SPARQL passthrough).
 type Endpoint = {
   id: string;
   method: "GET" | "POST";
@@ -42,9 +49,19 @@ const ENDPOINTS: Endpoint[] = [
     description:
       "List every concept in an ontology. Supports language, scheme and tag filters.",
     params: [
-      { key: "lang", label: "Language", optional: true, values: ["en", "fr", "de"] },
+      {
+        key: "lang",
+        label: "Language",
+        optional: true,
+        values: ["en", "fr", "de"],
+      },
       { key: "scheme", label: "Scheme", optional: true },
-      { key: "tag", label: "Tag", optional: true, values: ["v1.2", "v1.3", "latest"] },
+      {
+        key: "tag",
+        label: "Tag",
+        optional: true,
+        values: ["v1.2", "v1.3", "latest"],
+      },
       {
         key: "format",
         label: "Format",
@@ -68,7 +85,8 @@ const ENDPOINTS: Endpoint[] = [
     id: "schema",
     method: "GET",
     path: "/ontologies/:id/schema",
-    description: "The T-Box — Classes + RelationTypes plus their domain / range.",
+    description:
+      "The T-Box — Classes + RelationTypes plus their domain / range.",
     params: [],
   },
   {
@@ -78,7 +96,12 @@ const ENDPOINTS: Endpoint[] = [
     description: "Look up one concept by id (or by slug if you prefer names).",
     params: [
       { key: "conceptId", label: "Concept id" },
-      { key: "lang", label: "Language", optional: true, values: ["en", "fr", "de"] },
+      {
+        key: "lang",
+        label: "Language",
+        optional: true,
+        values: ["en", "fr", "de"],
+      },
     ],
   },
   {
@@ -117,12 +140,14 @@ export default function PlaygroundModal() {
   const endpoint =
     ENDPOINTS.find((e) => e.id === endpointId) ?? ENDPOINTS[0];
 
-  // Interpolate :id, :conceptId etc. and stitch the query string.
   const resolvedUrl = useMemo(() => {
     const base = `https://api.ontologia.dev`;
     let path = endpoint.path.replace(":id", ontology.id);
     if (endpoint.path.includes(":conceptId")) {
-      path = path.replace(":conceptId", paramValues.conceptId || "c_model_camry");
+      path = path.replace(
+        ":conceptId",
+        paramValues.conceptId || "c_model_camry"
+      );
     }
     const qs = new URLSearchParams();
     endpoint.params.forEach((p) => {
@@ -134,8 +159,6 @@ export default function PlaygroundModal() {
     return `${base}${path}${qsStr ? "?" + qsStr : ""}`;
   }, [endpoint, ontology, paramValues]);
 
-  // Simulated JSON response — synthesised from the live store so the user
-  // sees the same data they edit on the canvas.
   const responseBody = useMemo(() => {
     const scoped = (items: any[]) =>
       items.filter((x: any) => x.ontologyId === ontology.id);
@@ -149,9 +172,10 @@ export default function PlaygroundModal() {
         .map((c) => ({
           id: c.id,
           name: c.name,
-          prefLabel: c.labels.prefLabel.find(
-            (l: any) => l.lang === (paramValues.lang || "en")
-          )?.value ?? c.name,
+          prefLabel:
+            c.labels.prefLabel.find(
+              (l: any) => l.lang === (paramValues.lang || "en")
+            )?.value ?? c.name,
           definition:
             c.definitions.find(
               (l: any) => l.lang === (paramValues.lang || "en")
@@ -178,7 +202,8 @@ export default function PlaygroundModal() {
         if (!from || from.ontologyId !== ontology.id) return false;
         if (paramValues.from && r.from !== paramValues.from) return false;
         if (paramValues.to && r.to !== paramValues.to) return false;
-        if (paramValues.scheme && r.schemeId !== paramValues.scheme) return false;
+        if (paramValues.scheme && r.schemeId !== paramValues.scheme)
+          return false;
         return true;
       });
       return JSON.stringify(
@@ -229,8 +254,9 @@ export default function PlaygroundModal() {
     }
     if (endpoint.id === "get-concept") {
       const c =
-        concepts.find((x) => x.id === (paramValues.conceptId || "c_model_camry")) ??
-        concepts[0];
+        concepts.find(
+          (x) => x.id === (paramValues.conceptId || "c_model_camry")
+        ) ?? concepts[0];
       if (!c) return "{}";
       return JSON.stringify(
         {
@@ -253,7 +279,6 @@ export default function PlaygroundModal() {
         2
       );
     }
-    // sparql
     return JSON.stringify(
       {
         status: "stubbed",
@@ -284,7 +309,6 @@ export default function PlaygroundModal() {
     window.setTimeout(() => setCopied(null), 1500);
   }
 
-  // Useful options for the Scheme / From / To dropdowns.
   const schemesForOntology = useMemo(
     () => allSchemes.filter((s) => s.ontologyId === ontology.id),
     [ontology]
@@ -317,15 +341,13 @@ export default function PlaygroundModal() {
       width="max-w-5xl"
       footer={
         <>
-          <button
-            onClick={closePlayground}
-            className="btn-ghost py-1.5 px-3"
-          >
+          <Button variant="ghost" color="gray" onClick={closePlayground}>
             Close
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="surface"
+            color="gray"
             onClick={() => copy(curl, "cURL")}
-            className="btn-secondary py-1.5 px-3"
           >
             {copied === "cURL" ? (
               <Check className="h-3.5 w-3.5" />
@@ -333,10 +355,11 @@ export default function PlaygroundModal() {
               <Terminal className="h-3.5 w-3.5" />
             )}
             Copy cURL
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="surface"
+            color="gray"
             onClick={() => copy(fetchSnippet, "fetch()")}
-            className="btn-secondary py-1.5 px-3"
           >
             {copied === "fetch()" ? (
               <Check className="h-3.5 w-3.5" />
@@ -344,84 +367,113 @@ export default function PlaygroundModal() {
               <Code2 className="h-3.5 w-3.5" />
             )}
             Copy fetch()
-          </button>
-          <button
-            onClick={() => copy(responseBody, "Response")}
-            className="btn-primary py-1.5 px-3"
-          >
+          </Button>
+          <Button onClick={() => copy(responseBody, "Response")}>
             {copied === "Response" ? (
               <Check className="h-3.5 w-3.5" />
             ) : (
               <Share2 className="h-3.5 w-3.5" />
             )}
             Copy response
-          </button>
+          </Button>
         </>
       }
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
+      <Box className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
         {/* Endpoint list */}
-        <aside className="space-y-1">
-          <div className="px-1 text-[11px] font-semibold uppercase tracking-wider text-ink-500">
-            Endpoints
-          </div>
-          {ENDPOINTS.map((e) => {
-            const active = e.id === endpointId;
-            return (
-              <button
-                key={e.id}
-                onClick={() => setEndpointId(e.id)}
-                className={clsx(
-                  "w-full rounded-lg border px-3 py-2 text-left transition-colors",
-                  active
-                    ? "border-brand-500 bg-brand-50"
-                    : "border-ink-200 bg-white hover:bg-ink-50"
-                )}
+        <Flex direction="column" gap="2" asChild>
+          <aside>
+            <Box px="1">
+              <Text
+                size="1"
+                weight="bold"
+                color="gray"
+                className="uppercase tracking-wider"
               >
-                <div className="flex items-center gap-1.5">
-                  <span
-                    className={clsx(
-                      "chip font-mono text-[10px]",
-                      e.method === "GET"
-                        ? "bg-emerald-50 text-emerald-700"
-                        : "bg-amber-50 text-amber-700"
-                    )}
-                  >
-                    {e.method}
-                  </span>
-                  <span className="truncate font-mono text-[11.5px] font-semibold text-ink-900">
-                    {e.path}
-                  </span>
-                </div>
-                <p className="mt-0.5 text-[11px] text-ink-500">
-                  {e.description}
-                </p>
-              </button>
-            );
-          })}
-        </aside>
+                Endpoints
+              </Text>
+            </Box>
+            {ENDPOINTS.map((e) => {
+              const active = e.id === endpointId;
+              return (
+                <button
+                  key={e.id}
+                  onClick={() => setEndpointId(e.id)}
+                  className="w-full text-left"
+                  style={{
+                    border: active
+                      ? "2px solid var(--accent-9)"
+                      : "1px solid var(--gray-a4)",
+                    background: active
+                      ? "var(--accent-2)"
+                      : "var(--color-panel-solid)",
+                    borderRadius: "var(--radius-3)",
+                    padding: "8px 12px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Flex align="center" gap="2">
+                    <Badge
+                      color={e.method === "GET" ? "green" : "amber"}
+                      variant="soft"
+                      size="1"
+                      style={{ fontFamily: "var(--code-font-family)" }}
+                    >
+                      {e.method}
+                    </Badge>
+                    <Text
+                      size="1"
+                      weight="bold"
+                      className="truncate"
+                      style={{ fontFamily: "var(--code-font-family)" }}
+                    >
+                      {e.path}
+                    </Text>
+                  </Flex>
+                  <Text as="p" size="1" color="gray" mt="1">
+                    {e.description}
+                  </Text>
+                </button>
+              );
+            })}
+          </aside>
+        </Flex>
 
         {/* Request + response */}
-        <div className="flex min-w-0 flex-col gap-3">
+        <Flex direction="column" gap="3" className="min-w-0">
           {/* Request URL + params */}
-          <div className="rounded-lg border border-ink-200 bg-white p-3">
-            <div className="flex items-center gap-2">
-              <span
-                className={clsx(
-                  "chip font-mono text-[10px]",
-                  endpoint.method === "GET"
-                    ? "bg-emerald-50 text-emerald-700"
-                    : "bg-amber-50 text-amber-700"
-                )}
+          <Box
+            p="3"
+            style={{
+              background: "var(--color-panel-solid)",
+              border: "1px solid var(--gray-a4)",
+              borderRadius: "var(--radius-3)",
+            }}
+          >
+            <Flex align="center" gap="2">
+              <Badge
+                color={endpoint.method === "GET" ? "green" : "amber"}
+                variant="soft"
+                size="1"
+                style={{ fontFamily: "var(--code-font-family)" }}
               >
                 {endpoint.method}
-              </span>
-              <code className="flex-1 truncate rounded-md bg-ink-50 px-2 py-1 text-[11.5px] text-ink-800">
-                {resolvedUrl}
-              </code>
-              <button
+              </Badge>
+              <Box className="flex-1 min-w-0">
+                <Code
+                  variant="soft"
+                  size="1"
+                  className="block truncate"
+                  style={{ width: "100%" }}
+                >
+                  {resolvedUrl}
+                </Code>
+              </Box>
+              <IconButton
+                variant="ghost"
+                color="gray"
+                size="1"
                 onClick={() => copy(resolvedUrl, "URL")}
-                className="rounded-md p-1 text-ink-500 hover:bg-ink-100 hover:text-ink-800"
                 title="Copy URL"
               >
                 {copied === "URL" ? (
@@ -429,98 +481,181 @@ export default function PlaygroundModal() {
                 ) : (
                   <Copy className="h-3.5 w-3.5" />
                 )}
-              </button>
-            </div>
+              </IconButton>
+            </Flex>
 
             {endpoint.params.length > 0 && (
-              <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
+              <Box mt="3" className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 {endpoint.params.map((p) => {
                   const dynamic = optionListFor(p.key);
                   const values = p.values ?? dynamic ?? null;
                   return (
-                    <label key={p.key} className="block">
-                      <span className="text-[10.5px] font-semibold uppercase tracking-wide text-ink-500">
+                    <Box key={p.key}>
+                      <Text
+                        as="label"
+                        size="1"
+                        weight="bold"
+                        color="gray"
+                        className="uppercase tracking-wide block"
+                      >
                         {p.label}
                         {p.optional && (
-                          <span className="ml-1 text-ink-400">· optional</span>
+                          <Text size="1" color="gray" ml="1">
+                            · optional
+                          </Text>
                         )}
-                      </span>
-                      {values ? (
-                        <select
-                          value={paramValues[p.key] ?? ""}
-                          onChange={(e) =>
-                            setParamValues((prev) => ({
-                              ...prev,
-                              [p.key]: e.target.value,
-                            }))
-                          }
-                          className="mt-0.5 w-full rounded-md border border-ink-200 bg-white px-2 py-1 text-[12px] focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-                        >
-                          <option value="">
-                            {p.optional ? "— not set —" : "select…"}
-                          </option>
-                          {values.map((v) => (
-                            <option key={v} value={v}>
-                              {v}
-                            </option>
-                          ))}
-                        </select>
-                      ) : p.key === "query" ? (
-                        <textarea
-                          value={paramValues[p.key] ?? ""}
-                          onChange={(e) =>
-                            setParamValues((prev) => ({
-                              ...prev,
-                              [p.key]: e.target.value,
-                            }))
-                          }
-                          placeholder="SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10"
-                          className="mt-0.5 min-h-[60px] w-full resize-y rounded-md border border-ink-200 bg-white px-2 py-1 text-[12px] font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-                        />
-                      ) : (
-                        <input
-                          value={paramValues[p.key] ?? ""}
-                          onChange={(e) =>
-                            setParamValues((prev) => ({
-                              ...prev,
-                              [p.key]: e.target.value,
-                            }))
-                          }
-                          placeholder={p.key === "conceptId" ? "c_model_camry" : ""}
-                          className="mt-0.5 w-full rounded-md border border-ink-200 bg-white px-2 py-1 text-[12px] font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-                        />
-                      )}
-                    </label>
+                      </Text>
+                      <Box mt="1">
+                        {values ? (
+                          <Select.Root
+                            value={paramValues[p.key] ?? ""}
+                            onValueChange={(v) =>
+                              setParamValues((prev) => ({
+                                ...prev,
+                                [p.key]: v,
+                              }))
+                            }
+                            size="1"
+                          >
+                            <Select.Trigger
+                              className="w-full"
+                              placeholder={
+                                p.optional ? "— not set —" : "select…"
+                              }
+                            />
+                            <Select.Content>
+                              {values.map((v) => (
+                                <Select.Item key={v} value={v}>
+                                  {v}
+                                </Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Root>
+                        ) : p.key === "query" ? (
+                          <TextArea
+                            value={paramValues[p.key] ?? ""}
+                            onChange={(e) =>
+                              setParamValues((prev) => ({
+                                ...prev,
+                                [p.key]: e.target.value,
+                              }))
+                            }
+                            placeholder="SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10"
+                            size="1"
+                            style={{
+                              minHeight: 60,
+                              fontFamily: "var(--code-font-family)",
+                            }}
+                          />
+                        ) : (
+                          <TextField.Root
+                            value={paramValues[p.key] ?? ""}
+                            onChange={(e) =>
+                              setParamValues((prev) => ({
+                                ...prev,
+                                [p.key]: e.target.value,
+                              }))
+                            }
+                            placeholder={
+                              p.key === "conceptId" ? "c_model_camry" : ""
+                            }
+                            size="1"
+                            style={{
+                              fontFamily: "var(--code-font-family)",
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </Box>
                   );
                 })}
-              </div>
+              </Box>
             )}
-          </div>
+          </Box>
 
           {/* Response */}
-          <div className="flex min-h-0 flex-col rounded-lg border border-ink-200 bg-ink-950/95">
-            <div className="flex items-center justify-between border-b border-ink-800/40 px-3 py-1.5">
-              <div className="flex items-center gap-2 text-[11.5px] font-semibold text-emerald-300">
+          <Flex
+            direction="column"
+            className="min-h-0"
+            style={{
+              background: "rgba(2,6,23,0.95)",
+              border: "1px solid var(--gray-a4)",
+              borderRadius: "var(--radius-3)",
+            }}
+          >
+            <Flex
+              align="center"
+              justify="between"
+              px="3"
+              py="2"
+              style={{ borderBottom: "1px solid rgba(255,255,255,0.10)" }}
+            >
+              <Flex
+                align="center"
+                gap="2"
+                style={{ color: "var(--green-5)" }}
+              >
                 <Play className="h-3 w-3" />
-                200 OK · application/json
-              </div>
-              <div className="text-[10.5px] font-mono text-ink-300">
+                <Text
+                  size="1"
+                  weight="bold"
+                  style={{ color: "var(--green-5)" }}
+                >
+                  200 OK · application/json
+                </Text>
+              </Flex>
+              <Text
+                size="1"
+                style={{
+                  fontFamily: "var(--code-font-family)",
+                  color: "var(--gray-3)",
+                }}
+              >
                 {responseBody.length.toLocaleString()} chars ·{" "}
                 {responseBody.split("\n").length} lines
-              </div>
-            </div>
-            <pre className="max-h-[320px] overflow-auto px-4 py-3 font-mono text-[11.5px] leading-relaxed text-emerald-100">
+              </Text>
+            </Flex>
+            <pre
+              style={{
+                maxHeight: 320,
+                overflow: "auto",
+                padding: "12px 16px",
+                fontFamily: "var(--code-font-family)",
+                fontSize: 11.5,
+                lineHeight: 1.6,
+                color: "var(--green-3)",
+                margin: 0,
+              }}
+            >
               {responseBody}
             </pre>
-          </div>
+          </Flex>
 
-          <div className="rounded-lg border border-ink-200 bg-ink-50 px-3 py-2 text-[11px] text-ink-600">
-            {allConceptClasses.filter((c) => c.ontologyId === ontology.id).length}{" "}
-            classes · {allRelationTypes.filter((r) => r.ontologyId === ontology.id).length}{" "}
-            relation types · data refreshed from the live store on every keystroke.
-          </div>
-        </div>
-      </div>
+          <Box
+            px="3"
+            py="2"
+            style={{
+              background: "var(--gray-2)",
+              border: "1px solid var(--gray-a4)",
+              borderRadius: "var(--radius-3)",
+            }}
+          >
+            <Text size="1" color="gray">
+              {
+                allConceptClasses.filter((c) => c.ontologyId === ontology.id)
+                  .length
+              }{" "}
+              classes ·{" "}
+              {
+                allRelationTypes.filter((r) => r.ontologyId === ontology.id)
+                  .length
+              }{" "}
+              relation types · data refreshed from the live store on every
+              keystroke.
+            </Text>
+          </Box>
+        </Flex>
+      </Box>
     </Modal>
   );
 }

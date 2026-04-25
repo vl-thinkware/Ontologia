@@ -17,7 +17,8 @@ The "what we use and why" list. Each choice includes a brief justification, the 
 | Tree view | react-arborist / d3-hierarchy | latest | Virtualised, keyboardable | Low |
 | State (server) | TanStack Query | 5.x | Cache + refetch + optimistic updates | Low |
 | State (client) | Zustand | 4.x | Minimalist, no Redux ceremony | Low |
-| Styling | Tailwind CSS + Radix UI | 3.x / latest | Tokens + accessible primitives | Low |
+| Component library | Radix Themes | 3.x | Accessible, themed primitives (Button, Dialog, DropdownMenu, TextField, Tabs, Callout…) with token-driven theming | Low |
+| Layout utilities | Tailwind CSS | 3.x | Layout-only (`flex`, `grid`, `gap`, padding, sizing) — no design tokens | Low |
 | Forms | React Hook Form + Zod | latest | Client/server schema parity | Low |
 | Backend runtime | Node.js | 20 LTS | Shared TS types, mature ecosystem | Low |
 | API framework | Fastify | 4.x | High throughput, first-class schema + OpenAPI | Medium |
@@ -77,10 +78,11 @@ Exit is expensive — mitigated by an **adapter interface** (`GraphStore`) that 
 - Good virtualisation + custom node rendering.
 - Cytoscape.js shortlisted as fallback; migration is bounded to one package.
 
-### Tailwind + Radix (vs Chakra, MUI)
-- No opinionated CSS-in-JS runtime.
-- Radix is unstyled + accessible; Tailwind applies our tokens cleanly.
-- Keeps bundle size tight on the canvas page.
+### Radix Themes + Tailwind (vs Chakra, MUI, shadcn)
+- **Radix Themes** is the source of truth for components: Button, Card, Dialog, DropdownMenu, Popover, Tooltip, TextField, Select, Switch, Checkbox, RadioGroup, Tabs, Callout, Badge, Avatar, ScrollArea, Table, Code, Heading, Text, IconButton, Kbd, Spinner, Progress, SegmentedControl. Wrapped at the root with `<Theme accentColor="violet" grayColor="slate" radius="medium" scaling="100%">` — flipping to dark mode is a single prop change.
+- **Tailwind** is retained for layout utilities only (no `bg-*`, `text-*`, `rounded-*` design-token classes). Component visuals come from Radix's CSS variables (`var(--accent-9)`, `var(--gray-a4)`, `var(--radius-3)`, …).
+- No opinionated CSS-in-JS runtime; bundle stays tight on the canvas page.
+- Inter is preserved as the product font via the `--default-font-family` CSS variable.
 
 ### Clerk + Stripe + Resend = "pay for infra, not build it"
 As a small team racing to ship, we buy these capabilities until we have customer revenue that demands we internalise.
@@ -100,8 +102,8 @@ As a small team racing to ship, we buy these capabilities until we have customer
 - `@tanstack/react-query`, `zustand`
 - `reactflow`
 - `d3-hierarchy`, `react-arborist`
-- `@radix-ui/*`
-- `tailwindcss`, `class-variance-authority`, `clsx`
+- `@radix-ui/themes` (the high-level component library — bundles Radix's primitives with tokenized theming)
+- `tailwindcss`, `clsx` (layout utilities and className composition; no `class-variance-authority` dependency)
 - `react-hook-form`, `zod`, `@hookform/resolvers`
 - `lucide-react` (icons)
 - `date-fns`

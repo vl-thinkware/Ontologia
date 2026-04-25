@@ -15,132 +15,125 @@ Design tokens, components and rules that keep Ontologia's UI consistent, accessi
 - **Accessible always.** WCAG 2.2 AA is a baseline, not an aspiration.
 - **Dark-mode-native.** Designed in dark first; light mode is equally first-class.
 
-## 2. Brand palette
+## 2. Color system — Radix Themes
 
-From the v1 spec, with extended scales.
+The product runs on **Radix Themes** with `<Theme accentColor="violet" grayColor="slate" radius="medium" scaling="100%">`. We do not maintain bespoke hex tables — every color is one of Radix's twelve-step scales, addressed by CSS variable.
 
-### Primary — Indigo (brand)
-| Token | Hex | Use |
+### Accent — `violet`
+The brand. Use `var(--accent-*)` rather than `var(--violet-*)` directly so a future theme swap is one prop change.
+
+| Variable | Use |
+|---|---|
+| `var(--accent-1)` … `--accent-2` | App backgrounds, subtle wash |
+| `var(--accent-3)` … `--accent-5` | Hover surfaces, soft chips |
+| `var(--accent-6)` … `--accent-8` | Borders, separators on accent surfaces |
+| `var(--accent-9)` | **Primary** fill (Buttons, badges) |
+| `var(--accent-10)` | Hover state for `--accent-9` |
+| `var(--accent-11)` | Accent text (links, "violet" Text/Heading) |
+| `var(--accent-12)` | High-emphasis accent text |
+| `var(--accent-contrast)` | Text on `--accent-9` |
+| `var(--accent-a*)` | Alpha variants of the same scale, for overlay use |
+
+### Gray — `slate`
+The neutral scale. `var(--gray-*)` mirrors the structure above. We use:
+
+| Variable | Use |
+|---|---|
+| `var(--gray-1)` / `--gray-2` | Page background, subtle surfaces |
+| `var(--color-panel-solid)` | Card / panel surface (alias) |
+| `var(--gray-a3)` / `--gray-a4` | Hover states, soft borders |
+| `var(--gray-a5)` / `--gray-a6` | Default borders, dividers |
+| `var(--gray-9)` | Disabled / placeholder text |
+| `var(--gray-11)` | Body text |
+| `var(--gray-12)` | High-emphasis headings |
+
+### Semantic colors (Radix scales)
+We map each semantic role to a Radix scale and address it identically.
+
+| Role | Radix scale | Used as |
 |---|---|---|
-| `brand.50` | `#EEF0FF` | subtle backgrounds, hover surfaces (light) |
-| `brand.100` | `#DDE1FF` | |
-| `brand.300` | `#A2ABFF` | |
-| `brand.500` | `#6366F1` | primary buttons, key accents |
-| `brand.600` | `#4F46E5` | hover state |
-| `brand.700` | `#4338CA` | active |
-| `brand.900` | `#1E1B4B` | deep accents in dark UI |
+| Success | `green` | "create" badges, success toasts, valid validation |
+| Warning | `amber` | Deprecation, dirty state, validation warnings |
+| Danger | `ruby` | Destructive actions, errors, "delete" badges |
+| Info | `sky` | "update" badges, info toasts, neutral highlights |
+| Tag | `violet` | "tag" badges, AI-suggestion accents |
 
-### Success — Emerald
-| Token | Hex |
-|---|---|
-| `success.500` | `#10B981` |
-| `success.600` | `#059669` |
-| `success.700` | `#047857` |
-
-### Warning — Amber
-| Token | Hex |
-|---|---|
-| `warning.400` | `#FBBF24` |
-| `warning.500` | `#F59E0B` |
-| `warning.600` | `#D97706` |
-
-### Danger — Red
-| Token | Hex |
-|---|---|
-| `danger.500` | `#EF4444` |
-| `danger.600` | `#DC2626` |
-| `danger.700` | `#B91C1C` |
-
-### Neutrals
-Light mode:
-| Token | Hex |
-|---|---|
-| `bg.canvas` | `#F8F9FC` |
-| `bg.surface` | `#FFFFFF` |
-| `bg.subtle` | `#F1F3F8` |
-| `text.primary` | `#1E293B` |
-| `text.secondary` | `#475569` |
-| `border.subtle` | `#E2E8F0` |
-| `border.default` | `#CBD5E1` |
-
-Dark mode:
-| Token | Hex |
-|---|---|
-| `bg.canvas` | `#0F0F17` |
-| `bg.surface` | `#1C1C2E` |
-| `bg.subtle` | `#16161F` |
-| `text.primary` | `#E2E8F0` |
-| `text.secondary` | `#94A3B8` |
-| `border.subtle` | `#23233A` |
-| `border.default` | `#2E2E47` |
+A `Badge color="green" variant="soft"` resolves to `--green-3` background + `--green-11` text — the contrast pair is Radix's responsibility, not ours.
 
 ### Diff semantic colors
-- Added: `success.500` backgrounds with 8% alpha for tiles; solid for borders.
-- Removed: `danger.500` 8% alpha; strikethrough label in list view.
-- Modified: `warning.500` 8% alpha.
-- Unchanged: `text.secondary` at 60% opacity.
+- Added: `var(--green-3)` background, `var(--green-9)` left border.
+- Removed: `var(--ruby-3)` background, `var(--ruby-9)` left border, strikethrough in list view.
+- Modified: `var(--sky-3)` background, `var(--sky-9)` left border.
+- Unchanged: `var(--gray-11)` at 60% opacity.
 
 ## 3. Typography
 
-- **Sans.** Inter (system fallback stack `ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto`).
-- **Mono.** JetBrains Mono, for IDs, Cypher, code.
+- **Sans.** Inter — wired in by overriding Radix's `--default-font-family` on `.radix-themes` so every Radix component picks it up automatically. System fallback stack: `ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto`.
+- **Mono.** JetBrains Mono via `--code-font-family`; used by `<Code>`, `<Kbd>`, IDs, Cypher snippets.
 
-Scale (Tailwind mapping):
+Scale — we use Radix Themes' typographic primitives (`<Heading>`, `<Text>`, `<Code>`) instead of raw Tailwind classes. Sizes map as follows:
 
-| Role | Size | Line-height | Weight |
+| Role | Radix component | Size prop | Resolved px / line-height |
 |---|---|---|---|
-| Display / hero | 36px | 44px | 600 |
-| H1 | 28px | 36px | 600 |
-| H2 | 22px | 30px | 600 |
-| H3 | 18px | 26px | 600 |
-| Body L | 16px | 24px | 400 |
-| Body M | 14px | 20px | 400 |
-| Body S | 13px | 18px | 400 |
-| Caption | 12px | 16px | 500 |
-| Code | 13px | 20px | 500 (mono) |
+| Display / hero | `<Heading size="8">` | — | 36 / 44 |
+| H1 | `<Heading size="7">` | — | 28 / 36 |
+| H2 | `<Heading size="6">` | — | 22 / 30 |
+| H3 | `<Heading size="3">` weight="bold" | — | 18 / 26 |
+| Body L | `<Text size="3">` | — | 16 / 24 |
+| Body M | `<Text size="2">` | — | 14 / 20 |
+| Body S | `<Text size="1">` | — | 13 / 18 |
+| Code | `<Code>` | — | 13 / 20, mono |
 
-- Numerics use `font-variant-numeric: tabular-nums` in data-heavy UI.
+- Numerics use `font-variant-numeric: tabular-nums` in data-heavy UI (apply via inline style or a utility class).
 
 ## 4. Spacing
 
-4-pt scale. Use tokens:
+We use Radix Themes' 9-step spacing scale via CSS variables; same 4-pt grid as before but addressed by token.
 
-```
-space.1 = 4
-space.2 = 8
-space.3 = 12
-space.4 = 16
-space.5 = 20
-space.6 = 24
-space.8 = 32
-space.10 = 40
-space.12 = 48
-```
+| Variable | px | Common use |
+|---|---|---|
+| `var(--space-1)` | 4 | Tight inline gaps |
+| `var(--space-2)` | 8 | Icon + label gap, list-row gap |
+| `var(--space-3)` | 12 | Compact card padding |
+| `var(--space-4)` | 16 | Default card padding |
+| `var(--space-5)` | 24 | Section padding |
+| `var(--space-6)` | 32 | Large card padding (`Card size="3"`) |
+| `var(--space-7)` | 40 | Section spacing |
+| `var(--space-8)` | 48 | Hero spacing |
+| `var(--space-9)` | 64 | Marketing spacing |
 
-- Card padding: `space.4` mobile, `space.6` desktop.
-- Section spacing: `space.10` to `space.12`.
+Most components take a numeric prop (`p="4"`, `gap="2"`, `mt="3"`) that maps directly to this scale — prefer that over raw CSS.
 
 ## 5. Radius
 
+The Theme is configured with `radius="medium"`, which resolves the scale to:
+
 ```
-radius.sm = 4
-radius.md = 6       (default buttons, inputs)
-radius.lg = 10      (cards, modals)
-radius.xl = 16      (feature surfaces)
-radius.full = 9999
+var(--radius-1)  = 3px        small chips, inline pills
+var(--radius-2)  = 4px        Badge default
+var(--radius-3)  = 6px        Buttons, TextField, Select
+var(--radius-4)  = 8px        Cards, panels
+var(--radius-5)  = 12px       Modals, large surfaces
+var(--radius-6)  = 16px       Feature surfaces
+var(--radius-full) = 9999px   Avatars, pill buttons
 ```
+
+Increasing `radius="full"` on the Theme bumps the whole product to a softer look without code changes.
 
 ## 6. Elevation
 
-We keep shadows subtle. Two layers.
+Six-step shadow scale from Radix; we lean on the lower end.
 
 ```
-shadow.sm  = 0 1px 2px rgba(15,23,42,.08)
-shadow.md  = 0 4px 12px rgba(15,23,42,.10)
-shadow.lg  = 0 12px 32px rgba(15,23,42,.14)
+var(--shadow-1)  Hairline borders / soft depth
+var(--shadow-2)  Cards, surfaces (default)
+var(--shadow-3)  Hover lift, dropdown surfaces
+var(--shadow-4)  Popovers, dialogs (raised)
+var(--shadow-5)  Modal content
+var(--shadow-6)  Top-of-stack overlays
 ```
 
-Dark mode: use equivalent rgba on a mostly-transparent border instead of heavy shadows.
+Dark mode uses the same scale; Radix already swaps the alpha values internally.
 
 ## 7. Iconography
 
@@ -155,30 +148,38 @@ Dark mode: use equivalent rgba on a mostly-transparent border instead of heavy s
 - `ease-out` for entrances, `ease-in` for exits.
 - Skipped when `prefers-reduced-motion: reduce`.
 
-## 9. Core components (design system package `packages/ui`)
+## 9. Core components
 
-- `Button` (variants: primary, secondary, ghost, danger; sizes: sm, md, lg; icon-only).
+The component library is **Radix Themes**, imported directly from `@radix-ui/themes`. We do not maintain a fork in `packages/ui`; that package is reserved for Ontologia-specific compositions on top of Radix.
+
+### From Radix Themes (no wrapping)
+- `Button` (variants: `solid`, `soft`, `surface`, `outline`, `ghost`, `classic`; sizes 1–4; with `color` prop for semantic tints)
 - `IconButton`
-- `Input`, `Textarea`, `Select`, `Combobox`, `Checkbox`, `Radio`, `Switch`, `Slider`
-- `Badge`, `Chip`, `Tag`
-- `Tooltip` (Radix)
-- `Popover`, `Menu`, `Dialog`, `Drawer`
-- `Tabs`, `Accordion`
-- `Toast` (via Radix Toast)
-- `Table` (virtualised variant)
-- `EmptyState`
-- `Avatar`, `AvatarGroup`
-- `Breadcrumb`
-- `CommandPalette` (`cmdk` under the hood)
-- `StatusPill` (`success | warning | danger | neutral | brand`)
-- Canvas-specific:
-  - `ConceptNode`
-  - `RelationEdge`
-  - `MiniMap`
-  - `DiffNode` / `DiffEdge`
-  - `Inspector`
+- `TextField.Root` (+ `TextField.Slot`), `TextArea`, `Select` (`Root` / `Trigger` / `Content` / `Item`)
+- `Checkbox`, `RadioGroup`, `Switch`, `Slider`
+- `Badge` (replaces our old `Chip` / `Tag` concepts), `Code`, `Kbd`
+- `Tooltip`
+- `Popover`, `DropdownMenu`, `ContextMenu`, `HoverCard`, `Dialog`, `AlertDialog`
+- `Tabs`, `SegmentedControl`
+- `Callout` (replaces our `EmptyState` for inline notices)
+- `Table` (`Root` / `Header` / `Row` / `Cell`)
+- `Avatar` (use `<Flex className="-space-x-2">` for AvatarGroup behavior)
+- `ScrollArea`, `Separator`, `Spinner`, `Progress`, `Skeleton`
+- `Heading`, `Text`, `Link`, `Em`, `Strong`, `Quote`, `Blockquote`, `Reset`
 
-Each component lives with Storybook stories and a11y checks.
+### Ontologia compositions (in `apps/web/src/components` for the mockup, `packages/ui` once we have a real app)
+- `Modal` — thin wrapper around Radix `<Dialog>` that keeps the legacy `{open, onClose, title, subtitle, footer, width}` API for in-app forms.
+- `Toaster` — bottom-right toast queue using `Card` + `IconButton`.
+- `CommandPalette` — `⌘K` overlay using Radix `TextField` + custom list (Radix doesn't ship a command-palette primitive).
+- `NotificationsBell` — Radix `Popover` with the unread-feed list.
+- `ValidationPanel`, `AiSuggestionsPanel`, `ClassInspector`, `ClassAttributesEditor` — domain-specific right-rail panels using Radix primitives.
+- Canvas-specific (still hand-rolled, will live in `packages/ui` later):
+  - `ConceptNode`
+  - `ClassNode`
+  - `RelationEdge` (planned)
+  - `DiffNode` / `DiffEdge` (planned)
+
+Each Ontologia composition ships with Storybook stories and an axe check.
 
 ## 10. Canvas specifics
 
@@ -217,9 +218,11 @@ Canvas has its own density via zoom.
 
 ## 13. Naming & tokens on the wire
 
-Tokens are exported by `packages/ui/tokens` as both Tailwind theme config and a JSON file consumable by designers (Figma).
+Tokens come from **Radix Themes** at runtime via CSS custom properties (`--accent-9`, `--gray-a4`, `--radius-3`, `--space-4`, `--shadow-2`, …). We don't maintain a parallel JSON token file — Radix ships its scales as a stylesheet and that's the source of truth.
 
-Figma Library mirrors the code tokens. When they disagree, code wins; designer files are updated from the JSON.
+The Figma library mirrors the **Radix Themes Figma kit** (Radix publishes one), with our accent + gray choices applied. When code and design disagree, code wins; the Figma file is updated from a fresh export of the Radix stylesheet.
+
+For the few values not covered by Radix (presence avatar colors, mode pills for Glossary / Taxonomy / Ontology), tokens live in `apps/web/src/styles/local-tokens.css` and are documented in this file's §2.
 
 ## 14. Contribution
 

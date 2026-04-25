@@ -1,6 +1,19 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import clsx from "clsx";
+import {
+  Badge,
+  Box,
+  Button,
+  Callout,
+  Card,
+  Checkbox,
+  Code,
+  Flex,
+  Heading,
+  Select,
+  Table,
+  Text,
+} from "@radix-ui/themes";
 import {
   UploadCloud,
   FileSpreadsheet,
@@ -26,11 +39,7 @@ import {
 type Step = 1 | 2 | 3;
 
 const STEPS: { id: Step; title: string; description: string }[] = [
-  {
-    id: 1,
-    title: "Upload",
-    description: "Drag in a CSV or Excel sheet",
-  },
+  { id: 1, title: "Upload", description: "Drag in a CSV or Excel sheet" },
   {
     id: 2,
     title: "Map columns",
@@ -44,11 +53,41 @@ const STEPS: { id: Step; title: string; description: string }[] = [
 ];
 
 const SAMPLE_ROWS = [
-  { sku: "SKU-1001", name: "Oak Coffee Table", category: "Living room", brand: "Nordica", price: "299.00" },
-  { sku: "SKU-1002", name: "Linen Sofa 3-seater", category: "Living room", brand: "Nordica", price: "1299.00" },
-  { sku: "SKU-1003", name: "Ceramic Vase Midi", category: "Decor", brand: "Studio Vel", price: "49.00" },
-  { sku: "SKU-1004", name: "Walnut Shelf", category: "Storage", brand: "Nordica", price: "189.00" },
-  { sku: "SKU-1005", name: "Brass Table Lamp", category: "Lighting", brand: "Lumen Co", price: "129.00" },
+  {
+    sku: "SKU-1001",
+    name: "Oak Coffee Table",
+    category: "Living room",
+    brand: "Nordica",
+    price: "299.00",
+  },
+  {
+    sku: "SKU-1002",
+    name: "Linen Sofa 3-seater",
+    category: "Living room",
+    brand: "Nordica",
+    price: "1299.00",
+  },
+  {
+    sku: "SKU-1003",
+    name: "Ceramic Vase Midi",
+    category: "Decor",
+    brand: "Studio Vel",
+    price: "49.00",
+  },
+  {
+    sku: "SKU-1004",
+    name: "Walnut Shelf",
+    category: "Storage",
+    brand: "Nordica",
+    price: "189.00",
+  },
+  {
+    sku: "SKU-1005",
+    name: "Brass Table Lamp",
+    category: "Lighting",
+    brand: "Lumen Co",
+    price: "129.00",
+  },
 ];
 
 export default function ImportWizard() {
@@ -65,9 +104,6 @@ export default function ImportWizard() {
   const navigate = useNavigate();
   const { importConcepts, toast } = useApp();
 
-  // Resolve the class the user picked (by display name) to an actual classId
-  // within the chosen ontology. If nothing matches we fall back to the first
-  // non-implicit class so the import still lands somewhere sensible.
   const resolvedClass = useMemo(() => {
     const ontClasses = allConceptClasses.filter(
       (c) => c.ontologyId === targetOntologyId
@@ -81,16 +117,12 @@ export default function ImportWizard() {
     );
   }, [targetOntologyId, targetConcept]);
 
-  // Pick the first scheme in the chosen ontology so the rows have somewhere
-  // to live. If the ontology has no schemes we pass "" and the store skips
-  // scheme assignment.
   const resolvedSchemeId = useMemo(
-    () =>
-      allSchemes.find((s) => s.ontologyId === targetOntologyId)?.id ?? "",
+    () => allSchemes.find((s) => s.ontologyId === targetOntologyId)?.id ?? "",
     [targetOntologyId]
   );
 
-  const totalRows = SAMPLE_ROWS.length * 50; // pretend the file has 50× the preview
+  const totalRows = SAMPLE_ROWS.length * 50;
 
   function runImport() {
     if (!resolvedClass) {
@@ -103,8 +135,6 @@ export default function ImportWizard() {
     }
     setImporting(true);
     setTimeout(() => {
-      // Build the row payload from the sample preview — in a real build we'd
-      // use the parsed CSV, but the wizard is faking the file anyway.
       const rows = SAMPLE_ROWS.map((r) => ({
         name: r.name,
         description: `${r.category} · ${r.brand} · ${r.price}`,
@@ -123,339 +153,489 @@ export default function ImportWizard() {
       toast({
         kind: "success",
         title: `Imported ${concepts.length} concepts`,
-        description: `One ${"`bulk_import`"} change event was recorded.`,
+        description: `One bulk_import change event was recorded.`,
       });
     }, 1400);
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-8 py-8">
-      {/* Header + stepper */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-wider text-brand-700">
+    <Box className="mx-auto max-w-5xl" px="8" py="8">
+      {/* Header */}
+      <Flex align="start" justify="between" gap="4">
+        <Box>
+          <Text
+            size="1"
+            weight="bold"
+            color="violet"
+            className="uppercase tracking-wider"
+          >
             Import wizard
-          </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-ink-900">
+          </Text>
+          <Heading size="7" weight="bold" mt="1">
             Bring existing data into Ontologia
-          </h1>
-          <p className="mt-1 text-sm text-ink-600">
+          </Heading>
+          <Text as="p" size="2" color="gray" mt="1">
             Upload a CSV or Excel file. Ontologia will create one change event
             per row so everything stays revertable.
-          </p>
-        </div>
-        <Link to="/dashboard" className="btn-ghost text-xs">
-          <X className="h-3.5 w-3.5" />
-          Cancel
-        </Link>
-      </div>
+          </Text>
+        </Box>
+        <Button asChild variant="ghost" color="gray" size="1">
+          <Link to="/dashboard">
+            <X className="h-3.5 w-3.5" />
+            Cancel
+          </Link>
+        </Button>
+      </Flex>
 
-      <ol className="mt-6 flex items-center gap-2">
-        {STEPS.map((s, idx) => (
-          <li key={s.id} className="flex flex-1 items-center gap-2">
-            <div
-              className={clsx(
-                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold",
-                step > s.id
-                  ? "bg-brand-600 text-white"
-                  : step === s.id
-                  ? "bg-brand-600 text-white ring-4 ring-brand-500/20"
-                  : "bg-ink-200 text-ink-500"
-              )}
+      {/* Stepper */}
+      <Flex align="center" gap="2" mt="6" asChild>
+        <ol>
+          {STEPS.map((s, idx) => (
+            <Flex
+              asChild
+              key={s.id}
+              align="center"
+              gap="2"
+              className="flex-1"
             >
-              {step > s.id ? <Check className="h-3.5 w-3.5" /> : s.id}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div
-                className={clsx(
-                  "text-[13px] font-semibold",
-                  step >= s.id ? "text-ink-900" : "text-ink-400"
+              <li>
+                <Flex
+                  align="center"
+                  justify="center"
+                  className="h-7 w-7 shrink-0 rounded-full"
+                  style={{
+                    background:
+                      step >= s.id ? "var(--accent-9)" : "var(--gray-a4)",
+                    color:
+                      step >= s.id ? "var(--accent-contrast)" : "var(--gray-11)",
+                    fontWeight: 700,
+                    fontSize: 11,
+                    boxShadow:
+                      step === s.id ? "0 0 0 4px var(--accent-a4)" : undefined,
+                  }}
+                >
+                  {step > s.id ? <Check className="h-3.5 w-3.5" /> : s.id}
+                </Flex>
+                <Box className="min-w-0 flex-1">
+                  <Text
+                    size="2"
+                    weight="bold"
+                    style={{
+                      color:
+                        step >= s.id ? "var(--gray-12)" : "var(--gray-9)",
+                    }}
+                  >
+                    {s.title}
+                  </Text>
+                  <Text as="div" size="1" color="gray" className="truncate">
+                    {s.description}
+                  </Text>
+                </Box>
+                {idx < STEPS.length - 1 && (
+                  <Box
+                    width="48px"
+                    style={{
+                      height: 1,
+                      background:
+                        step > s.id ? "var(--accent-9)" : "var(--gray-a4)",
+                      flexShrink: 0,
+                    }}
+                  />
                 )}
-              >
-                {s.title}
-              </div>
-              <div className="truncate text-[11px] text-ink-500">
-                {s.description}
-              </div>
-            </div>
-            {idx < STEPS.length - 1 && (
-              <div
-                className={clsx(
-                  "h-px w-12 shrink-0",
-                  step > s.id ? "bg-brand-500" : "bg-ink-200"
-                )}
-              />
-            )}
-          </li>
-        ))}
-      </ol>
+              </li>
+            </Flex>
+          ))}
+        </ol>
+      </Flex>
 
       {/* Card */}
-      <section className="mt-6 overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card">
+      <Card mt="6" size="3" style={{ padding: 0, overflow: "hidden" }}>
         {/* Step 1: upload */}
         {step === 1 && (
-          <div className="p-8">
-            <label
-              className={clsx(
-                "flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 transition-colors",
-                filename
-                  ? "border-emerald-400 bg-emerald-50/60"
-                  : "border-ink-300 hover:border-brand-400 hover:bg-brand-50/50"
-              )}
-              onClick={(e) => {
-                e.preventDefault();
-                setFilename("products_catalogue_april_2026.csv");
+          <Box p="8">
+            <button
+              type="button"
+              onClick={() => setFilename("products_catalogue_april_2026.csv")}
+              className="w-full"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 40,
+                borderRadius: "var(--radius-4)",
+                border: filename
+                  ? "2px dashed var(--green-9)"
+                  : "2px dashed var(--gray-a6)",
+                background: filename
+                  ? "var(--green-2)"
+                  : "var(--color-panel-solid)",
+                cursor: "pointer",
+                transition: "background-color 120ms ease",
               }}
             >
               {!filename ? (
                 <>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 text-brand-700">
+                  <Flex
+                    align="center"
+                    justify="center"
+                    className="h-12 w-12 rounded-full"
+                    style={{
+                      background: "var(--accent-3)",
+                      color: "var(--accent-11)",
+                    }}
+                  >
                     <UploadCloud className="h-6 w-6" />
-                  </div>
-                  <div className="mt-4 text-sm font-semibold text-ink-900">
+                  </Flex>
+                  <Heading size="2" weight="bold" mt="4">
                     Drop a CSV or Excel file here
-                  </div>
-                  <div className="mt-1 text-xs text-ink-500">
+                  </Heading>
+                  <Text size="1" color="gray" mt="1">
                     or click to browse · up to 50 MB · UTF-8 recommended
-                  </div>
-                  <div className="mt-4 flex items-center gap-2 text-[11px] text-ink-500">
-                    <span className="chip bg-ink-100 text-ink-600">.csv</span>
-                    <span className="chip bg-ink-100 text-ink-600">.tsv</span>
-                    <span className="chip bg-ink-100 text-ink-600">.xlsx</span>
-                  </div>
+                  </Text>
+                  <Flex align="center" gap="2" mt="4">
+                    <Badge color="gray" variant="soft" size="1">
+                      .csv
+                    </Badge>
+                    <Badge color="gray" variant="soft" size="1">
+                      .tsv
+                    </Badge>
+                    <Badge color="gray" variant="soft" size="1">
+                      .xlsx
+                    </Badge>
+                  </Flex>
                 </>
               ) : (
                 <>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                    <CheckCircle2 className="h-6 w-6" />
-                  </div>
-                  <div className="mt-4 text-sm font-semibold text-ink-900">
-                    {filename}
-                  </div>
-                  <div className="mt-1 text-xs text-ink-500">
-                    248 rows detected · 5 columns · UTF-8
-                  </div>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setFilename(null);
+                  <Flex
+                    align="center"
+                    justify="center"
+                    className="h-12 w-12 rounded-full"
+                    style={{
+                      background: "var(--green-3)",
+                      color: "var(--green-11)",
                     }}
-                    className="mt-3 text-xs font-semibold text-brand-700 hover:text-brand-800"
                   >
-                    Choose a different file
-                  </button>
+                    <CheckCircle2 className="h-6 w-6" />
+                  </Flex>
+                  <Heading size="2" weight="bold" mt="4">
+                    {filename}
+                  </Heading>
+                  <Text size="1" color="gray" mt="1">
+                    248 rows detected · 5 columns · UTF-8
+                  </Text>
+                  <Box mt="3">
+                    <Button
+                      variant="ghost"
+                      size="1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFilename(null);
+                      }}
+                    >
+                      Choose a different file
+                    </Button>
+                  </Box>
                 </>
               )}
-            </label>
+            </button>
 
-            <div className="mt-8 grid grid-cols-3 gap-3">
-              <div className="rounded-xl border border-ink-200 bg-ink-50/60 p-4">
-                <FileSpreadsheet className="h-5 w-5 text-brand-700" />
-                <h3 className="mt-2 text-sm font-semibold text-ink-900">
-                  CSV / Excel
-                </h3>
-                <p className="mt-1 text-xs text-ink-600">
-                  One row per concept. Relations can be derived from ID columns.
-                </p>
-              </div>
-              <div className="rounded-xl border border-ink-200 bg-ink-50/60 p-4">
-                <Database className="h-5 w-5 text-brand-700" />
-                <h3 className="mt-2 text-sm font-semibold text-ink-900">
-                  Dry run
-                </h3>
-                <p className="mt-1 text-xs text-ink-600">
-                  We preview every change before writing it. Nothing is committed
-                  until you confirm.
-                </p>
-              </div>
-              <div className="rounded-xl border border-ink-200 bg-ink-50/60 p-4">
-                <FileText className="h-5 w-5 text-brand-700" />
-                <h3 className="mt-2 text-sm font-semibold text-ink-900">
-                  Revertable
-                </h3>
-                <p className="mt-1 text-xs text-ink-600">
-                  The import creates a single <code>bulk_import</code> event you
-                  can undo in one click.
-                </p>
-              </div>
-            </div>
-          </div>
+            <Box mt="8" className="grid grid-cols-3 gap-3">
+              {[
+                {
+                  icon: FileSpreadsheet,
+                  title: "CSV / Excel",
+                  body: "One row per concept. Relations can be derived from ID columns.",
+                },
+                {
+                  icon: Database,
+                  title: "Dry run",
+                  body: "We preview every change before writing it. Nothing is committed until you confirm.",
+                },
+                {
+                  icon: FileText,
+                  title: "Revertable",
+                  body: "The import creates a single bulk_import event you can undo in one click.",
+                },
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Card key={item.title} variant="surface" size="2">
+                    <Icon
+                      className="h-5 w-5"
+                      style={{ color: "var(--accent-11)" }}
+                    />
+                    <Heading size="2" weight="bold" mt="2">
+                      {item.title}
+                    </Heading>
+                    <Text as="p" size="1" color="gray" mt="1">
+                      {item.body}
+                    </Text>
+                  </Card>
+                );
+              })}
+            </Box>
+          </Box>
         )}
 
         {/* Step 2: mapping */}
         {step === 2 && (
-          <div>
-            <div className="border-b border-ink-100 px-6 py-4">
-              <div className="flex items-center gap-2">
-                <FileSpreadsheet className="h-4 w-4 text-brand-700" />
-                <span className="text-sm font-semibold text-ink-900">
+          <Box>
+            <Box
+              px="6"
+              py="4"
+              style={{ borderBottom: "1px solid var(--gray-a4)" }}
+            >
+              <Flex align="center" gap="2" wrap="wrap">
+                <FileSpreadsheet
+                  className="h-4 w-4"
+                  style={{ color: "var(--accent-11)" }}
+                />
+                <Text size="2" weight="bold">
                   {filename}
-                </span>
-                <span className="chip bg-ink-100 text-ink-600">
+                </Text>
+                <Badge color="gray" variant="soft" size="1">
                   248 rows · 5 columns
-                </span>
-                <div className="ml-auto flex items-center gap-3 text-[12px]">
-                  <label className="flex items-center gap-2 text-ink-600">
-                    Target ontology
-                    <select
-                      value={targetOntologyId}
-                      onChange={(e) => setTargetOntologyId(e.target.value)}
-                      className="rounded-md border border-ink-200 bg-white px-2 py-1 text-[12px] font-medium text-ink-800 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15"
-                    >
-                      {ontologies.map((o) => (
-                        <option key={o.id} value={o.id}>
-                          {o.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="flex items-center gap-2 text-ink-600">
-                    Target class
-                    <select
-                      value={targetConcept}
-                      onChange={(e) => setTargetConcept(e.target.value)}
-                      className="rounded-md border border-ink-200 bg-white px-2 py-1 text-[12px] font-medium text-ink-800 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15"
-                    >
-                      {allConceptClasses
-                        .filter((c) => c.ontologyId === targetOntologyId)
-                        .map((c) => (
-                          <option key={c.id} value={c.name}>
-                            {c.name}
-                          </option>
-                        ))}
-                    </select>
-                  </label>
-                </div>
-              </div>
-            </div>
+                </Badge>
+                <Box ml="auto">
+                  <Flex align="center" gap="3">
+                    <Flex align="center" gap="2">
+                      <Text size="1" color="gray">
+                        Target ontology
+                      </Text>
+                      <Select.Root
+                        value={targetOntologyId}
+                        onValueChange={setTargetOntologyId}
+                        size="1"
+                      >
+                        <Select.Trigger />
+                        <Select.Content>
+                          {ontologies.map((o) => (
+                            <Select.Item key={o.id} value={o.id}>
+                              {o.name}
+                            </Select.Item>
+                          ))}
+                        </Select.Content>
+                      </Select.Root>
+                    </Flex>
+                    <Flex align="center" gap="2">
+                      <Text size="1" color="gray">
+                        Target class
+                      </Text>
+                      <Select.Root
+                        value={targetConcept}
+                        onValueChange={setTargetConcept}
+                        size="1"
+                      >
+                        <Select.Trigger />
+                        <Select.Content>
+                          {allConceptClasses
+                            .filter((c) => c.ontologyId === targetOntologyId)
+                            .map((c) => (
+                              <Select.Item key={c.id} value={c.name}>
+                                {c.name}
+                              </Select.Item>
+                            ))}
+                        </Select.Content>
+                      </Select.Root>
+                    </Flex>
+                  </Flex>
+                </Box>
+              </Flex>
+            </Box>
 
-            <div className="grid grid-cols-2 gap-6 p-6">
-              <div>
-                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+            <Box p="6" className="grid grid-cols-2 gap-6">
+              <Box>
+                <Text
+                  size="1"
+                  weight="bold"
+                  color="gray"
+                  className="uppercase tracking-wider block"
+                >
                   Column mapping
-                </h3>
-                <div className="mt-2 overflow-hidden rounded-lg border border-ink-200">
+                </Text>
+                <Box
+                  mt="2"
+                  style={{
+                    border: "1px solid var(--gray-a4)",
+                    borderRadius: "var(--radius-3)",
+                    overflow: "hidden",
+                  }}
+                >
                   {[
                     { csv: "sku", field: "sku", ai: true },
                     { csv: "name", field: "name", ai: true },
-                    { csv: "category", field: "→ Category (relation)", ai: true },
+                    {
+                      csv: "category",
+                      field: "→ Category (relation)",
+                      ai: true,
+                    },
                     { csv: "brand", field: "→ Brand (relation)", ai: true },
                     { csv: "price", field: "price", ai: true },
                   ].map((m, i) => (
-                    <div
+                    <Flex
                       key={m.csv}
-                      className={clsx(
-                        "grid grid-cols-[1fr_auto_1.3fr] items-center gap-3 px-3 py-2 text-[12.5px]",
-                        i !== 0 && "border-t border-ink-100"
-                      )}
+                      align="center"
+                      gap="3"
+                      px="3"
+                      py="2"
+                      className="grid grid-cols-[1fr_auto_1.3fr]"
+                      style={{
+                        borderTop:
+                          i !== 0 ? "1px solid var(--gray-a3)" : "none",
+                      }}
                     >
-                      <div className="font-mono font-semibold text-ink-800">
+                      <Code variant="ghost" weight="bold">
                         {m.csv}
-                      </div>
-                      <ArrowRight className="h-3.5 w-3.5 text-ink-400" />
-                      <div className="flex items-center gap-1.5">
-                        <select
-                          defaultValue={m.field}
-                          className="flex-1 rounded-md border border-ink-200 bg-white px-2 py-1 text-[12px] text-ink-800 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15"
-                        >
-                          <option>{m.field}</option>
-                          <option>— Skip this column —</option>
-                        </select>
+                      </Code>
+                      <ArrowRight
+                        className="h-3.5 w-3.5"
+                        style={{ color: "var(--gray-9)" }}
+                      />
+                      <Flex align="center" gap="2">
+                        <Box className="flex-1">
+                          <Select.Root defaultValue={m.field} size="1">
+                            <Select.Trigger className="w-full" />
+                            <Select.Content>
+                              <Select.Item value={m.field}>
+                                {m.field}
+                              </Select.Item>
+                              <Select.Item value="skip">
+                                — Skip this column —
+                              </Select.Item>
+                            </Select.Content>
+                          </Select.Root>
+                        </Box>
                         {m.ai && (
-                          <span
-                            className="chip bg-brand-50 text-brand-700"
+                          <Badge
+                            color="violet"
+                            variant="soft"
+                            size="1"
                             title="Auto-matched"
                           >
                             <Sparkles className="h-2.5 w-2.5" />
                             AI
-                          </span>
+                          </Badge>
                         )}
-                      </div>
-                    </div>
+                      </Flex>
+                    </Flex>
                   ))}
-                </div>
+                </Box>
 
-                <div className="mt-4 rounded-lg border border-brand-200 bg-brand-50/60 p-3 text-[12px] text-brand-900">
-                  <div className="flex items-center gap-1.5 font-semibold">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    Auto-mapped 5 of 5 columns
-                  </div>
-                  <p className="mt-1 text-brand-800/90">
-                    We inferred 2 relation columns based on the existing
-                    ontology. Review and adjust before continuing.
-                  </p>
-                </div>
-              </div>
+                <Box mt="4">
+                  <Callout.Root color="violet" variant="surface" size="1">
+                    <Callout.Icon>
+                      <Sparkles className="h-3.5 w-3.5" />
+                    </Callout.Icon>
+                    <Callout.Text>
+                      <strong>Auto-mapped 5 of 5 columns.</strong> We inferred 2
+                      relation columns based on the existing ontology. Review
+                      and adjust before continuing.
+                    </Callout.Text>
+                  </Callout.Root>
+                </Box>
+              </Box>
 
-              <div>
-                <h3 className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+              <Box>
+                <Text
+                  size="1"
+                  weight="bold"
+                  color="gray"
+                  className="uppercase tracking-wider block"
+                >
                   Preview (first 5 rows)
-                </h3>
-                <div className="mt-2 overflow-hidden rounded-lg border border-ink-200">
-                  <table className="w-full text-[11.5px]">
-                    <thead className="bg-ink-50">
-                      <tr>
+                </Text>
+                <Box
+                  mt="2"
+                  style={{
+                    border: "1px solid var(--gray-a4)",
+                    borderRadius: "var(--radius-3)",
+                    overflow: "hidden",
+                  }}
+                >
+                  <Table.Root size="1" variant="ghost">
+                    <Table.Header>
+                      <Table.Row>
                         {["sku", "name", "category", "brand", "price"].map(
                           (h) => (
-                            <th
+                            <Table.ColumnHeaderCell
                               key={h}
-                              className="px-2 py-1.5 text-left font-mono font-semibold text-ink-600"
+                              style={{
+                                fontFamily: "var(--code-font-family)",
+                              }}
                             >
                               {h}
-                            </th>
+                            </Table.ColumnHeaderCell>
                           )
                         )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {SAMPLE_ROWS.map((r, i) => (
-                        <tr
-                          key={r.sku}
-                          className={clsx(
-                            i !== 0 && "border-t border-ink-100",
-                            "hover:bg-ink-50/60"
-                          )}
-                        >
-                          <td className="px-2 py-1 font-mono text-ink-700">
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {SAMPLE_ROWS.map((r) => (
+                        <Table.Row key={r.sku}>
+                          <Table.Cell
+                            style={{
+                              fontFamily: "var(--code-font-family)",
+                            }}
+                          >
                             {r.sku}
-                          </td>
-                          <td className="px-2 py-1 text-ink-800">{r.name}</td>
-                          <td className="px-2 py-1 text-ink-600">
-                            {r.category}
-                          </td>
-                          <td className="px-2 py-1 text-ink-600">{r.brand}</td>
-                          <td className="px-2 py-1 font-mono text-ink-600">
+                          </Table.Cell>
+                          <Table.Cell>{r.name}</Table.Cell>
+                          <Table.Cell>
+                            <Text size="1" color="gray">
+                              {r.category}
+                            </Text>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <Text size="1" color="gray">
+                              {r.brand}
+                            </Text>
+                          </Table.Cell>
+                          <Table.Cell
+                            style={{
+                              fontFamily: "var(--code-font-family)",
+                            }}
+                          >
                             {r.price}
-                          </td>
-                        </tr>
+                          </Table.Cell>
+                        </Table.Row>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="mt-2 flex items-center gap-1 text-[11px] text-ink-500">
-                  <CircleAlert className="h-3 w-3 text-amber-500" />
-                  3 rows have missing <span className="font-mono">brand</span> —
-                  will be imported without the Brand relation.
-                </div>
-              </div>
-            </div>
-          </div>
+                    </Table.Body>
+                  </Table.Root>
+                </Box>
+                <Flex align="center" gap="1" mt="2">
+                  <CircleAlert
+                    className="h-3 w-3"
+                    style={{ color: "var(--amber-9)" }}
+                  />
+                  <Text size="1" color="gray">
+                    3 rows have missing <Code variant="ghost">brand</Code> —
+                    will be imported without the Brand relation.
+                  </Text>
+                </Flex>
+              </Box>
+            </Box>
+          </Box>
         )}
 
         {/* Step 3: review */}
         {step === 3 && (
-          <div className="p-8">
+          <Box p="8">
             {!done ? (
               <>
-                <div className="rounded-xl border border-ink-200 bg-ink-50/60 p-5">
-                  <h3 className="text-sm font-semibold text-ink-900">
+                <Card variant="surface" size="3">
+                  <Heading size="2" weight="bold">
                     Ready to import
-                  </h3>
-                  <p className="mt-1 text-xs text-ink-600">
+                  </Heading>
+                  <Text as="p" size="1" color="gray" mt="1">
                     This is a dry-run preview. Nothing has been written yet.
-                  </p>
-                  <div className="mt-4 grid grid-cols-4 gap-3">
-                    <Stat label="New concepts" value="+248" accent="emerald" />
+                  </Text>
+                  <Box mt="4" className="grid grid-cols-4 gap-3">
+                    <Stat
+                      label="New concepts"
+                      value="+248"
+                      accent="emerald"
+                    />
                     <Stat label="Updated concepts" value="0" />
                     <Stat
                       label="New relations"
@@ -463,88 +643,146 @@ export default function ImportWizard() {
                       accent="emerald"
                     />
                     <Stat label="Warnings" value="3" accent="amber" />
-                  </div>
-                </div>
+                  </Box>
+                </Card>
 
-                <div className="mt-6 overflow-hidden rounded-lg border border-ink-200">
-                  <div className="flex items-center justify-between border-b border-ink-100 bg-ink-50/50 px-3 py-2 text-[12px] font-semibold text-ink-700">
-                    <span className="flex items-center gap-1.5">
-                      <TableIcon className="h-3.5 w-3.5" />
-                      Sample of changes (5 of 248)
-                    </span>
-                    <span className="text-[11px] font-medium text-ink-500">
-                      Will create one <code>bulk_import</code> change event
-                    </span>
-                  </div>
-                  <ul>
+                <Box
+                  mt="6"
+                  style={{
+                    border: "1px solid var(--gray-a4)",
+                    borderRadius: "var(--radius-3)",
+                    overflow: "hidden",
+                  }}
+                >
+                  <Flex
+                    align="center"
+                    justify="between"
+                    px="3"
+                    py="2"
+                    style={{
+                      background: "var(--gray-2)",
+                      borderBottom: "1px solid var(--gray-a4)",
+                    }}
+                  >
+                    <Flex align="center" gap="2">
+                      <TableIcon
+                        className="h-3.5 w-3.5"
+                        style={{ color: "var(--gray-11)" }}
+                      />
+                      <Text size="1" weight="bold">
+                        Sample of changes (5 of 248)
+                      </Text>
+                    </Flex>
+                    <Text size="1" color="gray">
+                      Will create one <Code variant="ghost">bulk_import</Code>{" "}
+                      change event
+                    </Text>
+                  </Flex>
+                  <Box>
                     {SAMPLE_ROWS.map((r, i) => (
-                      <li
+                      <Flex
                         key={r.sku}
-                        className={clsx(
-                          "flex items-center gap-3 px-3 py-2 text-[12px]",
-                          i !== 0 && "border-t border-ink-100"
-                        )}
+                        align="center"
+                        gap="3"
+                        px="3"
+                        py="2"
+                        style={{
+                          borderTop:
+                            i !== 0 ? "1px solid var(--gray-a3)" : "none",
+                        }}
                       >
-                        <span className="chip bg-emerald-50 text-emerald-700">
+                        <Badge color="green" variant="soft" size="1">
                           create
-                        </span>
-                        <span className="font-mono text-ink-700">
-                          {targetConcept}
-                        </span>
-                        <span className="text-ink-400">·</span>
-                        <span className="font-medium text-ink-900">
+                        </Badge>
+                        <Code variant="ghost">{targetConcept}</Code>
+                        <Text size="1" color="gray">
+                          ·
+                        </Text>
+                        <Text size="2" weight="medium">
                           {r.name}
-                        </span>
-                        <span className="ml-auto font-mono text-[11px] text-ink-500">
-                          sku={r.sku}
-                        </span>
-                      </li>
+                        </Text>
+                        <Box ml="auto">
+                          <Code variant="ghost" size="1">
+                            sku={r.sku}
+                          </Code>
+                        </Box>
+                      </Flex>
                     ))}
-                  </ul>
-                </div>
+                  </Box>
+                </Box>
 
-                <label className="mt-6 flex items-start gap-2 rounded-lg border border-ink-200 bg-white p-3 text-[12.5px] text-ink-700">
-                  <input type="checkbox" defaultChecked className="mt-0.5" />
-                  <span>
-                    Create a single{" "}
-                    <span className="font-mono font-semibold">bulk_import</span>{" "}
-                    change event so this import can be reverted in one click.
-                  </span>
-                </label>
+                <Box
+                  mt="6"
+                  p="3"
+                  style={{
+                    border: "1px solid var(--gray-a4)",
+                    borderRadius: "var(--radius-3)",
+                    background: "var(--color-panel-solid)",
+                  }}
+                >
+                  <Flex asChild align="start" gap="2">
+                    <label>
+                      <Checkbox defaultChecked mt="1" />
+                      <Text size="2">
+                        Create a single{" "}
+                        <Code variant="soft" weight="bold">
+                          bulk_import
+                        </Code>{" "}
+                        change event so this import can be reverted in one
+                        click.
+                      </Text>
+                    </label>
+                  </Flex>
+                </Box>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+              <Flex
+                direction="column"
+                align="center"
+                justify="center"
+                py="9"
+                className="text-center"
+              >
+                <Flex
+                  align="center"
+                  justify="center"
+                  className="h-14 w-14 rounded-full"
+                  style={{
+                    background: "var(--green-3)",
+                    color: "var(--green-11)",
+                  }}
+                >
                   <CheckCircle2 className="h-7 w-7" />
-                </div>
-                <h3 className="mt-4 text-base font-semibold text-ink-900">
+                </Flex>
+                <Heading size="3" weight="bold" mt="4">
                   Import complete
-                </h3>
-                <p className="mt-1 text-sm text-ink-600">
-                  {importedCount} concept{importedCount === 1 ? "" : "s"}{" "}
-                  added to{" "}
-                  <span className="font-semibold">
+                </Heading>
+                <Text as="p" size="2" color="gray" mt="1">
+                  {importedCount} concept{importedCount === 1 ? "" : "s"} added
+                  to{" "}
+                  <strong style={{ color: "var(--gray-12)" }}>
                     {ontologies.find((o) => o.id === targetOntologyId)?.name ??
                       "this ontology"}
-                  </span>
+                  </strong>
                   .
-                </p>
+                </Text>
                 {importedEventId && (
-                  <div className="mt-3 rounded-lg border border-ink-200 bg-ink-50 px-3 py-2 font-mono text-[11px] text-ink-600">
-                    Change event {importedEventId} · bulk_import · by Valentin
-                  </div>
+                  <Box mt="3">
+                    <Code variant="soft" size="1">
+                      Change event {importedEventId} · bulk_import · by Valentin
+                    </Code>
+                  </Box>
                 )}
-                <div className="mt-5 flex items-center gap-2">
-                  <button
-                    onClick={() =>
-                      navigate(`/ontologies/${targetOntologyId}`)
-                    }
-                    className="btn-primary"
+                <Flex align="center" gap="2" mt="5">
+                  <Button
+                    onClick={() => navigate(`/ontologies/${targetOntologyId}`)}
                   >
                     Open ontology
                     <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="surface"
+                    color="gray"
                     onClick={() => {
                       setStep(1);
                       setFilename(null);
@@ -552,43 +790,38 @@ export default function ImportWizard() {
                       setImportedCount(0);
                       setImportedEventId(null);
                     }}
-                    className="btn-secondary"
                   >
                     Import another file
-                  </button>
-                </div>
-              </div>
+                  </Button>
+                </Flex>
+              </Flex>
             )}
-          </div>
+          </Box>
         )}
-      </section>
+      </Card>
 
       {/* Footer actions */}
       {!done && (
-        <div className="mt-5 flex items-center justify-between">
-          <button
+        <Flex align="center" justify="between" mt="5">
+          <Button
+            variant="surface"
+            color="gray"
             disabled={step === 1}
             onClick={() => setStep((s) => (s - 1) as Step)}
-            className="btn-secondary disabled:opacity-40"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Back
-          </button>
+          </Button>
           {step < 3 ? (
-            <button
+            <Button
               disabled={step === 1 && !filename}
               onClick={() => setStep((s) => (s + 1) as Step)}
-              className="btn-primary"
             >
               Continue
               <ArrowRight className="h-3.5 w-3.5" />
-            </button>
+            </Button>
           ) : (
-            <button
-              disabled={importing}
-              onClick={runImport}
-              className="btn-primary"
-            >
+            <Button disabled={importing} onClick={runImport}>
               {importing ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -600,11 +833,11 @@ export default function ImportWizard() {
                   Run import
                 </>
               )}
-            </button>
+            </Button>
           )}
-        </div>
+        </Flex>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -617,18 +850,41 @@ function Stat({
   value: string;
   accent?: "emerald" | "amber";
 }) {
-  const colors =
+  const tint =
     accent === "emerald"
-      ? "border-emerald-200 bg-emerald-50/60 text-emerald-900"
+      ? {
+          background: "var(--green-2)",
+          border: "1px solid var(--green-a5)",
+          color: "var(--green-12)",
+        }
       : accent === "amber"
-      ? "border-amber-200 bg-amber-50/60 text-amber-900"
-      : "border-ink-200 bg-white text-ink-900";
+      ? {
+          background: "var(--amber-2)",
+          border: "1px solid var(--amber-a5)",
+          color: "var(--amber-12)",
+        }
+      : {
+          background: "var(--color-panel-solid)",
+          border: "1px solid var(--gray-a4)",
+          color: "var(--gray-12)",
+        };
   return (
-    <div className={`rounded-lg border px-3 py-2 ${colors}`}>
-      <div className="text-[11px] font-semibold uppercase tracking-wider opacity-70">
+    <Box
+      px="3"
+      py="2"
+      style={{ ...tint, borderRadius: "var(--radius-3)" }}
+    >
+      <Text
+        size="1"
+        weight="bold"
+        className="uppercase tracking-wider"
+        style={{ opacity: 0.7 }}
+      >
         {label}
-      </div>
-      <div className="mt-1 text-xl font-bold tracking-tight">{value}</div>
-    </div>
+      </Text>
+      <Heading size="5" weight="bold" mt="1">
+        {value}
+      </Heading>
+    </Box>
   );
 }

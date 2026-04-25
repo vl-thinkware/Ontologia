@@ -1,0 +1,19 @@
+// vite.config.js
+import { defineConfig } from "file:///sessions/bold-blissful-hawking/mnt/Desktop--Ontologia/mockup/node_modules/vite/dist/node/index.js";
+import react from "file:///sessions/bold-blissful-hawking/mnt/Desktop--Ontologia/mockup/node_modules/@vitejs/plugin-react/dist/index.js";
+var vite_config_default = defineConfig({
+  plugins: [react()],
+  server: {
+    port: 5173,
+    open: true
+  },
+  build: {
+    // Build into a fresh dir so we don't fight cloud-sync locks on ./dist.
+    outDir: "build",
+    emptyOutDir: true
+  }
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcuanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCIvc2Vzc2lvbnMvYm9sZC1ibGlzc2Z1bC1oYXdraW5nL21udC9EZXNrdG9wLS1PbnRvbG9naWEvbW9ja3VwXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ZpbGVuYW1lID0gXCIvc2Vzc2lvbnMvYm9sZC1ibGlzc2Z1bC1oYXdraW5nL21udC9EZXNrdG9wLS1PbnRvbG9naWEvbW9ja3VwL3ZpdGUuY29uZmlnLmpzXCI7Y29uc3QgX192aXRlX2luamVjdGVkX29yaWdpbmFsX2ltcG9ydF9tZXRhX3VybCA9IFwiZmlsZTovLy9zZXNzaW9ucy9ib2xkLWJsaXNzZnVsLWhhd2tpbmcvbW50L0Rlc2t0b3AtLU9udG9sb2dpYS9tb2NrdXAvdml0ZS5jb25maWcuanNcIjtpbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tIFwidml0ZVwiO1xuaW1wb3J0IHJlYWN0IGZyb20gXCJAdml0ZWpzL3BsdWdpbi1yZWFjdFwiO1xuZXhwb3J0IGRlZmF1bHQgZGVmaW5lQ29uZmlnKHtcbiAgcGx1Z2luczogW3JlYWN0KCldLFxuICBzZXJ2ZXI6IHtcbiAgICBwb3J0OiA1MTczLFxuICAgIG9wZW46IHRydWUsXG4gIH0sXG4gIGJ1aWxkOiB7XG4gICAgLy8gQnVpbGQgaW50byBhIGZyZXNoIGRpciBzbyB3ZSBkb24ndCBmaWdodCBjbG91ZC1zeW5jIGxvY2tzIG9uIC4vZGlzdC5cbiAgICBvdXREaXI6IFwiYnVpbGRcIixcbiAgICBlbXB0eU91dERpcjogdHJ1ZSxcbiAgfSxcbn0pO1xuIl0sCiAgIm1hcHBpbmdzIjogIjtBQUF5VyxTQUFTLG9CQUFvQjtBQUN0WSxPQUFPLFdBQVc7QUFDbEIsSUFBTyxzQkFBUSxhQUFhO0FBQUEsRUFDMUIsU0FBUyxDQUFDLE1BQU0sQ0FBQztBQUFBLEVBQ2pCLFFBQVE7QUFBQSxJQUNOLE1BQU07QUFBQSxJQUNOLE1BQU07QUFBQSxFQUNSO0FBQUEsRUFDQSxPQUFPO0FBQUE7QUFBQSxJQUVMLFFBQVE7QUFBQSxJQUNSLGFBQWE7QUFBQSxFQUNmO0FBQ0YsQ0FBQzsiLAogICJuYW1lcyI6IFtdCn0K

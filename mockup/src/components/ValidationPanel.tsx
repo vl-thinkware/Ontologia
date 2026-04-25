@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import clsx from "clsx";
+import { Badge, Box, Flex, Heading, Text } from "@radix-ui/themes";
 import {
   ShieldCheck,
   AlertTriangle,
@@ -30,7 +30,6 @@ type Issue = {
   relationId?: string;
 };
 
-// Analysis helpers — kept as pure functions so they're easy to unit-test later.
 function computeIssues(ontologyId: string, tick: number): Issue[] {
   void tick;
   const issues: Issue[] = [];
@@ -51,7 +50,6 @@ function computeIssues(ontologyId: string, tick: number): Issue[] {
       .map((r) => [r.id, r])
   );
 
-  // Rule 1: concept has no class assigned.
   scopedConcepts.forEach((c) => {
     if (!c.classId || !classById.has(c.classId)) {
       issues.push({
@@ -66,10 +64,9 @@ function computeIssues(ontologyId: string, tick: number): Issue[] {
     }
   });
 
-  // Rule 2: duplicate prefLabels within a scheme (case-insensitive, per lang).
   scopedSchemes.forEach((scheme) => {
     const inScheme = scopedConcepts.filter((c) => c.schemeId === scheme.id);
-    const seen = new Map<string, string>(); // `${lang}::${value.toLowerCase()}` → firstConceptId
+    const seen = new Map<string, string>();
     inScheme.forEach((c) => {
       c.labels.prefLabel.forEach((l) => {
         const key = `${l.lang}::${l.value.trim().toLowerCase()}`;
@@ -90,15 +87,15 @@ function computeIssues(ontologyId: string, tick: number): Issue[] {
     });
   });
 
-  // Rule 3: domain/range violation on relations.
   scopedRelations.forEach((r) => {
     const rt = relTypeById.get(r.relationTypeId);
-    if (!rt) return; // handled separately
+    if (!rt) return;
     const from = allConcepts.find((c) => c.id === r.from);
     const to = allConcepts.find((c) => c.id === r.to);
     if (!from || !to) return;
     if (rt.domainClassId && from.classId !== rt.domainClassId) {
-      const expected = classById.get(rt.domainClassId)?.name ?? rt.domainClassId;
+      const expected =
+        classById.get(rt.domainClassId)?.name ?? rt.domainClassId;
       const got = classById.get(from.classId)?.name ?? from.classId;
       issues.push({
         id: `dom-${r.id}`,
@@ -111,7 +108,8 @@ function computeIssues(ontologyId: string, tick: number): Issue[] {
       });
     }
     if (rt.rangeClassId && to.classId !== rt.rangeClassId) {
-      const expected = classById.get(rt.rangeClassId)?.name ?? rt.rangeClassId;
+      const expected =
+        classById.get(rt.rangeClassId)?.name ?? rt.rangeClassId;
       const got = classById.get(to.classId)?.name ?? to.classId;
       issues.push({
         id: `rng-${r.id}`,
@@ -125,7 +123,6 @@ function computeIssues(ontologyId: string, tick: number): Issue[] {
     }
   });
 
-  // Rule 4: deprecated concept still referenced by an active relation.
   scopedConcepts
     .filter((c) => c.deprecated)
     .forEach((c) => {
@@ -147,7 +144,6 @@ function computeIssues(ontologyId: string, tick: number): Issue[] {
       }
     });
 
-  // Rule 5: orphan concepts (no relations at all) in taxonomy-style schemes.
   scopedConcepts.forEach((c) => {
     if (c.deprecated) return;
     const anyRel = scopedRelations.some(
@@ -195,108 +191,168 @@ export default function ValidationPanel({
   const warnCount = issues.filter((i) => i.severity === "warn").length;
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
-      <div className="border-b border-ink-100 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 text-ink-500" />
-          <h3 className="text-sm font-semibold text-ink-900">Validation</h3>
+    <Flex direction="column" className="h-full min-h-0">
+      <Box
+        px="4"
+        py="3"
+        style={{ borderBottom: "1px solid var(--gray-a4)" }}
+      >
+        <Flex align="center" gap="2">
+          <ShieldCheck
+            className="h-4 w-4"
+            style={{ color: "var(--gray-11)" }}
+          />
+          <Heading size="2" weight="bold">
+            Validation
+          </Heading>
           {issues.length === 0 ? (
-            <span className="chip bg-emerald-50 text-emerald-700">
+            <Badge color="green" variant="soft" size="1">
               <CheckCircle2 className="h-3 w-3" />
               All clear
-            </span>
+            </Badge>
           ) : (
             <>
               {errorCount > 0 && (
-                <span className="chip bg-rose-50 text-rose-700">
+                <Badge color="ruby" variant="soft" size="1">
                   <CircleAlert className="h-3 w-3" />
                   {errorCount}
-                </span>
+                </Badge>
               )}
               {warnCount > 0 && (
-                <span className="chip bg-amber-50 text-amber-700">
+                <Badge color="amber" variant="soft" size="1">
                   <AlertTriangle className="h-3 w-3" />
                   {warnCount}
-                </span>
+                </Badge>
               )}
             </>
           )}
-        </div>
-        <p className="mt-1 text-[11.5px] text-ink-500">
+        </Flex>
+        <Text as="p" size="1" color="gray" mt="1">
           Live checks that run on every edit. Click an issue to jump to the
           offending concept.
-        </p>
-      </div>
+        </Text>
+      </Box>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <Box className="min-h-0 flex-1 overflow-y-auto">
         {issues.length === 0 && (
-          <div className="flex h-full flex-col items-center justify-center px-6 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            px="6"
+            className="h-full text-center"
+          >
+            <Flex
+              align="center"
+              justify="center"
+              className="h-12 w-12 rounded-full"
+              style={{
+                background: "var(--green-3)",
+                color: "var(--green-11)",
+              }}
+            >
               <CheckCircle2 className="h-6 w-6" />
-            </div>
-            <h4 className="mt-3 text-sm font-semibold text-ink-900">
+            </Flex>
+            <Heading size="2" weight="bold" mt="3">
               Everything checks out
-            </h4>
-            <p className="mt-1 max-w-[220px] text-[12px] text-ink-500">
+            </Heading>
+            <Text
+              size="1"
+              color="gray"
+              mt="1"
+              style={{ maxWidth: 220 }}
+            >
               No orphans, duplicates, or domain/range violations in this
               ontology.
-            </p>
-          </div>
+            </Text>
+          </Flex>
         )}
         {Object.entries(byRule).map(([rule, items]) => {
           const firstSeverity = items[0].severity;
           const Icon = iconForRule(rule);
           return (
-            <section key={rule} className="border-b border-ink-100">
-              <header className="flex items-center gap-2 bg-ink-50/70 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-ink-600">
-                <Icon className="h-3.5 w-3.5" />
-                {rule}
-                <span
-                  className={clsx(
-                    "ml-auto rounded-full px-1.5 py-0.5 text-[10px]",
-                    firstSeverity === "error"
-                      ? "bg-rose-100 text-rose-700"
-                      : "bg-amber-100 text-amber-700"
-                  )}
+            <Box
+              key={rule}
+              style={{ borderBottom: "1px solid var(--gray-a4)" }}
+            >
+              <Flex
+                align="center"
+                gap="2"
+                px="4"
+                py="2"
+                style={{ background: "var(--gray-2)" }}
+              >
+                <Icon
+                  className="h-3.5 w-3.5"
+                  style={{ color: "var(--gray-11)" }}
+                />
+                <Text
+                  size="1"
+                  weight="bold"
+                  color="gray"
+                  className="uppercase tracking-wide"
                 >
-                  {items.length}
-                </span>
-              </header>
-              <ul>
-                {items.map((issue) => (
-                  <li
-                    key={issue.id}
-                    onClick={() => {
-                      if (issue.conceptId) {
-                        navigate(
-                          `/ontologies/${ontologyId}/concepts/${issue.conceptId}`
-                        );
-                      }
-                    }}
-                    className={clsx(
-                      "flex cursor-pointer items-start gap-2 px-4 py-2.5 transition-colors hover:bg-ink-50",
-                      issue.severity === "error"
-                        ? "border-l-2 border-rose-500"
-                        : "border-l-2 border-amber-500"
-                    )}
+                  {rule}
+                </Text>
+                <Box ml="auto">
+                  <Badge
+                    color={firstSeverity === "error" ? "ruby" : "amber"}
+                    variant="soft"
+                    size="1"
                   >
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[12.5px] font-semibold text-ink-900">
-                        {issue.title}
-                      </div>
-                      <p className="mt-0.5 text-[11.5px] text-ink-500">
-                        {issue.description}
-                      </p>
-                    </div>
-                    <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-ink-300 group-hover:text-ink-600" />
-                  </li>
-                ))}
-              </ul>
-            </section>
+                    {items.length}
+                  </Badge>
+                </Box>
+              </Flex>
+              <Flex direction="column" asChild>
+                <ul>
+                  {items.map((issue) => (
+                    <Flex
+                      asChild
+                      key={issue.id}
+                      align="start"
+                      gap="2"
+                      px="4"
+                      py="2"
+                      onClick={() => {
+                        if (issue.conceptId) {
+                          navigate(
+                            `/ontologies/${ontologyId}/concepts/${issue.conceptId}`
+                          );
+                        }
+                      }}
+                      className="cursor-pointer hover:bg-[var(--gray-a3)]"
+                      style={{
+                        borderLeft: `2px solid ${
+                          issue.severity === "error"
+                            ? "var(--ruby-9)"
+                            : "var(--amber-9)"
+                        }`,
+                      }}
+                    >
+                      <li>
+                        <Box className="min-w-0 flex-1">
+                          <Text size="1" weight="bold">
+                            {issue.title}
+                          </Text>
+                          <Text as="p" size="1" color="gray" mt="1">
+                            {issue.description}
+                          </Text>
+                        </Box>
+                        <ArrowRight
+                          className="mt-1 h-3.5 w-3.5 shrink-0"
+                          style={{ color: "var(--gray-9)" }}
+                        />
+                      </li>
+                    </Flex>
+                  ))}
+                </ul>
+              </Flex>
+            </Box>
           );
         })}
-      </div>
-    </div>
+      </Box>
+    </Flex>
   );
 }
 

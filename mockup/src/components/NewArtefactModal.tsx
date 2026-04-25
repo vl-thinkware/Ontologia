@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  Flex,
+  Text,
+  TextArea,
+  TextField,
+} from "@radix-ui/themes";
+import {
   Network,
   ArrowRight,
   Globe,
@@ -16,13 +26,8 @@ import {
   type LangTag,
 } from "../data/mock";
 
-// Workspace-level languages the user can enable on the new ontology. Matches
-// the LangTag union in mock.ts. If we ever add more, bump both places.
 const AVAILABLE_LANGS: LangTag[] = ["en", "fr", "de", "es", "ja"];
 
-// Starter presets — give the user a head start by pre-filling a T-Box shape.
-// None of them currently seed concepts in the mockup; the copy makes clear
-// what the generated schema will contain.
 type Starter = {
   id: string;
   title: string;
@@ -65,8 +70,6 @@ export default function NewArtefactModal() {
   const navigate = useNavigate();
 
   function toggleLang(lang: LangTag) {
-    // The default language is always enabled — don't let the user remove it
-    // without first picking a different default.
     if (lang === defaultLang) return;
     setLanguages((prev) =>
       prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang]
@@ -94,8 +97,6 @@ export default function NewArtefactModal() {
     setStarterId("blank");
     setDefaultLang("en");
     setLanguages(["en"]);
-    // Route into the first ontology as a stand-in — the mockup doesn't yet
-    // persist new workspaces.
     navigate(`/ontologies/${ontologies[0]?.id ?? "ont_cars"}`);
   }
 
@@ -110,83 +111,122 @@ export default function NewArtefactModal() {
       width="max-w-2xl"
       footer={
         <>
-          <button className="btn-secondary" onClick={closeNewArtefact}>
+          <Button variant="surface" color="gray" onClick={closeNewArtefact}>
             Cancel
-          </button>
-          <button
-            className={clsx(
-              "btn-primary",
-              !valid && "cursor-not-allowed opacity-60"
-            )}
-            disabled={!valid}
-            onClick={handleCreate}
-          >
+          </Button>
+          <Button disabled={!valid} onClick={handleCreate}>
             Create ontology
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </Button>
         </>
       }
     >
-      <div className="space-y-5">
+      <Flex direction="column" gap="5">
         {/* Identity */}
-        <div className="flex items-center gap-3 rounded-xl border border-sky-200 bg-gradient-to-br from-sky-50 to-white p-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-sky-700 ring-1 ring-black/5">
-            <Network className="h-5 w-5" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="text-[13px] font-semibold text-ink-900">
-              Ontology · T-Box + A-Box
-            </div>
-            <div className="text-[11.5px] text-ink-600">
-              Classes, relation types, and one or more taxonomies (concept
-              schemes) — the full modelling stack Ontologia is built around.
-            </div>
-          </div>
-          <span className="chip bg-sky-100 text-sky-700">
-            <Sparkles className="h-3 w-3" />
-            Recommended
-          </span>
-        </div>
+        <Card
+          variant="surface"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--sky-2), var(--color-panel-solid))",
+            border: "1px solid var(--sky-a5)",
+          }}
+        >
+          <Flex align="center" gap="3">
+            <Flex
+              align="center"
+              justify="center"
+              className="h-10 w-10 shrink-0 rounded-[var(--radius-3)]"
+              style={{
+                background: "var(--color-panel-solid)",
+                color: "var(--sky-11)",
+                border: "1px solid var(--sky-a4)",
+              }}
+            >
+              <Network className="h-5 w-5" />
+            </Flex>
+            <Box className="min-w-0 flex-1">
+              <Text size="2" weight="bold">
+                Ontology · T-Box + A-Box
+              </Text>
+              <Text as="p" size="1" color="gray">
+                Classes, relation types, and one or more taxonomies (concept
+                schemes) — the full modelling stack Ontologia is built around.
+              </Text>
+            </Box>
+            <Badge color="sky" variant="soft">
+              <Sparkles className="h-3 w-3" />
+              Recommended
+            </Badge>
+          </Flex>
+        </Card>
 
         {/* Name + description */}
-        <div className="grid grid-cols-1 gap-3">
-          <label className="block">
-            <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+        <Flex direction="column" gap="3">
+          <Box>
+            <Text
+              as="label"
+              size="1"
+              weight="bold"
+              color="gray"
+              className="uppercase tracking-wider block"
+              mb="1"
+            >
               Name
-            </span>
-            <input
+            </Text>
+            <TextField.Root
               autoFocus
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Cars ontology"
-              className="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              size="2"
             />
-          </label>
-          <label className="block">
-            <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-ink-500">
-              Description <span className="text-ink-400">(optional)</span>
-            </span>
-            <textarea
+          </Box>
+          <Box>
+            <Text
+              as="label"
+              size="1"
+              weight="bold"
+              color="gray"
+              className="uppercase tracking-wider block"
+              mb="1"
+            >
+              Description{" "}
+              <Text size="1" color="gray" className="normal-case font-normal">
+                (optional)
+              </Text>
+            </Text>
+            <TextArea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What does this ontology describe? Who will consume it downstream?"
-              className="min-h-[72px] w-full resize-y rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+              style={{ minHeight: 72 }}
+              size="2"
             />
-          </label>
-        </div>
+          </Box>
+        </Flex>
 
         {/* Languages */}
-        <div>
-          <div className="mb-2 flex items-baseline justify-between">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+        <Box>
+          <Flex align="baseline" justify="between" mb="2">
+            <Text
+              size="1"
+              weight="bold"
+              color="gray"
+              className="uppercase tracking-wider"
+            >
               Languages
-            </span>
-            <span className="inline-flex items-center gap-1 text-[11px] text-ink-500">
-              <Globe className="h-3 w-3" />
-              Pick a default · enable additional translations
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
+            </Text>
+            <Flex align="center" gap="1">
+              <Globe
+                className="h-3 w-3"
+                style={{ color: "var(--gray-9)" }}
+              />
+              <Text size="1" color="gray">
+                Pick a default · enable additional translations
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex wrap="wrap" gap="2">
             {AVAILABLE_LANGS.map((lang) => {
               const enabled = languages.includes(lang);
               const isDefault = defaultLang === lang;
@@ -194,18 +234,30 @@ export default function NewArtefactModal() {
                 <button
                   key={lang}
                   type="button"
-                  onClick={() =>
-                    isDefault ? undefined : toggleLang(lang)
-                  }
+                  onClick={() => (isDefault ? undefined : toggleLang(lang))}
                   onDoubleClick={() => handleSelectDefault(lang)}
                   className={clsx(
-                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition-colors",
-                    isDefault
-                      ? "border-brand-600 bg-brand-600 text-white"
-                      : enabled
-                      ? "border-brand-300 bg-brand-50 text-brand-800"
-                      : "border-ink-200 bg-white text-ink-600 hover:bg-ink-50"
+                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11.5px] font-bold transition-colors"
                   )}
+                  style={
+                    isDefault
+                      ? {
+                          background: "var(--accent-9)",
+                          color: "var(--accent-contrast)",
+                          borderColor: "var(--accent-9)",
+                        }
+                      : enabled
+                      ? {
+                          background: "var(--accent-3)",
+                          color: "var(--accent-11)",
+                          borderColor: "var(--accent-7)",
+                        }
+                      : {
+                          background: "var(--color-panel-solid)",
+                          color: "var(--gray-11)",
+                          borderColor: "var(--gray-a5)",
+                        }
+                  }
                   title={
                     isDefault
                       ? "Default language (click a different chip, then double-click to change)"
@@ -213,73 +265,92 @@ export default function NewArtefactModal() {
                   }
                 >
                   <span className="uppercase tracking-wide">{lang}</span>
-                  <span
-                    className={clsx(
-                      isDefault ? "text-white/80" : "text-ink-500"
-                    )}
-                  >
-                    {LANGUAGE_NAMES[lang]}
-                  </span>
+                  <span style={{ opacity: 0.8 }}>{LANGUAGE_NAMES[lang]}</span>
                   {isDefault && (
-                    <span className="rounded-full bg-white/20 px-1 text-[9px] uppercase tracking-wider">
+                    <span
+                      className="rounded-full px-1 text-[9px] uppercase tracking-wider"
+                      style={{ background: "rgba(255,255,255,0.2)" }}
+                    >
                       default
                     </span>
                   )}
                 </button>
               );
             })}
-          </div>
-        </div>
+          </Flex>
+        </Box>
 
         {/* Starter T-Box */}
-        <div>
-          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+        <Box>
+          <Text
+            size="1"
+            weight="bold"
+            color="gray"
+            mb="2"
+            className="uppercase tracking-wider block"
+          >
             Starter schema
-          </div>
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+          </Text>
+          <Box className="grid grid-cols-1 gap-2 md:grid-cols-3">
             {STARTERS.map((s) => {
               const active = starterId === s.id;
               return (
-                <button
+                <Card
+                  asChild
                   key={s.id}
-                  type="button"
-                  onClick={() => setStarterId(s.id)}
-                  className={clsx(
-                    "flex flex-col gap-2 rounded-xl border p-3 text-left transition-colors",
+                  variant={active ? "classic" : "surface"}
+                  size="2"
+                  style={
                     active
-                      ? "border-brand-500 bg-brand-50 ring-2 ring-brand-200"
-                      : "border-ink-200 bg-white hover:bg-ink-50"
-                  )}
+                      ? {
+                          border: "2px solid var(--accent-9)",
+                          background: "var(--accent-2)",
+                        }
+                      : { cursor: "pointer" }
+                  }
                 >
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[12.5px] font-semibold text-ink-900">
-                      {s.title}
-                    </span>
-                    {active && (
-                      <Check className="ml-auto h-3.5 w-3.5 text-brand-600" />
-                    )}
-                  </div>
-                  <p className="text-[11.5px] text-ink-600">{s.body}</p>
-                  <div className="mt-auto space-y-0.5 text-[10.5px] text-ink-500">
-                    <div>
-                      <span className="font-semibold uppercase tracking-wide text-ink-400">
-                        Classes:{" "}
-                      </span>
-                      {s.classesHint}
-                    </div>
-                    <div>
-                      <span className="font-semibold uppercase tracking-wide text-ink-400">
-                        Relations:{" "}
-                      </span>
-                      {s.relationsHint}
-                    </div>
-                  </div>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setStarterId(s.id)}
+                    className="text-left"
+                  >
+                    <Flex align="center" gap="2">
+                      <Text size="2" weight="bold">
+                        {s.title}
+                      </Text>
+                      {active && (
+                        <Box ml="auto">
+                          <Check
+                            className="h-3.5 w-3.5"
+                            style={{ color: "var(--accent-11)" }}
+                          />
+                        </Box>
+                      )}
+                    </Flex>
+                    <Text as="p" size="1" color="gray" mt="1">
+                      {s.body}
+                    </Text>
+                    <Box mt="3">
+                      <Text size="1" color="gray">
+                        <strong className="uppercase tracking-wide">
+                          Classes:{" "}
+                        </strong>
+                        {s.classesHint}
+                      </Text>
+                      <Text as="div" size="1" color="gray">
+                        <strong className="uppercase tracking-wide">
+                          Relations:{" "}
+                        </strong>
+                        {s.relationsHint}
+                      </Text>
+                    </Box>
+                  </button>
+                </Card>
               );
             })}
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Flex>
     </Modal>
   );
 }
