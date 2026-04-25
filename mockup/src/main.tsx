@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter, Navigate } from "react-router-dom";
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
 import "@xyflow/react/dist/style.css";
 import "./index.css";
 import Shell from "./components/Shell";
@@ -51,10 +53,19 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AppProvider>
-      <PresenceProvider>
-        <RouterProvider router={router} />
-      </PresenceProvider>
-    </AppProvider>
+    <Theme
+      accentColor="violet"
+      grayColor="slate"
+      radius="medium"
+      scaling="100%"
+      panelBackground="solid"
+      appearance="light"
+    >
+      <AppProvider>
+        <PresenceProvider>
+          <RouterProvider router={router} />
+        </PresenceProvider>
+      </AppProvider>
+    </Theme>
   </React.StrictMode>
 );

@@ -1,98 +1,181 @@
-# Glossary
+**Primary owner**: @Valentin LEMORT · **Contributor**: @Alexandre Delplace
 
-**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
+**Last updated**: 24 April 2026
 
-
-Shared vocabulary used across product, engineering, design and GTM. Terms are alphabetical. When in doubt, refer here rather than inventing new words.
-
----
-
-**ACL (Access Control List).** Per-resource permission grant (e.g. "user X can edit ontology Y"). Complements role-based access control.
-
-**Audit log.** Immutable record of every action taken inside a workspace (who, what, when, from where). Exportable on Pro+ plans.
-
-**Branch.** Named pointer to a chain of commits on an ontology. Mirrors Git semantics. Default branch is `main`.
-
-**Canvas.** The interactive graph editor in the main application view.
-
-**Changelog.** Human-readable feed of significant commits, merges and releases, scoped to an ontology or workspace.
-
-**Commit.** An atomic, immutable snapshot of an ontology on a branch. Carries author, timestamp, message and a link to its parent commit.
-
-**Concept.** A node in the graph — a named idea in the user's domain ("Product", "Risk", "Subscription"). Has typed properties, a status and a stable id.
-
-**Conflict (merge conflict).** Two branches modified the same concept or relation divergently. Resolved via a 3-way merge UI.
-
-**Connector.** A first-party integration to an external system (dbt, DataHub, Atlan, webhook).
-
-**Cypher.** Neo4j's declarative query language. Exposed through a read-only console on Pro+.
-
-**Design partner.** An early customer (often free) who co-develops the product with us in exchange for influence and reference status.
-
-**Diff.** A structured comparison between two commits / branches, showing added, modified and deleted concepts and relations.
-
-**Draft.** Uncommitted local changes on a branch. Lives in the browser until the user commits.
-
-**HEAD.** The most recent commit on the currently checked-out branch.
-
-**Inspector.** Right-hand drawer that shows a selected concept's or relation's properties, history and comments.
-
-**Instance.** A concrete occurrence of a concept (distinct from the concept definition itself). Ontologia supports instances in a light form; deep instance management is out of scope.
-
-**is-a.** Canonical hierarchical relation ("Car is-a Vehicle"). First-class in the tree view.
-
-**JSON-LD.** Linked-data serialization format. One of our supported import/export formats.
-
-**Knowledge graph.** A domain model expressed as typed nodes and edges. The artefact an ontology describes.
-
-**Merge.** Integrating changes from one branch into another. Fast-forward where possible, 3-way otherwise.
-
-**Multi-tenant.** Architectural property: many organisations share infrastructure, but each sees only its own data.
-
-**Neo4j.** The native graph database powering the ontology store.
-
-**Ontology.** A structured description of concepts and relations in a domain. In Ontologia, an ontology lives in a workspace and has at least one branch (`main`).
-
-**Organisation (Org).** Billing entity. Holds one or more workspaces, users and subscriptions.
-
-**OWL.** Web Ontology Language. We read a simplified subset on import; we do not perform OWL-DL reasoning.
-
-**PII.** Personally Identifiable Information. Minimised and access-controlled throughout the stack.
-
-**PR (Review Request / conceptual PR).** Proposed set of commits on a branch awaiting review before merging to `main`.
-
-**Property.** A key/value pair attached to a concept or relation (e.g. `definition`, `source`, `confidence`).
-
-**RAG (Retrieval-Augmented Generation).** A common downstream use of ontologies for LLM pipelines.
-
-**Relation.** A typed, directed edge between two concepts (e.g. `is-a`, `part-of`, `has-property`).
-
-**Relation type.** The declared kind of a relation, optionally marked transitive or symmetric. Defined per ontology.
-
-**Revert.** Create a new commit that restores the state of a previous commit. History is never rewritten.
-
-**Role.** Workspace-scoped permission bundle: Owner, Editor, Reviewer, Viewer.
-
-**SCIM.** System for Cross-domain Identity Management. Used for enterprise user provisioning.
-
-**SKOS.** Simple Knowledge Organisation System — RDF vocabulary for thesauri. Partial import support.
-
-**Soft-delete.** Marking a concept `deprecated` rather than physically removing it. Default behaviour.
-
-**SSO.** Single Sign-On (SAML / OIDC). Enterprise-tier.
-
-**Status (of a concept).** Lifecycle flag: `draft`, `validated`, `deprecated`.
-
-**Tenant.** See *Organisation*.
-
-**Tree view.** Collapsible hierarchical view filtered to `is-a` relations.
-
-**Version.** Colloquial term for a commit. Prefer "commit" in engineering contexts.
-
-**Webhook.** Outbound HTTP callback triggered by workspace events (commit, merge, etc.).
-
-**Workspace.** A container for related ontologies inside an organisation. Holds members, roles, billing per-seat counts.
+**Scope**: Canonical definitions used across every Ontologia doc, the product UI, the API, and user-facing copy. If a term appears here and in one of the peer docs, this page wins.
 
 ---
 
-See also: [Data Model](../02_architecture/DATA_MODEL.md) for the formal schema, and [API Specification](../02_architecture/API_SPECIFICATION.md) for how these entities appear on the wire.
+## How to read this glossary
+
+Terms are grouped by concern, not alphabetised — grouping makes the relationships between them easier to learn. The **Modelling** group is load-bearing for everything else; if you only read one section, read that.
+
+Every entry follows the shape:
+
+> **Term** — single-sentence definition.
+> 
+> _Maps to_: SKOS / OWL vocabulary it corresponds to, if any.
+> 
+> _See also_: closely related terms.
+
+---
+
+## Modelling
+
+> **Ontology** — a workspace-scoped container that holds both the schema (classes + relation types) and one or more taxonomies of concepts that follow that schema. Every artefact created in Ontologia is an Ontology.
+> 
+> _Maps to_: `owl:Ontology`.
+> 
+> _See also_: ConceptClass, RelationType, ConceptScheme.
+
+> **T-Box** — the schema layer of an ontology: the set of ConceptClasses and RelationTypes that constrain what instances can exist and how they can connect. Short for _terminological box_.
+> 
+> _See also_: A-Box, ConceptClass, RelationType.
+
+> **A-Box** — the instance layer of an ontology: the actual Concepts and Relations that live inside one or more ConceptSchemes. Short for _assertional box_.
+> 
+> _See also_: T-Box, ConceptScheme, Concept.
+
+> **ConceptClass** — a T-Box definition for a kind of thing (e.g. `Manufacturer`, `Model`, `Engine`). Every concept is typed by exactly one class. Classes carry a human name + description, a colour, and zero or more custom attributes (see `ClassProperty`). Every concept of a class also carries the six SKOS built-in attributes.
+> 
+> _Maps to_: `owl:Class`.
+
+> **RelationType** — a T-Box definition for a kind of edge between concepts (e.g. `manufacturedBy`, `hasBodyStyle`). Each relation type declares a `domainClassId` and a `rangeClassId` so the editor can reject mismatched connections. Flags: `isBuiltIn`, `isTransitive`, `isSymmetric`, `strict`.
+> 
+> _Maps to_: `owl:ObjectProperty`.
+
+> **ClassProperty** — a typed custom attribute declared on a ConceptClass (e.g. `horsepower: number`, `modelYear: number`, `msrpUsd: money`). Supported value types: `string`, `number`, `boolean`, `enum`, `date`, `reference`, `money`. Flags: `required`, `localizable`.
+> 
+> _See also_: SKOS built-in attribute.
+
+> **ConceptScheme** — an A-Box container for a group of concepts that share the parent ontology's T-Box. Also called a **taxonomy** in product copy when the scheme is organised via `broader` relations. An ontology typically has several: e.g. the Cars ontology ships a Model catalogue, a Body style taxonomy, a Fuel type taxonomy, a Market segments taxonomy, and a Manufacturing geography scheme.
+> 
+> _Maps to_: `skos:ConceptScheme`.
+
+> **Concept** — an A-Box instance typed by a ConceptClass, living inside exactly one ConceptScheme. Every concept carries the six SKOS built-in attributes, zero or more custom property values, and a `lastChangeId` pointing at the event that last touched it.
+> 
+> _Maps to_: `skos:Concept`.
+
+> **Relation** — an A-Box edge between two concepts, typed by a RelationType and scoped to a ConceptScheme. Always directed (`from` → `to`).
+
+---
+
+## SKOS built-in attributes
+
+Every Concept carries the following six slots by virtue of being a SKOS Concept. They are not declared in a class's custom properties — the class editor surfaces them as always-present.
+
+> **prefLabel** — the canonical display name for a concept. At most one per language.
+> 
+> _Maps to_: `skos:prefLabel`.
+
+> **altLabel** — alternative names (synonyms, acronyms, spelling variants). Many per language.
+> 
+> _Maps to_: `skos:altLabel`.
+
+> **hiddenLabel** — search-only labels. Useful for misspellings, legacy codes, internal names. Never shown as display text. Many per language.
+> 
+> _Maps to_: `skos:hiddenLabel`.
+
+> **definition** — authoritative meaning of the concept. At most one per language.
+> 
+> _Maps to_: `skos:definition`.
+
+> **notation** — a stable machine-friendly code (SKU, ISO alpha-2, enum value). Language-neutral.
+> 
+> _Maps to_: `skos:notation`.
+
+> **example** — free-text illustrative usage. Many per language.
+> 
+> _Maps to_: `skos:example`.
+
+---
+
+## Hierarchy (inside a ConceptScheme)
+
+> **broader / narrower** — the SKOS hierarchy edge. `Camry —[broader]→ Mid-size Sedan` reads _the Camry is a narrower term than Mid-size Sedan_. Every taxonomy-style scheme ships a class-scoped `broader` RelationType; the Taxonomies tree uses it to build the tree.
+> 
+> _Maps to_: `skos:broader`, `skos:narrower`.
+
+> **related** — a non-hierarchical pointer between two concepts, typically rendered as a `competitorOf`-style symmetric relation or a user-defined RelationType.
+> 
+> _Maps to_: `skos:related`.
+
+---
+
+## Views (UI)
+
+> **Dashboard** — the workspace home. Usage gauges, activity feed from live ChangeEvents, ontology tiles.
+
+> **Canvas / Schema mode** — ER-style diagram of the ontology's T-Box. Classes are nodes, relation types are edges. Default view when opening an ontology.
+
+> **Canvas / Taxonomies mode** — same canvas toggled to show concrete Concepts from a single selected scheme, with their A-Box relations.
+
+> **Schema view** — dedicated full-page T-Box editor. Lists classes and relation types side by side; clicking a class expands its full attribute editor (SKOS built-ins documented + custom `ClassProperty` editor with add/edit/delete).
+
+> **Taxonomies tree** — the `/tree` view. Left rail is a per-scheme accordion of trees built from `broader` relations; center pane is the full ConceptDetail for the selected concept. Drag-drop rows to re-parent.
+
+> **Tables view** — a sortable, filterable datagrid over the concepts of the active ontology (or a single scheme). Multi-select bulk actions: Deprecate, Tag.
+
+> **Concept detail** — the full concept page: Overview, Properties, Relations, History, Usage, and AI tabs. Accessible from every view and also at `/ontologies/:id/concepts/:conceptId`.
+
+---
+
+## Versioning & change control
+
+> **ChangeEvent** — the audit record produced by every mutation. Kinds: `create`, `update`, `delete`, `revert`, `tag`, `bulk_import`. Carries author, timestamp, summary and optional message.
+
+> **Tag** — a named pointer to a ChangeEvent (e.g. `v1.3`). Downstream consumers pin API calls to a tag so they get a stable snapshot.
+
+> **Tag-to-tag diff** — the modal that compares two tags and shows a roll-up of added / modified / removed concepts between them.
+
+> **Revert** — recording a new ChangeEvent that inverts a previous one. The original entry stays visible in history (non-destructive).
+
+---
+
+## Governance
+
+> **Deprecation** — marking a concept inactive. Optional pointer to a replacement concept (`dct:isReplacedBy`) + free-text reason. Deprecated concepts stay in the graph for referential integrity and show a strike-through + banner everywhere.
+> 
+> _Maps to_: `owl:deprecated`, `dct:isReplacedBy`.
+
+> **Validation panel** — a right-rail surface that flags governance issues live: orphan concepts, domain/range violations on relations, duplicate prefLabels within a scheme, deprecated concepts still referenced by active relations, concepts missing a class.
+
+---
+
+## Distribution
+
+> **Export modal** — the picker that serialises the ontology into JSON-LD, SKOS Turtle, OWL RDF/XML or CSV, with a scope selector (full ontology vs per-scheme) and a live preview.
+
+> **API Playground** — a modal that exposes five endpoints (list concepts, list relations, schema, get concept, SPARQL) against the live workspace data. Copy-as-cURL / Copy-as-fetch shortcuts.
+
+> **Starter template** — the preset picked when creating a new ontology. Current options: Blank, Product reference, Catalog with multi-taxonomies.
+
+---
+
+## Collaboration
+
+> **Presence** — the fake-teammate overlay: avatars in the topbar, an "X is editing this" banner on the active concept, and small avatar chips on tree rows where a teammate is parked.
+
+> **Notifications center** — the bell icon in the topbar. Opens a popover listing recent ChangeEvents authored by others, plus static review/comment prompts. Mark-read persists per session.
+
+---
+
+## Roles
+
+> **OntologyArchitect** — can edit the T-Box (classes + relation types) and the A-Box of every ontology in a workspace.
+
+> **CatalogueMaintainer** — can edit concepts + relations inside designated ConceptSchemes but cannot change the T-Box.
+
+> **Downstream consumer** — read-only API client. Pins calls to a tag for stability.
+
+---
+
+## Serialization
+
+> **JSON-LD** — the default linked-data JSON export. Pairs well with glossaries and RAG pipelines.
+
+> **SKOS Turtle** — the Turtle serialization of a ConceptScheme. Round-trips with PoolParty, Sitecore, Algolia and anything that speaks SKOS.
+
+> **OWL RDF/XML** — full ontology export including T-Box. Consumed by Protégé, Stardog, GraphDB.
+
+> **CSV** — flat concept list with custom property columns. For BI, spreadsheets, legacy pipelines.

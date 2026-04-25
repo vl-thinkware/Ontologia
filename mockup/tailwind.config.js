@@ -1,6 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{ts,tsx}",
+    // Exclude the cloud-sync shadow duplicates (permissions can fail).
+    "!./src/**/* 2.tsx",
+    "!./src/**/* 2.ts",
+  ],
   theme: {
     extend: {
       colors: {

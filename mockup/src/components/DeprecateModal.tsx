@@ -1,5 +1,16 @@
 import { useMemo, useState } from "react";
-import clsx from "clsx";
+import {
+  Badge,
+  Box,
+  Button,
+  Callout,
+  Code,
+  Flex,
+  IconButton,
+  Text,
+  TextArea,
+  TextField,
+} from "@radix-ui/themes";
 import { AlertTriangle, Search, X, ArrowRight } from "lucide-react";
 import Modal from "./Modal";
 import { useApp } from "../app/AppContext";
@@ -9,7 +20,7 @@ import { useApp } from "../app/AppContext";
  *
  * The modal is deliberately opinionated: deprecation without a replacement
  * is allowed (sometimes the term just retires) but the picker is pre-scoped
- * to concepts from the same scheme + class so the taxonomist doesn't wander
+ * to concepts from the same ontology so the taxonomist doesn't wander
  * across artefacts. Matches the "dct:isReplacedBy / skos:exactMatch"
  * pattern from the data-model doc.
  */
@@ -31,12 +42,6 @@ export default function DeprecateModal() {
   const [replacementId, setReplacementId] = useState<string | null>(null);
   const [reason, setReason] = useState("");
 
-  // Whenever the modal opens for a different concept, reset the form.
-  const key = deprecateTarget?.id ?? null;
-  // A tiny local signal — not worth a useEffect; reset on first render per key
-  // by stashing a ref. Using inline compare against previous key works here.
-  // (We're not persisting form state between opens, so this is fine.)
-
   const candidates = useMemo(() => {
     if (!concept) return [];
     const q = query.trim().toLowerCase();
@@ -44,21 +49,15 @@ export default function DeprecateModal() {
       .filter((c) => {
         if (c.id === concept.id) return false;
         if (c.deprecated) return false;
-        // Prefer same scheme + class first, but still allow cross-scheme.
         if (c.ontologyId !== concept.ontologyId) return false;
         if (!q) return true;
         return (
           c.name.toLowerCase().includes(q) ||
-          c.labels.prefLabel.some((l) =>
-            l.value.toLowerCase().includes(q)
-          ) ||
-          c.labels.altLabel.some((l) =>
-            l.value.toLowerCase().includes(q)
-          )
+          c.labels.prefLabel.some((l) => l.value.toLowerCase().includes(q)) ||
+          c.labels.altLabel.some((l) => l.value.toLowerCase().includes(q))
         );
       })
       .sort((a, b) => {
-        // Same scheme + class first, then same scheme, then rest.
         const score = (x: typeof a) =>
           (x.schemeId === concept.schemeId ? 2 : 0) +
           (x.classId === concept.classId ? 1 : 0);
@@ -79,7 +78,9 @@ export default function DeprecateModal() {
         onClose={closeDeprecate}
         title="Deprecate concept"
       >
-        <p className="text-sm text-ink-500">Concept not found.</p>
+        <Text size="2" color="gray">
+          Concept not found.
+        </Text>
       </Modal>
     );
   }
@@ -99,7 +100,13 @@ export default function DeprecateModal() {
         : "Consumers will see the term but it'll be hidden from pickers.",
     });
     closeDeprecate();
-    // Clear local form state on close
+    setQuery("");
+    setReplacementId(null);
+    setReason("");
+  }
+
+  function reset() {
+    closeDeprecate();
     setQuery("");
     setReplacementId(null);
     setReason("");
@@ -108,137 +115,188 @@ export default function DeprecateModal() {
   return (
     <Modal
       open={!!deprecateTarget}
-      onClose={() => {
-        closeDeprecate();
-        setQuery("");
-        setReplacementId(null);
-        setReason("");
-      }}
+      onClose={reset}
       title={`Deprecate "${concept.name}"`}
       subtitle="Retires the concept from pickers but keeps it queryable for referential integrity."
       width="max-w-xl"
       footer={
         <>
-          <button onClick={closeDeprecate} className="btn-ghost py-1.5 px-3">
+          <Button variant="ghost" color="gray" onClick={closeDeprecate}>
             Cancel
-          </button>
-          <button
-            onClick={submit}
-            className="btn-primary py-1.5 px-3 bg-amber-600 hover:bg-amber-700 focus:ring-amber-200"
-          >
+          </Button>
+          <Button color="amber" onClick={submit}>
             <AlertTriangle className="h-3.5 w-3.5" />
-            Deprecate {key ? "" : ""}
-            {replacement ? " + redirect" : ""}
-          </button>
+            Deprecate{replacement ? " + redirect" : ""}
+          </Button>
         </>
       }
     >
-      <div className="space-y-4">
+      <Flex direction="column" gap="4">
         {/* Summary */}
-        <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-[12.5px] text-amber-900">
-          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-          <div>
+        <Callout.Root color="amber" variant="surface">
+          <Callout.Icon>
+            <AlertTriangle className="h-4 w-4" />
+          </Callout.Icon>
+          <Callout.Text>
             Downstream consumers keep their references intact. If you point at
             a replacement, clients that follow{" "}
-            <code className="rounded bg-amber-100 px-1">dct:isReplacedBy</code>{" "}
-            auto-redirect on next sync.
-          </div>
-        </div>
+            <Code variant="ghost">dct:isReplacedBy</Code> auto-redirect on next
+            sync.
+          </Callout.Text>
+        </Callout.Root>
 
         {/* Replacement picker */}
-        <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">
+        <Box>
+          <Text
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wide block"
+          >
             Replacement concept{" "}
-            <span className="font-normal normal-case text-ink-400">
+            <Text size="1" color="gray" className="normal-case font-normal">
               (optional)
-            </span>
-          </label>
+            </Text>
+          </Text>
           {replacement ? (
-            <div className="mt-1.5 flex items-center justify-between gap-2 rounded-lg border border-brand-300 bg-brand-50 px-3 py-2 text-[13px]">
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <ArrowRight className="h-3.5 w-3.5 text-brand-600" />
-                  <span className="truncate font-semibold text-ink-900">
+            <Flex
+              align="center"
+              justify="between"
+              gap="2"
+              mt="2"
+              p="2"
+              style={{
+                background: "var(--accent-3)",
+                border: "1px solid var(--accent-7)",
+                borderRadius: "var(--radius-3)",
+              }}
+            >
+              <Box className="min-w-0">
+                <Flex align="center" gap="2">
+                  <ArrowRight
+                    className="h-3.5 w-3.5"
+                    style={{ color: "var(--accent-11)" }}
+                  />
+                  <Text size="2" weight="bold" className="truncate">
                     {replacement.name}
-                  </span>
-                </div>
-                <div className="truncate text-[11px] text-ink-500">
+                  </Text>
+                </Flex>
+                <Text size="1" color="gray" className="truncate block">
                   {replacement.description || "No description"}
-                </div>
-              </div>
-              <button
+                </Text>
+              </Box>
+              <IconButton
+                variant="ghost"
+                color="gray"
+                size="1"
                 onClick={() => setReplacementId(null)}
-                className="rounded-md p-1 text-ink-400 hover:bg-white hover:text-ink-700"
                 title="Clear replacement"
               >
                 <X className="h-3.5 w-3.5" />
-              </button>
-            </div>
+              </IconButton>
+            </Flex>
           ) : (
             <>
-              <div className="mt-1.5 flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-2 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100">
-                <Search className="h-3.5 w-3.5 text-ink-400" />
-                <input
-                  autoFocus
+              <Box mt="2">
+                <TextField.Root
                   placeholder="Search concepts in this ontology…"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="w-full bg-transparent py-2 text-[13px] text-ink-800 placeholder:text-ink-400 focus:outline-none"
-                />
-              </div>
+                  size="2"
+                  autoFocus
+                >
+                  <TextField.Slot>
+                    <Search className="h-3.5 w-3.5" />
+                  </TextField.Slot>
+                </TextField.Root>
+              </Box>
               {candidates.length > 0 && (
-                <ul className="mt-2 max-h-56 overflow-y-auto rounded-lg border border-ink-200 bg-white divide-y divide-ink-100">
-                  {candidates.map((c) => (
-                    <li key={c.id}>
-                      <button
-                        onClick={() => setReplacementId(c.id)}
-                        className={clsx(
-                          "flex w-full items-center justify-between gap-2 px-3 py-2 text-left hover:bg-brand-50"
-                        )}
-                      >
-                        <div className="min-w-0">
-                          <div className="truncate text-[13px] font-medium text-ink-900">
+                <Box
+                  mt="2"
+                  style={{
+                    background: "var(--color-panel-solid)",
+                    border: "1px solid var(--gray-a4)",
+                    borderRadius: "var(--radius-3)",
+                    maxHeight: 224,
+                    overflowY: "auto",
+                  }}
+                >
+                  {candidates.map((c, i) => (
+                    <Flex
+                      asChild
+                      key={c.id}
+                      align="center"
+                      justify="between"
+                      gap="2"
+                      px="3"
+                      py="2"
+                      onClick={() => setReplacementId(c.id)}
+                      className="cursor-pointer hover:bg-[var(--accent-3)]"
+                      style={{
+                        borderTop:
+                          i !== 0 ? "1px solid var(--gray-a3)" : "none",
+                      }}
+                    >
+                      <button>
+                        <Box className="min-w-0">
+                          <Text
+                            size="2"
+                            weight="medium"
+                            className="block truncate"
+                          >
                             {c.name}
-                          </div>
-                          <div className="truncate text-[11px] text-ink-500">
+                          </Text>
+                          <Text
+                            size="1"
+                            color="gray"
+                            className="block truncate"
+                          >
                             {c.description || "—"}
-                          </div>
-                        </div>
-                        <span className="chip bg-ink-100 text-ink-600 text-[10px]">
+                          </Text>
+                        </Box>
+                        <Badge color="gray" variant="soft" size="1">
                           {c.schemeId === concept.schemeId
                             ? "same scheme"
                             : "cross-scheme"}
-                        </span>
+                        </Badge>
                       </button>
-                    </li>
+                    </Flex>
                   ))}
-                </ul>
+                </Box>
               )}
               {query && candidates.length === 0 && (
-                <p className="mt-1 text-[11.5px] text-ink-500">
+                <Text size="1" color="gray" mt="2" as="p">
                   No matches in this ontology.
-                </p>
+                </Text>
               )}
             </>
           )}
-        </div>
+        </Box>
 
         {/* Reason */}
-        <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">
+        <Box>
+          <Text
+            size="1"
+            weight="bold"
+            color="gray"
+            className="uppercase tracking-wide block"
+          >
             Reason{" "}
-            <span className="font-normal normal-case text-ink-400">
+            <Text size="1" color="gray" className="normal-case font-normal">
               (optional — shown to downstream editors)
-            </span>
-          </label>
-          <textarea
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            placeholder={`Why is "${concept.name}" being deprecated?`}
-            className="mt-1.5 w-full resize-y min-h-[72px] rounded-lg border border-ink-200 bg-white px-3 py-2 text-[13px] focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-          />
-        </div>
-      </div>
+            </Text>
+          </Text>
+          <Box mt="2">
+            <TextArea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder={`Why is "${concept.name}" being deprecated?`}
+              size="2"
+              style={{ minHeight: 72 }}
+            />
+          </Box>
+        </Box>
+      </Flex>
     </Modal>
   );
 }

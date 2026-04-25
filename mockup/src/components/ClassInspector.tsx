@@ -1,6 +1,14 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import clsx from "clsx";
+import {
+  Badge,
+  Box,
+  Button,
+  Code,
+  Flex,
+  Heading,
+  Text,
+} from "@radix-ui/themes";
 import {
   Layers,
   Languages,
@@ -23,9 +31,15 @@ import {
   type ConceptClass,
 } from "../data/mock";
 
-// Right-rail inspector for the Schema canvas mode. Lighter than
-// ClassAttributesEditor: read-only, compact enough for the 380px panel,
-// and deep-links into the Schema view for the full editor.
+const COLOR_BANNER: Record<string, string> = {
+  violet: "linear-gradient(90deg, var(--violet-9), var(--violet-11))",
+  emerald: "linear-gradient(90deg, var(--green-9), var(--green-11))",
+  amber: "linear-gradient(90deg, var(--amber-9), var(--amber-11))",
+  sky: "linear-gradient(90deg, var(--sky-9), var(--sky-11))",
+  rose: "linear-gradient(90deg, var(--ruby-9), var(--ruby-11))",
+  ink: "linear-gradient(90deg, var(--gray-11), var(--gray-12))",
+};
+
 export default function ClassInspector({
   classId,
   ontologyId,
@@ -38,18 +52,16 @@ export default function ClassInspector({
 
   const cls = useMemo(
     () => allConceptClasses.find((c) => c.id === classId) ?? null,
-    // tick so live-edits in the Schema view are reflected here
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [classId, tick]
   );
 
-  // Count instances + count relation types that reference this class on either
-  // side. Gives the user a sense of how load-bearing the class is.
   const stats = useMemo(() => {
-    if (!cls)
-      return { instances: 0, outgoing: [], incoming: [] };
+    if (!cls) return { instances: 0, outgoing: [], incoming: [] };
     const instances = allConcepts.filter((c) => c.classId === cls.id).length;
-    const outgoing = allRelationTypes.filter((r) => r.domainClassId === cls.id);
+    const outgoing = allRelationTypes.filter(
+      (r) => r.domainClassId === cls.id
+    );
     const incoming = allRelationTypes.filter(
       (r) => r.rangeClassId === cls.id && r.domainClassId !== cls.id
     );
@@ -60,276 +72,437 @@ export default function ClassInspector({
 
   if (!cls) {
     return (
-      <div className="flex h-full flex-col items-center justify-center px-6 py-10 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-ink-100 text-ink-400">
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        px="6"
+        py="9"
+        className="h-full text-center"
+      >
+        <Flex
+          align="center"
+          justify="center"
+          className="h-12 w-12 rounded-full"
+          style={{ background: "var(--gray-a3)", color: "var(--gray-9)" }}
+        >
           <MousePointer2 className="h-5 w-5" />
-        </div>
-        <h3 className="mt-4 text-sm font-semibold text-ink-800">
+        </Flex>
+        <Heading size="2" weight="bold" mt="4">
           Pick a class
-        </h3>
-        <p className="mt-1 max-w-xs text-xs text-ink-500">
+        </Heading>
+        <Text size="1" color="gray" mt="1" style={{ maxWidth: 260 }}>
           Click any class card on the schema canvas to see its SKOS built-ins,
           custom attributes and the relation types it participates in.
-        </p>
-      </div>
+        </Text>
+      </Flex>
     );
   }
 
   const color = cls.color ?? "ink";
-  const colorBanner: Record<string, string> = {
-    violet: "bg-gradient-to-r from-violet-500 to-violet-700",
-    emerald: "bg-gradient-to-r from-emerald-500 to-emerald-700",
-    amber: "bg-gradient-to-r from-amber-500 to-amber-700",
-    sky: "bg-gradient-to-r from-sky-500 to-sky-700",
-    rose: "bg-gradient-to-r from-rose-500 to-rose-700",
-    ink: "bg-gradient-to-r from-ink-600 to-ink-800",
-  };
   const props = cls.properties ?? [];
 
-  const outgoingRels = allRelations.filter((r) => {
-    const from = allConcepts.find((c) => c.id === r.from);
-    return from?.classId === cls.id;
-  }).length;
-  const incomingRels = allRelations.filter((r) => {
-    const to = allConcepts.find((c) => c.id === r.to);
-    return to?.classId === cls.id;
-  }).length;
-  void outgoingRels;
-  void incomingRels;
-
   return (
-    <div className="flex h-full min-h-0 flex-col">
+    <Flex direction="column" className="h-full min-h-0">
       {/* Identity */}
-      <div className="border-b border-ink-100 px-4 py-3">
-        <div
-          className={clsx(
-            "flex items-center gap-2 rounded-t-lg px-3 py-1.5 text-white",
-            colorBanner[color]
-          )}
+      <Box
+        px="4"
+        py="3"
+        style={{ borderBottom: "1px solid var(--gray-a4)" }}
+      >
+        <Flex
+          align="center"
+          gap="2"
+          px="3"
+          py="2"
+          style={{
+            background: COLOR_BANNER[color],
+            color: "white",
+            borderRadius: "var(--radius-3) var(--radius-3) 0 0",
+          }}
         >
           <Layers className="h-3.5 w-3.5" />
-          <span className="truncate text-[13px] font-semibold tracking-tight">
+          <Text size="2" weight="bold" className="truncate">
             {cls.name}
-          </span>
-          <span
-            className="ml-auto rounded-full bg-white/25 px-1.5 py-px text-[9.5px] font-bold uppercase tracking-wider"
+          </Text>
+          <Box
+            ml="auto"
+            style={{
+              background: "rgba(255,255,255,0.25)",
+              padding: "1px 6px",
+              borderRadius: 999,
+              fontSize: 9.5,
+              fontWeight: 700,
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+            }}
             title="owl:Class"
           >
             Class
-          </span>
-        </div>
-        <div className="mt-2 flex items-center justify-between text-[11px] text-ink-500">
-          <code className="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-[10.5px] text-ink-700">
+          </Box>
+        </Flex>
+        <Flex align="center" justify="between" mt="2">
+          <Code variant="soft" size="1">
             {cls.id}
-          </code>
-          <span className="font-semibold text-ink-700">
+          </Code>
+          <Text size="1" weight="bold">
             {stats.instances} instance{stats.instances === 1 ? "" : "s"}
-          </span>
-        </div>
+          </Text>
+        </Flex>
         {cls.description && (
-          <p className="mt-2 text-[12.5px] leading-relaxed text-ink-600">
+          <Text as="p" size="1" color="gray" mt="2">
             {cls.description}
-          </p>
+          </Text>
         )}
-        <div className="mt-3 flex items-center gap-1.5">
-          <button
+        <Box mt="3">
+          <Button
+            size="1"
             onClick={() => navigate(`/ontologies/${ontologyId}/schema`)}
-            className="btn-primary py-1 px-2 text-[11px]"
           >
             <ArrowUpRight className="h-3 w-3" />
             Edit in Schema view
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Box>
+      </Box>
 
-      <div className="min-h-0 flex-1 overflow-y-auto scroll-thin">
+      <Box className="min-h-0 flex-1 overflow-y-auto scroll-thin">
         {/* Built-in SKOS attributes */}
-        <section className="border-b border-ink-100 px-4 py-3">
-          <div className="mb-2 flex items-center gap-1.5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+        <Box
+          px="4"
+          py="3"
+          style={{ borderBottom: "1px solid var(--gray-a4)" }}
+        >
+          <Flex align="center" gap="2" mb="2">
+            <Text
+              size="1"
+              weight="bold"
+              color="gray"
+              className="uppercase tracking-wider"
+            >
               Built-in attributes
-            </h3>
-            <span className="chip bg-violet-50 text-violet-700 text-[10px]">
+            </Text>
+            <Badge color="violet" variant="soft" size="1">
               SKOS
-            </span>
-          </div>
-          <ul className="space-y-1.5">
+            </Badge>
+          </Flex>
+          <Flex direction="column" gap="2">
             {[
-              { key: "prefLabel", label: "Preferred label", icon: TagIcon, cardinality: "1 / lang", i18n: true },
-              { key: "altLabel", label: "Alternative labels", icon: Languages, cardinality: "many / lang", i18n: true },
-              { key: "hiddenLabel", label: "Hidden labels", icon: EyeOff, cardinality: "many / lang", i18n: true },
-              { key: "definition", label: "Definition", icon: BookOpen, cardinality: "1 / lang", i18n: true },
-              { key: "notation", label: "Notation", icon: Hash, cardinality: "0..1", i18n: false },
-              { key: "example", label: "Example", icon: FileText, cardinality: "0..many", i18n: true },
+              {
+                key: "prefLabel",
+                label: "Preferred label",
+                icon: TagIcon,
+                cardinality: "1 / lang",
+                i18n: true,
+              },
+              {
+                key: "altLabel",
+                label: "Alternative labels",
+                icon: Languages,
+                cardinality: "many / lang",
+                i18n: true,
+              },
+              {
+                key: "hiddenLabel",
+                label: "Hidden labels",
+                icon: EyeOff,
+                cardinality: "many / lang",
+                i18n: true,
+              },
+              {
+                key: "definition",
+                label: "Definition",
+                icon: BookOpen,
+                cardinality: "1 / lang",
+                i18n: true,
+              },
+              {
+                key: "notation",
+                label: "Notation",
+                icon: Hash,
+                cardinality: "0..1",
+                i18n: false,
+              },
+              {
+                key: "example",
+                label: "Example",
+                icon: FileText,
+                cardinality: "0..many",
+                i18n: true,
+              },
             ].map((b) => {
               const Icon = b.icon;
               return (
-                <li
+                <Flex
                   key={b.key}
-                  className="flex items-center gap-2 rounded-md bg-violet-50/40 px-2 py-1.5"
+                  align="center"
+                  gap="2"
+                  px="2"
+                  py="2"
+                  style={{
+                    background: "var(--violet-2)",
+                    borderRadius: "var(--radius-2)",
+                  }}
                 >
-                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-violet-100 text-violet-700">
+                  <Flex
+                    align="center"
+                    justify="center"
+                    className="h-5 w-5 shrink-0 rounded-[var(--radius-2)]"
+                    style={{
+                      background: "var(--violet-3)",
+                      color: "var(--violet-11)",
+                    }}
+                  >
                     <Icon className="h-3 w-3" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <code className="truncate text-[12px] font-semibold text-ink-900">
+                  </Flex>
+                  <Box className="min-w-0 flex-1">
+                    <Code
+                      size="1"
+                      variant="ghost"
+                      weight="bold"
+                      className="truncate"
+                    >
                       {b.key}
-                    </code>
-                    <span className="ml-1 text-[11px] text-ink-600">
+                    </Code>
+                    <Text size="1" color="gray" ml="1">
                       {b.label}
-                    </span>
-                  </div>
-                  <span className="shrink-0 text-[10.5px] text-ink-500">
+                    </Text>
+                  </Box>
+                  <Text size="1" color="gray">
                     {b.cardinality}
-                  </span>
+                  </Text>
                   {b.i18n && (
                     <Languages
-                      className="h-3 w-3 shrink-0 text-brand-600"
+                      className="h-3 w-3 shrink-0"
+                      style={{ color: "var(--accent-11)" }}
                       aria-label="language-aware"
                     />
                   )}
-                </li>
+                </Flex>
               );
             })}
-          </ul>
-        </section>
+          </Flex>
+        </Box>
 
         {/* Custom attributes */}
-        <section className="border-b border-ink-100 px-4 py-3">
-          <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+        <Box
+          px="4"
+          py="3"
+          style={{ borderBottom: "1px solid var(--gray-a4)" }}
+        >
+          <Flex align="center" justify="between" mb="2">
+            <Text
+              size="1"
+              weight="bold"
+              color="gray"
+              className="uppercase tracking-wider"
+            >
               Custom attributes ({props.length})
-            </h3>
-          </div>
+            </Text>
+          </Flex>
           {props.length === 0 ? (
-            <p className="rounded-md border border-dashed border-ink-200 bg-white px-2 py-3 text-center text-[11.5px] text-ink-500">
-              No custom attributes. Add some from the Schema view to capture
-              class-specific data.
-            </p>
+            <Box
+              px="2"
+              py="3"
+              style={{
+                border: "1px dashed var(--gray-a5)",
+                background: "var(--color-panel-solid)",
+                borderRadius: "var(--radius-2)",
+                textAlign: "center",
+              }}
+            >
+              <Text size="1" color="gray">
+                No custom attributes. Add some from the Schema view to capture
+                class-specific data.
+              </Text>
+            </Box>
           ) : (
-            <ul className="space-y-1.5">
+            <Flex direction="column" gap="2">
               {props.map((p) => (
-                <li
+                <Flex
                   key={p.key}
-                  className="flex items-start gap-2 rounded-md border border-ink-200 bg-white px-2 py-1.5"
+                  align="start"
+                  gap="2"
+                  px="2"
+                  py="2"
+                  style={{
+                    background: "var(--color-panel-solid)",
+                    border: "1px solid var(--gray-a4)",
+                    borderRadius: "var(--radius-2)",
+                  }}
                 >
-                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-ink-100 text-ink-600">
+                  <Flex
+                    align="center"
+                    justify="center"
+                    className="mt-0.5 h-5 w-5 shrink-0 rounded-[var(--radius-2)]"
+                    style={{
+                      background: "var(--gray-a3)",
+                      color: "var(--gray-11)",
+                    }}
+                  >
                     <Type className="h-3 w-3" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-1">
-                      <code className="text-[12px] font-semibold text-ink-900">
+                  </Flex>
+                  <Box className="min-w-0 flex-1">
+                    <Flex wrap="wrap" align="center" gap="1">
+                      <Code size="1" variant="ghost" weight="bold">
                         {p.key}
-                      </code>
-                      <span className="chip bg-ink-100 text-ink-700 font-mono text-[9.5px]">
+                      </Code>
+                      <Badge color="gray" variant="soft" size="1">
                         {p.valueType}
-                      </span>
+                      </Badge>
                       {p.required && (
-                        <span className="chip bg-rose-50 text-rose-700 text-[9.5px]">
+                        <Badge color="ruby" variant="soft" size="1">
                           required
-                        </span>
+                        </Badge>
                       )}
                       {p.localizable && (
-                        <span className="chip bg-brand-50 text-brand-700 text-[9.5px]">
+                        <Badge color="violet" variant="soft" size="1">
                           <Languages className="h-2.5 w-2.5" />
                           i18n
-                        </span>
+                        </Badge>
                       )}
-                    </div>
+                    </Flex>
                     {p.description && (
-                      <p className="mt-0.5 text-[11px] leading-snug text-ink-500">
+                      <Text as="p" size="1" color="gray" mt="1">
                         {p.description}
-                      </p>
+                      </Text>
                     )}
-                  </div>
-                </li>
+                  </Box>
+                </Flex>
               ))}
-            </ul>
+            </Flex>
           )}
-        </section>
+        </Box>
 
         {/* Relation participation */}
-        <section className="px-4 py-3">
-          <div className="mb-2 flex items-center gap-1.5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+        <Box px="4" py="3">
+          <Flex align="center" gap="2" mb="2">
+            <Text
+              size="1"
+              weight="bold"
+              color="gray"
+              className="uppercase tracking-wider"
+            >
               Relation participation
-            </h3>
-          </div>
+            </Text>
+          </Flex>
           {stats.outgoing.length === 0 && stats.incoming.length === 0 && (
-            <p className="text-[11.5px] text-ink-500">
+            <Text size="1" color="gray">
               This class isn't the domain or range of any relation type yet.
-            </p>
+            </Text>
           )}
           {stats.outgoing.length > 0 && (
-            <div className="mb-2">
-              <div className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-ink-400">
+            <Box mb="2">
+              <Text
+                size="1"
+                weight="bold"
+                color="gray"
+                mb="1"
+                className="uppercase tracking-wide block"
+              >
                 as domain
-              </div>
-              <ul className="space-y-1">
+              </Text>
+              <Flex direction="column" gap="1">
                 {stats.outgoing.map((rt) => {
                   const target = allConceptClasses.find(
                     (c) => c.id === rt.rangeClassId
                   );
                   return (
-                    <li
+                    <Flex
                       key={rt.id}
-                      className="flex items-center gap-1.5 rounded-md border border-ink-200 bg-white px-2 py-1 text-[11.5px]"
+                      align="center"
+                      gap="2"
+                      px="2"
+                      py="1"
+                      style={{
+                        background: "var(--color-panel-solid)",
+                        border: "1px solid var(--gray-a4)",
+                        borderRadius: "var(--radius-2)",
+                      }}
                     >
-                      <Link2 className="h-3 w-3 text-ink-400" />
-                      <code className="font-semibold text-ink-900">
+                      <Link2
+                        className="h-3 w-3"
+                        style={{ color: "var(--gray-9)" }}
+                      />
+                      <Code size="1" variant="ghost" weight="bold">
                         {rt.name}
-                      </code>
-                      <span className="text-ink-400">→</span>
-                      <span className="font-semibold text-ink-700">
+                      </Code>
+                      <Text size="1" color="gray">
+                        →
+                      </Text>
+                      <Text size="1" weight="bold">
                         {target?.name ?? rt.rangeClassId}
-                      </span>
+                      </Text>
                       {rt.isBuiltIn && (
-                        <span className="ml-auto chip bg-ink-100 text-ink-600 text-[9.5px]">
-                          built-in
-                        </span>
+                        <Box ml="auto">
+                          <Badge color="gray" variant="soft" size="1">
+                            built-in
+                          </Badge>
+                        </Box>
                       )}
-                    </li>
+                    </Flex>
                   );
                 })}
-              </ul>
-            </div>
+              </Flex>
+            </Box>
           )}
           {stats.incoming.length > 0 && (
-            <div>
-              <div className="mb-1 text-[10.5px] font-semibold uppercase tracking-wide text-ink-400">
+            <Box>
+              <Text
+                size="1"
+                weight="bold"
+                color="gray"
+                mb="1"
+                className="uppercase tracking-wide block"
+              >
                 as range
-              </div>
-              <ul className="space-y-1">
+              </Text>
+              <Flex direction="column" gap="1">
                 {stats.incoming.map((rt) => {
                   const src = allConceptClasses.find(
                     (c) => c.id === rt.domainClassId
                   );
                   return (
-                    <li
+                    <Flex
                       key={rt.id}
-                      className="flex items-center gap-1.5 rounded-md border border-ink-200 bg-ink-50/50 px-2 py-1 text-[11.5px]"
+                      align="center"
+                      gap="2"
+                      px="2"
+                      py="1"
+                      style={{
+                        background: "var(--gray-2)",
+                        border: "1px solid var(--gray-a4)",
+                        borderRadius: "var(--radius-2)",
+                      }}
                     >
-                      <span className="font-semibold text-ink-700">
+                      <Text size="1" weight="bold">
                         {src?.name ?? rt.domainClassId}
-                      </span>
-                      <span className="text-ink-400">—[</span>
-                      <code className="font-semibold text-ink-900">
+                      </Text>
+                      <Text size="1" color="gray">
+                        —[
+                      </Text>
+                      <Code size="1" variant="ghost" weight="bold">
                         {rt.name}
-                      </code>
-                      <span className="text-ink-400">]→</span>
-                      <span className="text-ink-500">this</span>
-                    </li>
+                      </Code>
+                      <Text size="1" color="gray">
+                        ]→
+                      </Text>
+                      <Text size="1" color="gray">
+                        this
+                      </Text>
+                    </Flex>
                   );
                 })}
-              </ul>
-            </div>
+              </Flex>
+            </Box>
           )}
-        </section>
-      </div>
-    </div>
+        </Box>
+      </Box>
+
+      {/* Use unused relation counts to keep noUnusedLocals quiet without hiding
+          something the reader can spot in the source. */}
+      {void allRelations}
+    </Flex>
   );
 }
 
-// ConceptClass is re-exported here purely to preserve the noUnusedLocals
-// discipline — TypeScript flags imports that are only used in type position.
 void null as unknown as ConceptClass;

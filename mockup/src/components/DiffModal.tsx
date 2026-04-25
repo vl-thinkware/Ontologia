@@ -1,5 +1,12 @@
 import { useMemo } from "react";
-import clsx from "clsx";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Flex,
+  Text,
+} from "@radix-ui/themes";
 import { ArrowLeftRight, History, RotateCcw } from "lucide-react";
 import Modal from "./Modal";
 import { useApp } from "../app/AppContext";
@@ -10,11 +17,28 @@ type FieldDiff = {
   after: string;
 };
 
+type EventKind =
+  | "create"
+  | "update"
+  | "delete"
+  | "revert"
+  | "tag"
+  | "bulk_import";
+
+const KIND_COLOR: Record<
+  EventKind,
+  "green" | "sky" | "ruby" | "amber" | "violet" | "gray"
+> = {
+  create: "green",
+  update: "sky",
+  delete: "ruby",
+  revert: "amber",
+  tag: "violet",
+  bulk_import: "gray",
+};
+
 /**
- * Diff viewer for a single ChangeEvent. We don't persist old values in the
- * mockup, so we synthesise a "before" by looking at the event's siblings
- * (immediately preceding event on the same entity). If we can't find one
- * we show the summary + author + timestamp as the authoritative record.
+ * Diff viewer for a single ChangeEvent.
  */
 export default function DiffModal() {
   const {
@@ -32,8 +56,6 @@ export default function DiffModal() {
     [events, diffEventId]
   );
 
-  // Find the previous event touching the same entity so we can render a
-  // plausible before/after. If nothing exists this is a creation event.
   const previous = useMemo(() => {
     if (!event) return null;
     const siblings = events.filter(
@@ -42,7 +64,6 @@ export default function DiffModal() {
     return siblings.sort((a, b) => (a.at < b.at ? 1 : -1))[0] ?? null;
   }, [events, event]);
 
-  // Best-effort current snapshot (what the field looks like now).
   const snapshot = useMemo(() => {
     if (!event) return null;
     if (event.entityKind === "concept") {
@@ -70,7 +91,8 @@ export default function DiffModal() {
           {
             label: "Replaced by",
             value: c.replacedBy
-              ? concepts.find((x) => x.id === c.replacedBy)?.name ?? c.replacedBy
+              ? concepts.find((x) => x.id === c.replacedBy)?.name ??
+                c.replacedBy
               : "—",
           },
         ],
@@ -93,13 +115,8 @@ export default function DiffModal() {
     return null;
   }, [event, concepts, relations]);
 
-  // Synthetic "before" values — the mockup doesn't keep history snapshots,
-  // so we infer the likely pre-change state by reading the previous event's
-  // summary when its shape is obvious, and fall back to "—" otherwise.
   const diff: FieldDiff[] = useMemo(() => {
     if (!event || !snapshot) return [];
-    // For update events, show every field and mark it "unchanged" when
-    // we can't infer — realistic for the demo.
     if (event.kind === "create") {
       return snapshot.fields.map((f) => ({
         label: f.label,
@@ -123,11 +140,11 @@ export default function DiffModal() {
         },
       ];
     }
-    // For update, if we have a previous event with an inline summary we use
-    // that as the "before" label; otherwise mark fields unchanged.
     return snapshot.fields.map((f) => ({
       label: f.label,
-      before: previous?.summary.includes(f.label) ? "(previous)" : "(unchanged)",
+      before: previous?.summary.includes(f.label)
+        ? "(previous)"
+        : "(unchanged)",
       after: f.value,
     }));
   }, [event, snapshot, previous]);
@@ -135,7 +152,9 @@ export default function DiffModal() {
   if (!event) {
     return (
       <Modal open={!!diffEventId} onClose={closeDiff} title="Change detail">
-        <p className="text-sm text-ink-500">Event not found.</p>
+        <Text size="2" color="gray">
+          Event not found.
+        </Text>
       </Modal>
     );
   }
@@ -149,11 +168,13 @@ export default function DiffModal() {
       width="max-w-3xl"
       footer={
         <>
-          <button onClick={closeDiff} className="btn-ghost py-1.5 px-3">
+          <Button variant="ghost" color="gray" onClick={closeDiff}>
             Close
-          </button>
+          </Button>
           {event.kind !== "revert" && (
-            <button
+            <Button
+              variant="surface"
+              color="gray"
               onClick={() => {
                 revertEvent(event.id);
                 toast({
@@ -163,114 +184,210 @@ export default function DiffModal() {
                 });
                 closeDiff();
               }}
-              className="btn-secondary py-1.5 px-3"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Revert this change
-            </button>
+            </Button>
           )}
         </>
       }
     >
-      <div className="space-y-3">
+      <Flex direction="column" gap="3">
         {/* Author bar */}
-        <div className="flex items-center gap-2 rounded-lg border border-ink-200 bg-ink-50 px-3 py-2 text-[12.5px]">
-          <div
-            className="flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold text-white"
-            style={{ backgroundColor: event.author.color }}
-          >
-            {event.author.initials}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="truncate font-semibold text-ink-900">
+        <Flex
+          align="center"
+          gap="2"
+          p="2"
+          style={{
+            background: "var(--gray-2)",
+            border: "1px solid var(--gray-a4)",
+            borderRadius: "var(--radius-3)",
+          }}
+        >
+          <Avatar
+            size="1"
+            radius="full"
+            fallback={event.author.initials}
+            style={{ background: event.author.color, color: "white" }}
+          />
+          <Box className="min-w-0 flex-1">
+            <Text size="2" weight="bold" className="block truncate">
               {event.author.name}
-            </div>
-            <div className="truncate text-[11px] text-ink-500">
+            </Text>
+            <Text size="1" color="gray" className="block truncate">
               {new Date(event.at).toLocaleString()}
               {event.message ? ` · ${event.message}` : ""}
-            </div>
-          </div>
-          <span
-            className={clsx(
-              "chip text-[10px]",
-              event.kind === "create" && "bg-emerald-50 text-emerald-700",
-              event.kind === "update" && "bg-sky-50 text-sky-700",
-              event.kind === "delete" && "bg-rose-50 text-rose-700",
-              event.kind === "revert" && "bg-amber-50 text-amber-700",
-              event.kind === "tag" && "bg-violet-50 text-violet-700",
-              event.kind === "bulk_import" && "bg-ink-100 text-ink-700"
-            )}
+            </Text>
+          </Box>
+          <Badge
+            color={KIND_COLOR[event.kind as EventKind] ?? "gray"}
+            variant="soft"
+            size="1"
           >
             {event.kind}
-          </span>
-        </div>
+          </Badge>
+        </Flex>
 
         {/* Diff table */}
-        <div className="overflow-hidden rounded-lg border border-ink-200">
-          <div className="grid grid-cols-[max-content_1fr_auto_1fr] items-stretch divide-x divide-ink-200 bg-ink-50 text-[11px] font-semibold uppercase tracking-wide text-ink-500">
-            <div className="px-3 py-1.5">Field</div>
-            <div className="px-3 py-1.5">Before</div>
-            <div className="flex items-center px-2">
-              <ArrowLeftRight className="h-3.5 w-3.5 text-ink-400" />
-            </div>
-            <div className="px-3 py-1.5">After</div>
-          </div>
+        <Box
+          style={{
+            border: "1px solid var(--gray-a4)",
+            borderRadius: "var(--radius-3)",
+            overflow: "hidden",
+          }}
+        >
+          <Flex
+            style={{
+              background: "var(--gray-2)",
+              borderBottom: "1px solid var(--gray-a4)",
+              fontSize: 11,
+            }}
+          >
+            <Box
+              px="3"
+              py="2"
+              style={{
+                width: "max-content",
+                borderRight: "1px solid var(--gray-a4)",
+              }}
+            >
+              <Text
+                size="1"
+                weight="bold"
+                color="gray"
+                className="uppercase tracking-wide"
+              >
+                Field
+              </Text>
+            </Box>
+            <Box
+              px="3"
+              py="2"
+              className="flex-1"
+              style={{ borderRight: "1px solid var(--gray-a4)" }}
+            >
+              <Text
+                size="1"
+                weight="bold"
+                color="gray"
+                className="uppercase tracking-wide"
+              >
+                Before
+              </Text>
+            </Box>
+            <Flex
+              align="center"
+              px="2"
+              style={{ borderRight: "1px solid var(--gray-a4)" }}
+            >
+              <ArrowLeftRight
+                className="h-3.5 w-3.5"
+                style={{ color: "var(--gray-9)" }}
+              />
+            </Flex>
+            <Box px="3" py="2" className="flex-1">
+              <Text
+                size="1"
+                weight="bold"
+                color="gray"
+                className="uppercase tracking-wide"
+              >
+                After
+              </Text>
+            </Box>
+          </Flex>
           {diff.length === 0 ? (
-            <div className="flex items-center gap-2 px-3 py-4 text-[12.5px] text-ink-500">
-              <History className="h-4 w-4" />
-              No structured diff available — treat the summary above as the
-              source of truth.
-            </div>
+            <Flex align="center" gap="2" px="3" py="4">
+              <History
+                className="h-4 w-4"
+                style={{ color: "var(--gray-9)" }}
+              />
+              <Text size="2" color="gray">
+                No structured diff available — treat the summary above as the
+                source of truth.
+              </Text>
+            </Flex>
           ) : (
-            <div className="divide-y divide-ink-100 text-[12.5px]">
+            <Box>
               {diff.map((d, i) => {
                 const changed = d.before !== d.after;
                 return (
-                  <div
+                  <Flex
                     key={i}
-                    className="grid grid-cols-[max-content_1fr_auto_1fr] items-stretch divide-x divide-ink-100"
+                    style={{
+                      borderTop:
+                        i !== 0 ? "1px solid var(--gray-a3)" : "none",
+                    }}
                   >
-                    <div className="px-3 py-2 font-medium text-ink-600">
-                      {d.label}
-                    </div>
-                    <div
-                      className={clsx(
-                        "px-3 py-2",
-                        changed
-                          ? "bg-rose-50/50 text-rose-900"
-                          : "text-ink-600"
-                      )}
+                    <Box
+                      px="3"
+                      py="2"
+                      style={{
+                        width: "max-content",
+                        borderRight: "1px solid var(--gray-a3)",
+                      }}
                     >
-                      <span className="break-words">{d.before || "—"}</span>
-                    </div>
-                    <div />
-                    <div
-                      className={clsx(
-                        "px-3 py-2",
-                        changed
-                          ? "bg-emerald-50/60 text-emerald-900"
-                          : "text-ink-600"
-                      )}
+                      <Text size="1" color="gray" weight="medium">
+                        {d.label}
+                      </Text>
+                    </Box>
+                    <Box
+                      px="3"
+                      py="2"
+                      className="flex-1"
+                      style={{
+                        borderRight: "1px solid var(--gray-a3)",
+                        background: changed
+                          ? "var(--ruby-2)"
+                          : "transparent",
+                        color: changed
+                          ? "var(--ruby-12)"
+                          : "var(--gray-11)",
+                      }}
                     >
-                      <span className="break-words">{d.after || "—"}</span>
-                    </div>
-                  </div>
+                      <Text size="1" className="break-words">
+                        {d.before || "—"}
+                      </Text>
+                    </Box>
+                    <Box
+                      style={{
+                        borderRight: "1px solid var(--gray-a3)",
+                      }}
+                    />
+                    <Box
+                      px="3"
+                      py="2"
+                      className="flex-1"
+                      style={{
+                        background: changed
+                          ? "var(--green-2)"
+                          : "transparent",
+                        color: changed
+                          ? "var(--green-12)"
+                          : "var(--gray-11)",
+                      }}
+                    >
+                      <Text size="1" className="break-words">
+                        {d.after || "—"}
+                      </Text>
+                    </Box>
+                  </Flex>
                 );
               })}
-            </div>
+            </Box>
           )}
-        </div>
+        </Box>
 
         {previous && (
-          <div className="text-[11px] text-ink-500">
+          <Text size="1" color="gray">
             Previous touch on this entity:{" "}
-            <span className="font-semibold text-ink-700">
+            <strong style={{ color: "var(--gray-12)" }}>
               {previous.summary}
-            </span>{" "}
+            </strong>{" "}
             · {timeAgo(previous.at)}
-          </div>
+          </Text>
         )}
-      </div>
+      </Flex>
     </Modal>
   );
 }

@@ -1,5 +1,21 @@
-import { X } from "lucide-react";
-import { useEffect } from "react";
+import { Dialog, Flex, Heading, Text } from "@radix-ui/themes";
+
+/**
+ * Backward-compatible Modal wrapper around Radix Themes Dialog.
+ *
+ * Keeps the legacy {open, onClose, title, subtitle, children, footer, width}
+ * API so every existing modal continues to work, while inheriting Radix
+ * Themes' a11y (focus trap, ESC, restore focus, portal, scroll lock).
+ */
+const widthMap: Record<string, string> = {
+  "max-w-sm": "420px",
+  "max-w-md": "480px",
+  "max-w-lg": "560px",
+  "max-w-xl": "640px",
+  "max-w-2xl": "720px",
+  "max-w-3xl": "880px",
+  "max-w-4xl": "1024px",
+};
 
 export default function Modal({
   open,
@@ -18,48 +34,61 @@ export default function Modal({
   footer?: React.ReactNode;
   width?: string;
 }) {
-  useEffect(() => {
-    if (!open) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  // Caller may pass either a tailwind max-w-* token (legacy) or a raw px/% value.
+  const maxWidth = widthMap[width] ?? width;
 
-  if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-ink-950/40 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div
-        className={`relative w-full ${width} overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-pop`}
+    <Dialog.Root open={open} onOpenChange={(v) => !v && onClose()}>
+      <Dialog.Content
+        maxWidth={maxWidth}
+        className="overflow-hidden p-0"
+        style={{ padding: 0 }}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-ink-100 px-5 py-4">
+        {/* Header */}
+        <Flex
+          align="start"
+          justify="between"
+          gap="4"
+          px="5"
+          py="4"
+          style={{ borderBottom: "1px solid var(--gray-a4)" }}
+        >
           <div>
-            <h2 className="text-base font-semibold tracking-tight text-ink-900">
-              {title}
-            </h2>
+            <Dialog.Title size="3" weight="bold" mb="0">
+              <Heading size="3" weight="bold" as="h2">
+                {title}
+              </Heading>
+            </Dialog.Title>
             {subtitle && (
-              <p className="mt-0.5 text-xs text-ink-600">{subtitle}</p>
+              <Dialog.Description size="1" color="gray" mt="1">
+                <Text as="p" size="1" color="gray">
+                  {subtitle}
+                </Text>
+              </Dialog.Description>
             )}
           </div>
-          <button
-            onClick={onClose}
-            className="rounded-md p-1 text-ink-400 hover:bg-ink-100 hover:text-ink-700"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+        </Flex>
+
+        {/* Body */}
         <div className="px-5 py-4">{children}</div>
+
+        {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-2 border-t border-ink-100 bg-ink-50/50 px-5 py-3">
+          <Flex
+            align="center"
+            justify="end"
+            gap="2"
+            px="5"
+            py="3"
+            style={{
+              borderTop: "1px solid var(--gray-a4)",
+              background: "var(--gray-2)",
+            }}
+          >
             {footer}
-          </div>
+          </Flex>
         )}
-      </div>
-    </div>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

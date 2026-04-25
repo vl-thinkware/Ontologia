@@ -1,291 +1,149 @@
-# Feature Specifications
+**Primary owner**: @Valentin LEMORT · **Contributor**: @Alexandre Delplace
 
-**Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (MVP scope trimmed)
+**Last updated**: 25 April 2026
 
-Each feature has: ID, priority, user story, acceptance criteria, dependencies, and implementation notes. Priorities map to the MoSCoW bucket from the [PRD](PRD.md).
-
-Legend: **M** = Must (MVP, v1.0) · **S** = Should (v1.1) · **C** = Could (v2.0 and beyond).
-
-> **MVP scope change (v2 of this doc)**: the git-like branches/merge/review workflow is **deferred to v1.1 or later**. MVP ships with an immutable change history at the concept-and-ontology level, plus revert and tags — enough for full auditability and safe editing, without the complexity of branches and three-way merges.
+**Scope**: Canonical feature list for Ontologia. Each feature is marked `MVP`, `V1` (post-launch first twelve months), or `V2+` (roadmap). If a feature is listed here, it either exists in the built mockup or is scheduled. Anything not on this page is explicitly out of scope.
 
 ---
 
-## M1 — Visual graph editor
+## How to read this page
 
-**User story.** As a Knowledge Architect, I can lay out and edit concepts and typed relations visually so that I model my domain quickly.
+Features are grouped by the surface area they affect, not by tier or persona. Every entry carries:
 
-**Acceptance criteria.**
-- Create a concept with name and optional description; edit both inline.
-- Attach typed relations between two concepts; pick or create a relation type.
-- Drag, multi-select, copy/paste, undo/redo (session-scoped).
-- Zoom 10%–400%, pan, fit-to-screen, mini-map.
-- Filter the canvas by relation type, status, or free-text.
-- Performance budget: < 150 ms FPS cost on a 5,000-node canvas.
+- **Status** — one of `MVP`, `V1`, `V2+`
+- **Surface** — the view(s) in which the feature lives
+- **One-line description** — what the feature does
 
-**Dependencies.** Concept/relation APIs (Phase 0). Frontend lib: React Flow.
-
-**Owner**: Alexandre (implementation), Valentin (UX).
+For anything deeper, follow the link to the dedicated spec.
 
 ---
 
-## M2 — Change history (concept-level and ontology-level)
+## 1. Core modelling (T-Box)
 
-**User story.** As an Architect, every change I make is recorded as an immutable change event I can review and revert.
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|ConceptClass CRUD|MVP|Schema|Create, rename, recolour, describe, delete classes. Deletion refuses when the class is still referenced by concepts.|
+|Custom attributes on a class|MVP|Schema|Add typed properties: `string`, `number`, `boolean`, `enum` (with values list), `date`, `reference`, `money`. Flags: `required`, `localizable`.|
+|SKOS built-in attributes|MVP|Schema|Every class exposes the six SKOS slots (`prefLabel`, `altLabel`, `hiddenLabel`, `definition`, `notation`, `example`) as always-present. No configuration needed.|
+|RelationType CRUD|MVP|Schema|Create relation types with `domain` + `range` class pointers. Flags: `isBuiltIn`, `isTransitive`, `isSymmetric`, `strict`. Deletion refuses when the type is still in use.|
+|Schema ER canvas|MVP|Canvas (Schema)|Classes as nodes, relation types as edges. Hub-and-spoke initial layout. Drag nodes freely. Built-in `broader` edges dashed; user-defined edges solid purple.|
+|Class inspector|MVP|Canvas (Schema) · right rail|Click a class on the canvas to see identity, instance count, SKOS built-ins, custom attributes, and every relation type participating (as domain and as range). "Edit in Schema view" deep link.|
 
-**Acceptance criteria.**
-- Every edit (create / update / delete on a concept or a relation) is persisted as a change event with: id, author, timestamp, entity type, entity id, diff payload, optional message.
-- History view (per ontology) lists change events in reverse chronological order with filters (author, date range, entity type).
-- Per-concept history view lists the change events that touched that concept.
-- Diff view between any two change events at the ontology level.
-- Revert creates a *new* change event that inverts a target change (no rewrite).
-- History is append-only; no force-edit, no force-delete of history.
-- Tag a point-in-time snapshot with a human-readable name (e.g. `v1-released`, `2026-Q2`); tags are immutable.
+## 2. Core modelling (A-Box)
 
-**Why this shape for MVP**: most of the auditability and safety benefits of git-like versioning come from the immutable history + revert + tags. We ship those first and skip the branching/merging complexity until customer demand justifies it.
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|Concept CRUD|MVP|Canvas (Taxonomies), Tables, Tree, Concept detail|Create, edit and remove concepts. New Concept modal scoped to a ConceptScheme.|
+|Multilingual labels|MVP|Concept detail, Inspector|Edit `prefLabel`, `altLabel`, `hiddenLabel` per workspace-configured language. Side-by-side multilingual view on ConceptDetail.|
+|Custom property values|MVP|Concept detail, Tables, Inspector|Fill typed values per class attribute. `localizable` attributes take multiple language-tagged values.|
+|Relation CRUD|MVP|Canvas (Taxonomies)|Drag between concept handles to open the RelationPickerModal; it filters applicable RelationTypes by domain/range. Delete edges via selection + Backspace.|
+|ConceptScheme CRUD|MVP|Sidebar, Schema|Create and rename schemes inside an ontology. Schemes share the parent ontology's T-Box.|
+|SKOS broader/narrower tree|MVP|Taxonomies tree|`/tree` view builds a scheme's hierarchy from `broader` relations and renders an expandable tree.|
+|Drag-drop reparenting|MVP|Taxonomies tree|Drop a row onto another to rewrite its broader relation. Cycle-safe. Records one ChangeEvent summarising the move.|
+|Deprecation + replacement|MVP|Concept detail, Inspector|Mark a concept inactive with optional `dct:isReplacedBy` pointer and free-text reason. Strike-through + banner surface the status everywhere.|
 
-**Dependencies.** [DATA_MODEL.md](../02_architecture/DATA_MODEL.md) (ChangeEvent node and payload format), diff algorithm.
+## 3. Views
 
-**Owner**: Alexandre (history storage), Valentin (UX of the history view).
+|View|Status|Notes|
+|---|---|---|
+|Canvas · Schema mode|MVP|Default when opening an ontology. Shows the T-Box.|
+|Canvas · Taxonomies mode|MVP|Toggle at top-right. Shows concrete concepts inside the selected scheme. Scheme switcher on the left overlay.|
+|Schema view|MVP|Full-page T-Box editor. Classes accordion with inline attribute editor; relation types list with inline forms.|
+|Taxonomies tree|MVP|Left rail: per-scheme trees. Center: full ConceptDetail (tabs: Overview, Properties, Relations, History, Usage, AI).|
+|Tables view|MVP|Sortable/filterable datagrid. Multi-select bulk actions (Deprecate, Tag).|
+|Concept detail|MVP|Stand-alone page at `/ontologies/:id/concepts/:conceptId`. Also embedded in the tree view.|
+|Dashboard|MVP|Usage gauges, ontology tiles, activity feed filterable by event kind.|
 
----
+## 4. Change control
 
-## M3 — Multi-tenant workspaces & roles
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|ChangeEvent journal|MVP|History panel, Dashboard|Every mutation records an event (kind, author, timestamp, summary, optional message).|
+|Revert|MVP|History panel, Diff modal|Records a new event that inverts a prior one. Original event stays visible.|
+|Tagging|MVP|History panel, Topbar|Name a ChangeEvent (`v1.3`). Downstream consumers pin API calls to the tag.|
+|Single-event diff|MVP|Diff modal|Click any event in the history panel to see a field-level before/after table.|
+|Tag-to-tag diff|MVP|Tag diff modal|Compare two tags and see added / modified / removed concepts between them.|
+|Activity feed|MVP|Dashboard|Live feed of events across every ontology. Filterable by kind; clickable rows.|
 
-**User story.** As an Owner, I can create an org, invite members and control who does what.
+## 5. Governance
 
-**Acceptance criteria.**
-- Org → Workspace → Ontology hierarchy.
-- Roles: `owner`, `editor`, `reviewer`, `viewer`.
-- Invite by email; accept via magic link.
-- Revoke member access immediately invalidates tokens (session + API keys scoped to member).
-- No cross-tenant data visible anywhere in the UI or API.
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|Validation panel|MVP|Right rail tab|Live analysis: orphan concepts, domain/range violations, duplicate prefLabels per scheme, deprecated-still-referenced, missing class.|
+|Roles|V1|Settings · Members|`OntologyArchitect` / `CatalogueMaintainer` / `Viewer`. Scoped to Ontology or Scheme.|
+|Review requests|V2+|Notifications, History|Author request → reviewer sign-off → tag. Currently stubbed in notifications.|
+|SHACL validation|V2+|Schema|Importable SHACL shapes that run on save.|
 
-**Dependencies.** Auth (Clerk), Postgres tenant model, [MULTI_TENANCY.md](../02_architecture/MULTI_TENANCY.md).
+## 6. AI helpers
 
-**Owner**: Alexandre (implementation), Valentin (policy & UX).
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|altLabel suggestions|MVP|Concept detail · AI tab, Inspector|Heuristic synonym suggestions from a curated dictionary. (un peu ambitieux pour un MVP?) —> Effet wahou assuré par contre|
+|Auto-translate prefLabel|MVP|Concept detail · AI tab|Translate the prefLabel into the ontology's other languages. (un peu ambitieux pour un MVP?) —> Effet wahou assuré par contre|
+|Duplicate detection|MVP|Concept detail · AI tab|Jaccard-on-altLabels suggests a possible duplicate with overlap score. (un peu ambitieux pour un MVP?) —> Effet wahou assuré par contre|
+|Class suggestion|MVP|Concept detail · AI tab|When a concept has no class, propose the best-fit one from the ontology. (un peu ambitieux pour un MVP?) —> Effet wahou assuré par contre|
+|Review-flow assistant|V2+|Validation panel|Natural-language explanation of validation failures + proposed fixes.|
+|Multilingual definition rewrite|V2+|Concept detail|AI-polished prose passes across all languages.|
 
----
+## 7. Collaboration
 
-## M4 — Import / Export
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|Live presence|MVP (mocked)|Canvas, Concept detail, Tree|Fake-teammate avatars in topbar; "X is editing" banner; presence chips on tree rows.|
+|Notifications center|MVP|Topbar|Bell icon + popover. Lists recent ChangeEvents authored by others + static review/comment prompts. Read/unread state.|
+|Comments on concepts|V1|Concept detail|Threaded comments per concept. Mentions.|
+|Real-time cursors|V2+|Canvas|Replace the current mock with a Yjs + WebSocket implementation.|
+|Branching / merging|V2+|Topbar, History|Fork an ontology, diverge, merge back with conflict resolution.|
 
-**User story.** As any user, I can bring an existing taxonomy in and take it out.
+## 8. Import / Export
 
-**Acceptance criteria.**
-- CSV import with a mapping step (which column → concept name / description / parent).
-- JSON-LD import using a documented `@context`.
-- Simplified OWL import (classes + subClassOf only at v1).
-- Export: JSON (native format), CSV, JSON-LD, TTL.
-- Imports run async as jobs; user sees progress; failures are actionable.
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|CSV import wizard|MVP|`/import`|Four-step wizard: upload → map columns → pick target ontology + class → preview → import. Creates one `bulk_import` event.|
+|SKOS Turtle export|MVP|Export modal|Turtle serialization of ConceptSchemes. Honours tags via `?tag=`.|
+|JSON-LD export|MVP|Export modal|Linked-data JSON for RAG pipelines and modern web consumers.|
+|OWL RDF/XML export|MVP|Export modal|Full ontology export for Protégé / Stardog / GraphDB.|
+|CSV export|MVP|Export modal|Flat concept list with custom property columns.|
+|Live preview in export modal|MVP|Export modal|Dark preview pane, line/char counts, copy-to-clipboard, download-as-file.|
+|Webhooks|V1|Settings|Emit on `concept.created`, `relation.deleted`, `ontology.tagged`, etc.|
+|MCP server|V2+|—|Expose the ontology as an MCP tool for LLM agents.|
 
-**Dependencies.** BullMQ, Cloudflare R2 for temporary file storage.
+## 9. Distribution
 
-**Owner**: Alexandre.
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|REST API|MVP|—|Five endpoints: `GET /ontologies/:id/concepts`, `.../relations`, `.../schema`, `.../concepts/:conceptId`, `POST /sparql`.|
+|API Playground modal|MVP|Editor topbar|Live endpoint tester against in-memory store. Copy-as-cURL / copy-as-fetch.|
+|Version pinning (`?tag=`)|MVP|API|Pin a request to a specific tag for stable snapshots.|
+|Language negotiation (`?lang=`)|MVP|API|Return labels + definitions in the requested language, falling back to default.|
+|Format negotiation (`?format=`)|MVP|API|`json` (default) · `jsonld` · `skos`.|
+|API keys|MVP|Settings|Create, scope, revoke. Per-key last-used and request counts.|
 
----
+## 10. Editor ergonomics
 
-## M5 — Search & navigation
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|Command palette|MVP|⌘K|Jump to any ontology, scheme, concept. Invoke actions (new concept, tag, export).|
+|Global search|MVP|Topbar|Any keystroke opens the Command Palette pre-filled.|
+|Inline editing|MVP|Concept detail|Toggle an edit mode that mutates the store via `updateConcept`. Save records a ChangeEvent.|
+|Deprecation banner|MVP|Concept detail, Inspector, Tree editor|Amber strip surfaces the replacedBy link + reason wherever a deprecated concept appears.|
 
-**User story.** As any user, I can find any concept in < 2 seconds.
+## 11. Authentication & workspaces
 
-**Acceptance criteria.**
-- Full-text search across concept name, description, synonyms, property values.
-- Filters: status, relation type, property key/value.
-- Tree view for `is-a` hierarchy with lazy loading; drag-drop reparent triggers a change event.
-- Cmd-K / Ctrl-K palette: jump to ontology, concept, or action.
-
-**Dependencies.** Postgres `tsvector` for MVP.
-
-**Owner**: Alexandre.
-
----
-
-## M6 — Billing & plan gating
-
-**User story.** As an Owner, I subscribe, upgrade, cancel, and the product enforces my plan limits.
-
-**Acceptance criteria.**
-- Stripe subscription for Team and Business, annual or monthly.
-- Enterprise invoiced manually.
-- Plan limits (workspaces, concepts, API calls) enforced server-side with friendly 402-style errors in the UI.
-- Free-tier ceilings: 1 workspace, 500 concepts, 5,000 API calls / month.
-- Upgrade flow completes in < 60 seconds.
-
-**Dependencies.** Stripe, metered usage counters, [PRICING_MODEL.md](../08_finance/PRICING_MODEL.md).
-
-**Owner**: Valentin (business rules & pricing page), Alexandre (implementation).
-
----
-
-## S1 — Branches (deferred from MVP)
-
-**User story.** As an Architect, I can branch off `main`, iterate in isolation, then merge back.
-
-**Acceptance criteria (when we ship).**
-- Create, rename, delete, switch branches.
-- Fast-forward merge where no divergence.
-- 3-way merge when both branches advanced; conflict UI at concept / relation level.
-- Merge produces a single merge event referencing both parents.
-- Branch protection on `main` (Business+): require at least N approvals.
-
-**Dependencies.** M2 history, conflict-resolution UI, branch-aware data model changes.
-
-**Status**: deferred. Shipped when two or more paying customers on Business/Enterprise demonstrate a real need; see [VERSIONING_SYSTEM.md](../02_architecture/VERSIONING_SYSTEM.md).
-
-**Owner**: Alexandre (implementation), Valentin (UX).
-
----
-
-## S2 — Review requests (deferred from MVP)
-
-**User story.** As an Architect, I can require review before changes land on `main`.
-
-**Acceptance criteria (when we ship).**
-- Open a review request from a branch against a target branch.
-- Request reviewers by name; roles gated (only reviewers/editors can approve).
-- Reviewers can comment on any concept/relation, approve, or request changes.
-- Merge blocked until approvals satisfy the branch policy.
-- Email + in-app notifications on open, comment, approval, merge.
-
-**Dependencies.** S1 branches, S3 comments, notification service.
-
-**Status**: deferred. Ships with S1 at the earliest.
-
-**Owner**: Alexandre + Valentin.
+|Feature|Status|Surface|What it does|
+|---|---|---|---|
+|Email / Google sign-in|MVP|`/signin`|Mocked in the prototype; wired to a backend at launch.|
+|Workspaces|MVP|Topbar, Settings|One user can belong to several workspaces. Each workspace scopes ontologies, roles, billing, API keys.|
+|Plan gating|MVP|Settings · Billing|Free / Team / Business / Enterprise. Gated by concept count, API calls, workspaces, seats, support tier.|
+|SSO (SAML)|V1|Settings|Enterprise tier.|
+|SCIM|V2+|Settings|Enterprise tier.|
 
 ---
 
-## S3 — Comments & annotations
+## Out of scope
 
-**User story.** I can have a discussion about a specific concept or relation.
-
-**Acceptance criteria.**
-- Comment threads on a concept or a relation.
-- @mentions; resolves; edit history.
-- Inline reactions (thumbs-up).
-
-**Dependencies.** Postgres comments table, notification service.
-
-**Owner**: Alexandre (implementation), Valentin (UX).
-
----
-
-## S4 — Public REST API
-
-**User story.** As a Platform Engineer, I can read and write the ontology from my pipeline.
-
-**Acceptance criteria.**
-- Endpoints: ontologies, change events, concepts, relations, searches (see [API_SPECIFICATION.md](../02_architecture/API_SPECIFICATION.md)).
-- Auth via API key (Bearer token) scoped to workspace.
-- Rate limits: documented, with `X-RateLimit-*` headers.
-- OpenAPI 3.1 schema published at `/api/openapi.json`.
-- SDK: `ontologia-python`, `ontologia-js` (generated from OpenAPI).
-
-**Dependencies.** Auth, rate-limiter (Redis), M2 history.
-
-**Owner**: Alexandre.
-
----
-
-## S5 — Changelog & audit log
-
-**User story.** As an Owner, I can prove what happened, when, and by whom.
-
-**Acceptance criteria.**
-- Changelog: per-ontology, change-event-level, human-readable.
-- Audit log: per-org, every action (auth, membership, billing, ontology changes).
-- Filters: user, date range, action type.
-- Export CSV / JSON; retention: 30 days on Free, 90 days on Team, 12 months on Business, up to 7 years on Enterprise.
-
-**Dependencies.** Event bus.
-
-**Owner**: Alexandre.
-
----
-
-## S6 — Rich metadata
-
-**User story.** I can attach extra information — definitions, synonyms, sources — to each concept.
-
-**Acceptance criteria.**
-- Built-in fields: `definition`, `synonyms[]`, `source`, `status`, `confidence` (0–1).
-- Arbitrary custom properties (string, number, boolean, date, reference).
-- Schema (when defined) validates types on change event application.
-
-**Owner**: Alexandre (storage), Valentin (UX).
-
----
-
-## C1 — Light inference
-
-- Compute transitive closure of `is-a`.
-- Detect cycles in declared hierarchies.
-- Validate transitivity / symmetry declarations of relation types.
-- Expose results via the API; display warnings in the canvas.
-
-**Owner**: Alexandre.
-
----
-
-## C2 — AI suggestions
-
-- "Concepts you might have missed" — cluster descriptions, surface gaps.
-- "Similar concept already exists" — warn on near-duplicates during editing.
-- "Suggested relation" — propose likely relations between selected pair.
-- All suggestions are opt-in, shown as drafts, never auto-applied.
-- LLM calls run through a single adapter with usage quotas per workspace; multi-vendor from day one.
-
-**Owner**: Alexandre (adapter + UX flow), Valentin (prompt quality + evaluation).
-
----
-
-## C3 — Webhooks & integrations
-
-- Event types: `change.created`, `tag.created`, `member.invited`, `concept.deprecated`.
-- HMAC-signed payloads; retry with exponential backoff; dead-letter queue; replay from UI.
-- Native connectors: dbt (export model descriptions), DataHub (push lineage & terms), Atlan (bi-directional sync).
-
-**Owner**: Alexandre.
-
----
-
-## C4 — Cypher console
-
-- Read-only query interface for Business+ workspaces.
-- Query scoped to the workspace's Neo4j database.
-- Results rendered as table + graph preview.
-- Rate-limited; slow-query kill switch; no write access in v1.
-
-**Owner**: Alexandre.
-
----
-
-## C5 — MCP server
-
-- Expose the ontology as an MCP server so LLM agents (Claude, OpenAI Assistants, etc.) can look up concepts, relations, and synonyms.
-- Read-only in v1; write endpoints gated by signed approvals.
-- Strategic positioning: Ontologia as the canonical ontology source for agent ecosystems.
-
-**Owner**: Alexandre.
-
----
-
-## C6 — Templates library
-
-- Seed ontologies for e-commerce, finance (FIBO subset), healthcare (ICD-lite), manufacturing.
-- "Start from template" in workspace creation.
-- Community submissions later.
-
-**Owner**: Valentin.
-
----
-
-## Cross-cutting features
-
-- **Onboarding.** Product tour, sample ontology, first-change nudge. Owner: Valentin (content), Alexandre (implementation).
-- **Billing portal.** Stripe-hosted for Team/Business; manual invoicing for Enterprise. Owner: Valentin.
-- **Notifications.** Email (Resend), in-app center, per-user preferences. Owner: Alexandre.
-- **Search (global).** Across ontologies, change events, comments. Owner: Alexandre.
-
----
-
-Related: [User Flows](USER_FLOWS.md) · [API Specification](../02_architecture/API_SPECIFICATION.md) · [Data Model](../02_architecture/DATA_MODEL.md) · [Versioning System](../02_architecture/VERSIONING_SYSTEM.md) · [Roadmap](../00_overview/ROADMAP.md)
+- **No mobile UI.** Responsive down to tablet; narrower than that is explicitly out of scope.
+- **No email digests.** Activity lives in-product.
+- **No chat / video inside the product.** Use Slack / Teams integrations via webhooks.
+- **No scheduled exports.** Use the API + your own cron.
+- **No billing self-service for Enterprise.** Those contracts are human-signed.

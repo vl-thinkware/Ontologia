@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
+import { Badge, Box, Flex, Heading, Text } from "@radix-ui/themes";
 import {
   Building2,
   Users,
@@ -34,58 +35,90 @@ export default function SettingsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto flex max-w-7xl gap-8 px-8 py-8">
-      <nav className="w-56 shrink-0">
-        <div className="mb-3 px-2 text-[11px] font-semibold uppercase tracking-wider text-ink-500">
-          Workspace settings
-        </div>
-        <ul className="space-y-0.5">
-          {nav.map((n) => (
-            <li key={n.label}>
-              {n.soon ? (
-                <span className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-ink-400">
-                  <n.icon className="h-4 w-4" />
-                  {n.label}
-                  <span className="ml-auto text-[10px] font-semibold uppercase tracking-wider text-ink-400">
-                    soon
-                  </span>
-                </span>
-              ) : (
-                <NavLink
-                  to={n.to}
-                  end={n.end}
-                  className={({ isActive }) =>
-                    clsx(
-                      "flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-brand-50 text-brand-700"
-                        : "text-ink-700 hover:bg-ink-100"
-                    )
-                  }
-                >
-                  <n.icon className="h-4 w-4" />
-                  {n.label}
-                </NavLink>
-              )}
-            </li>
-          ))}
-        </ul>
-      </nav>
+    <Flex
+      className="mx-auto max-w-7xl"
+      gap="8"
+      px="8"
+      py="8"
+    >
+      <Box width="220px" className="shrink-0" asChild>
+        <nav>
+          <Box mb="3" px="2">
+            <Text
+              size="1"
+              color="gray"
+              weight="bold"
+              className="uppercase tracking-wider"
+            >
+              Workspace settings
+            </Text>
+          </Box>
+          <Flex direction="column" gap="1" asChild>
+            <ul>
+              {nav.map((n) => (
+                <li key={n.label}>
+                  {n.soon ? (
+                    <Flex
+                      align="center"
+                      gap="2"
+                      px="2"
+                      py="2"
+                      style={{ color: "var(--gray-9)" }}
+                    >
+                      <n.icon className="h-4 w-4" />
+                      <Text size="2">{n.label}</Text>
+                      <Box ml="auto">
+                        <Badge color="gray" variant="soft" size="1">
+                          soon
+                        </Badge>
+                      </Box>
+                    </Flex>
+                  ) : (
+                    <NavLink
+                      to={n.to}
+                      end={n.end}
+                      className={({ isActive }) =>
+                        clsx(
+                          "flex items-center gap-2 rounded-[var(--radius-3)] px-2.5 py-2 text-sm font-medium transition-colors",
+                          isActive
+                            ? "bg-[var(--accent-3)] text-[var(--accent-11)]"
+                            : "text-[var(--gray-11)] hover:bg-[var(--gray-a3)] hover:text-[var(--gray-12)]"
+                        )
+                      }
+                    >
+                      <n.icon className="h-4 w-4" />
+                      {n.label}
+                    </NavLink>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </Flex>
+        </nav>
+      </Box>
 
-      <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-ink-900">
+      <Box className="min-w-0 flex-1">
+        <Flex align="start" justify="between" gap="4">
+          <Box>
+            <Heading size="6" weight="bold">
               {title}
-            </h1>
+            </Heading>
             {description && (
-              <p className="mt-1 text-sm text-ink-600">{description}</p>
+              <Text size="2" color="gray" mt="1" as="p">
+                {description}
+              </Text>
             )}
-          </div>
-          {actions && <div className="flex items-center gap-2">{actions}</div>}
-        </div>
-        <div className="mt-6 space-y-6">{children}</div>
-      </div>
-    </div>
+          </Box>
+          {actions && (
+            <Flex align="center" gap="2">
+              {actions}
+            </Flex>
+          )}
+        </Flex>
+        <Flex direction="column" gap="6" mt="6">
+          {children}
+        </Flex>
+      </Box>
+    </Flex>
   );
 }

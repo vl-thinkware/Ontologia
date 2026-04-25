@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* -----------------------------------------------------------------------------
+ * Radix Themes font override — keep Inter as the product font.
+ * --------------------------------------------------------------------------- */
+:root,
+.radix-themes {
+  --default-font-family:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --heading-font-family: var(--default-font-family);
+  --code-font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --strong-font-family: var(--default-font-family);
+  --em-font-family: var(--default-font-family);
+  --quote-font-family: var(--default-font-family);
+}
+
 @layer base {
   html,
   body,
@@ -14,51 +30,152 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  .radix-themes {
+    min-height: 100%;
+    height: 100%;
+    background: var(--color-background);
+  }
 }
 
+/* -----------------------------------------------------------------------------
+ * Component shim classes — semantic helpers (.btn-*, .input, .card, etc.)
+ * preserved from the pre-Radix mockup, now rebuilt on top of Radix Themes
+ * tokens so the look is consistent with native <Button>, <TextField>, <Card>.
+ * --------------------------------------------------------------------------- */
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 disabled:cursor-not-allowed disabled:opacity-50;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    border-radius: var(--radius-3);
+    padding: 0 var(--space-3);
+    height: var(--space-6);
+    font-size: var(--font-size-2);
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease,
+      border-color 120ms ease, box-shadow 120ms ease;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--accent-a8);
+    outline-offset: 2px;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700 shadow-sm;
+    @apply btn;
+    background: var(--accent-9);
+    color: var(--accent-contrast);
+  }
+  .btn-primary:hover {
+    background: var(--accent-10);
   }
 
   .btn-secondary {
-    @apply btn border border-ink-200 bg-white text-ink-700 hover:bg-ink-50;
+    @apply btn;
+    background: var(--gray-3);
+    color: var(--gray-12);
+    border: 1px solid var(--gray-a4);
+  }
+  .btn-secondary:hover {
+    background: var(--gray-4);
   }
 
   .btn-ghost {
-    @apply btn text-ink-700 hover:bg-ink-100;
+    @apply btn;
+    background: transparent;
+    color: var(--gray-11);
+  }
+  .btn-ghost:hover {
+    background: var(--gray-a3);
+    color: var(--gray-12);
   }
 
   .btn-danger {
-    @apply btn bg-white border border-red-200 text-red-700 hover:bg-red-50;
+    @apply btn;
+    background: var(--color-panel-solid);
+    color: var(--red-11);
+    border: 1px solid var(--red-a5);
   }
-
-  .chip {
-    @apply inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium;
+  .btn-danger:hover {
+    background: var(--red-3);
   }
 
   .input {
-    @apply w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/20;
+    width: 100%;
+    border-radius: var(--radius-3);
+    border: 1px solid var(--gray-a5);
+    background: var(--color-panel-solid);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-2);
+    color: var(--gray-12);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .input::placeholder {
+    color: var(--gray-9);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--accent-8);
+    box-shadow: 0 0 0 2px var(--accent-a4);
+  }
+  .input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   .card {
-    @apply rounded-xl bg-white border border-ink-200 shadow-card;
+    border-radius: var(--radius-4);
+    background: var(--color-panel-solid);
+    border: 1px solid var(--gray-a4);
+    box-shadow: var(--shadow-2);
   }
 
   .surface {
-    @apply bg-white border border-ink-200 rounded-xl shadow-card;
+    background: var(--color-panel-solid);
+    border: 1px solid var(--gray-a4);
+    border-radius: var(--radius-4);
+    box-shadow: var(--shadow-2);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    border-radius: var(--radius-2);
+    padding: 0 var(--space-2);
+    height: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
   }
 
   .kbd {
-    @apply inline-flex items-center justify-center rounded-md border border-ink-200 bg-white px-1.5 py-0.5 text-[11px] font-medium text-ink-500 shadow-sm;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-2);
+    border: 1px solid var(--gray-a5);
+    background: var(--color-panel-solid);
+    padding: 0 var(--space-1);
+    height: 18px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gray-11);
+    box-shadow: var(--shadow-1);
+    font-family: var(--default-font-family);
   }
 }
 
-/* React Flow customisations */
+/* React Flow customisations — keep these, they style the canvas. */
 .react-flow__node-concept {
   background: transparent;
 }
@@ -74,29 +191,27 @@
 .react-flow__attribution {
   background: transparent !important;
   font-size: 10px !important;
-  color: #94a3b8 !important;
+  color: var(--gray-9) !important;
 }
 
 .react-flow__panel.react-flow__controls {
-  border-radius: 10px;
-  box-shadow:
-    0 1px 2px 0 rgb(15 23 42 / 0.04),
-    0 1px 3px 0 rgb(15 23 42 / 0.08) !important;
-  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-3);
+  box-shadow: var(--shadow-3) !important;
+  border: 1px solid var(--gray-a4);
   overflow: hidden;
 }
 
 .react-flow__controls-button {
-  background: white !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-  color: #334155 !important;
+  background: var(--color-panel-solid) !important;
+  border-bottom: 1px solid var(--gray-a4) !important;
+  color: var(--gray-11) !important;
 }
 
 .react-flow__controls-button:hover {
-  background: #f1f5f9 !important;
+  background: var(--gray-a3) !important;
 }
 
-/* Animations */
+/* Animations — used by toasts, popovers, command palette. */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -128,17 +243,17 @@
   }
 }
 
-/* Thin scrollbars */
+/* Thin scrollbars — used inside long lists, command palette, etc. */
 .scroll-thin::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 .scroll-thin::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--gray-a5);
   border-radius: 8px;
 }
 .scroll-thin::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--gray-a7);
 }
 .scroll-thin::-webkit-scrollbar-track {
   background: transparent;

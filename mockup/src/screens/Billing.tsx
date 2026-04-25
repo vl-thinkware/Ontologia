@@ -1,4 +1,16 @@
-import clsx from "clsx";
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  Code,
+  Flex,
+  Heading,
+  IconButton,
+  Progress,
+  Table,
+  Text,
+} from "@radix-ui/themes";
 import { Check, Download, CreditCard, Sparkles } from "lucide-react";
 import SettingsLayout from "../components/SettingsLayout";
 import { usage } from "../data/mock";
@@ -79,28 +91,26 @@ function Meter({
 }) {
   const pct = Math.min(100, Math.round((used / limit) * 100));
   return (
-    <div className="rounded-lg border border-ink-200 bg-white p-4">
-      <div className="flex items-baseline justify-between">
-        <span className="text-xs font-semibold text-ink-700">{label}</span>
-        <span className="text-[11px] text-ink-500">
+    <Card variant="surface" size="2">
+      <Flex align="baseline" justify="between">
+        <Text size="1" weight="bold">
+          {label}
+        </Text>
+        <Text size="1" color="gray">
           {formatNumber(used)} / {formatNumber(limit)} {unit}
-        </span>
-      </div>
-      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-ink-100">
-        <div
-          className={clsx(
-            "h-full rounded-full",
-            pct > 80
-              ? "bg-gradient-to-r from-amber-500 to-red-500"
-              : "bg-gradient-to-r from-brand-500 to-brand-700"
-          )}
-          style={{ width: `${pct}%` }}
+        </Text>
+      </Flex>
+      <Box mt="2">
+        <Progress
+          value={pct}
+          color={pct > 80 ? "amber" : "violet"}
+          size="1"
         />
-      </div>
-      <div className="mt-1.5 text-[10.5px] font-medium text-ink-500">
+      </Box>
+      <Text size="1" color="gray" mt="2" as="p">
         {pct}% used · resets May 1
-      </div>
-    </div>
+      </Text>
+    </Card>
   );
 }
 
@@ -111,32 +121,57 @@ export default function Billing() {
       description="Manage your plan, payment method, and download invoices."
     >
       {/* Current plan */}
-      <section className="card overflow-hidden">
-        <div className="flex items-start justify-between gap-4 border-b border-ink-100 bg-gradient-to-br from-brand-50 to-white px-6 py-5">
-          <div>
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-brand-600" />
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-brand-700">
+      <Card size="3" style={{ padding: 0, overflow: "hidden" }}>
+        <Flex
+          align="start"
+          justify="between"
+          gap="4"
+          px="6"
+          py="5"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--accent-2), var(--color-panel-solid))",
+            borderBottom: "1px solid var(--gray-a4)",
+          }}
+        >
+          <Box>
+            <Flex align="center" gap="2">
+              <Sparkles
+                className="h-4 w-4"
+                style={{ color: "var(--accent-11)" }}
+              />
+              <Text
+                size="1"
+                weight="bold"
+                color="violet"
+                className="uppercase tracking-wider"
+              >
                 Current plan
-              </span>
-            </div>
-            <div className="mt-1.5 flex items-baseline gap-2">
-              <span className="text-2xl font-bold tracking-tight text-ink-900">
+              </Text>
+            </Flex>
+            <Flex align="baseline" gap="2" mt="1">
+              <Heading size="6" weight="bold">
                 Team
-              </span>
-              <span className="text-sm text-ink-600">· $499/month</span>
-            </div>
-            <p className="mt-1 text-xs text-ink-600">
+              </Heading>
+              <Text size="2" color="gray">
+                · $499/month
+              </Text>
+            </Flex>
+            <Text as="p" size="1" color="gray" mt="1">
               Renews on <strong>May 1, 2026</strong> · Billed to Visa ••••4242
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="btn-secondary">Change plan</button>
-            <button className="btn-ghost">Cancel subscription</button>
-          </div>
-        </div>
+            </Text>
+          </Box>
+          <Flex align="center" gap="2">
+            <Button variant="surface" color="gray">
+              Change plan
+            </Button>
+            <Button variant="ghost" color="gray">
+              Cancel subscription
+            </Button>
+          </Flex>
+        </Flex>
 
-        <div className="grid grid-cols-4 gap-4 p-6">
+        <Box p="6" className="grid grid-cols-4 gap-4">
           <Meter
             label="Concepts"
             used={usage.concepts.used}
@@ -157,142 +192,187 @@ export default function Billing() {
             used={usage.webhooks.used}
             limit={usage.webhooks.limit}
           />
-        </div>
-      </section>
+        </Box>
+      </Card>
 
       {/* Plans */}
-      <section>
-        <h2 className="text-sm font-semibold text-ink-900">Available plans</h2>
-        <p className="text-xs text-ink-500">
+      <Box>
+        <Heading size="2" weight="bold">
+          Available plans
+        </Heading>
+        <Text size="1" color="gray">
           Every plan is workspace-based — no per-seat tax.
-        </p>
-        <div className="mt-3 grid grid-cols-4 gap-3">
+        </Text>
+        <Box mt="3" className="grid grid-cols-4 gap-3">
           {PLANS.map((p) => (
-            <div
+            <Card
               key={p.id}
-              className={clsx(
-                "flex flex-col rounded-xl border bg-white p-4",
+              variant={p.current ? "classic" : "surface"}
+              size="2"
+              style={
                 p.current
-                  ? "border-brand-400 shadow-pop ring-4 ring-brand-500/10"
-                  : "border-ink-200"
-              )}
+                  ? {
+                      border: "2px solid var(--accent-9)",
+                      boxShadow: "var(--shadow-4)",
+                    }
+                  : undefined
+              }
             >
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold text-ink-900">
+              <Flex align="center" justify="between">
+                <Text size="2" weight="bold">
                   {p.name}
-                </div>
+                </Text>
                 {p.current && (
-                  <span className="chip bg-brand-600 text-white text-[10px]">
+                  <Badge color="violet" variant="solid" size="1">
                     Current
-                  </span>
+                  </Badge>
                 )}
-              </div>
-              <div className="mt-2 flex items-baseline">
-                <span className="text-xl font-bold tracking-tight text-ink-900">
+              </Flex>
+              <Flex align="baseline" mt="2">
+                <Heading size="5" weight="bold">
                   {p.price}
-                </span>
-                <span className="ml-1 text-[11px] text-ink-500">{p.unit}</span>
-              </div>
-              <p className="mt-1 text-[11.5px] text-ink-600">{p.tagline}</p>
-              <ul className="mt-3 space-y-1.5 text-[11.5px] text-ink-700">
-                {p.highlights.map((h) => (
-                  <li key={h} className="flex items-start gap-1.5">
-                    <Check className="mt-0.5 h-3 w-3 shrink-0 text-emerald-600" />
-                    <span>{h}</span>
-                  </li>
-                ))}
-              </ul>
-              <button
+                </Heading>
+                <Text size="1" color="gray" ml="1">
+                  {p.unit}
+                </Text>
+              </Flex>
+              <Text as="p" size="1" color="gray" mt="1">
+                {p.tagline}
+              </Text>
+              <Flex direction="column" gap="2" mt="3" asChild>
+                <ul style={{ padding: 0, margin: 0, listStyle: "none" }}>
+                  {p.highlights.map((h) => (
+                    <Flex key={h} align="start" gap="2" asChild>
+                      <li>
+                        <Check
+                          className="mt-0.5 h-3 w-3 shrink-0"
+                          style={{ color: "var(--green-9)" }}
+                        />
+                        <Text size="1">{h}</Text>
+                      </li>
+                    </Flex>
+                  ))}
+                </ul>
+              </Flex>
+              <Button
                 disabled={p.current}
-                className={clsx(
-                  "mt-4 w-full rounded-lg py-1.5 text-[12px] font-semibold",
-                  p.current
-                    ? "cursor-default bg-ink-100 text-ink-500"
-                    : "bg-brand-600 text-white hover:bg-brand-700"
-                )}
+                variant={p.current ? "soft" : "solid"}
+                color={p.current ? "gray" : "violet"}
+                mt="4"
+                className="w-full"
               >
                 {p.current ? "Current plan" : "Switch to " + p.name}
-              </button>
-            </div>
+              </Button>
+            </Card>
           ))}
-        </div>
-      </section>
+        </Box>
+      </Box>
 
       {/* Payment method */}
-      <section className="card p-5">
-        <h2 className="text-sm font-semibold text-ink-900">Payment method</h2>
-        <div className="mt-4 flex items-center gap-4 rounded-lg border border-ink-200 bg-white p-4">
-          <div className="flex h-10 w-14 items-center justify-center rounded-md bg-gradient-to-br from-slate-800 to-slate-900 text-white">
+      <Card size="3">
+        <Heading size="2" weight="bold">
+          Payment method
+        </Heading>
+        <Flex
+          align="center"
+          gap="4"
+          mt="4"
+          p="4"
+          style={{
+            background: "var(--color-panel-solid)",
+            border: "1px solid var(--gray-a4)",
+            borderRadius: "var(--radius-3)",
+          }}
+        >
+          <Flex
+            align="center"
+            justify="center"
+            className="h-10 w-14 rounded-md text-white"
+            style={{
+              background: "linear-gradient(135deg, var(--gray-12), #000)",
+            }}
+          >
             <CreditCard className="h-4 w-4" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="text-sm font-semibold text-ink-900">
+          </Flex>
+          <Box className="flex-1 min-w-0">
+            <Text size="2" weight="bold">
               Visa ending in 4242
-            </div>
-            <div className="text-[11.5px] text-ink-500">
+            </Text>
+            <Text as="div" size="1" color="gray">
               Expires 08/2028 · Valentin Lemort
-            </div>
-          </div>
-          <button className="btn-ghost text-xs">Update</button>
-        </div>
-      </section>
+            </Text>
+          </Box>
+          <Button variant="ghost" color="gray" size="1">
+            Update
+          </Button>
+        </Flex>
+      </Card>
 
       {/* Invoices */}
-      <section className="card">
-        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-3.5">
-          <div>
-            <h2 className="text-sm font-semibold text-ink-900">
+      <Card size="3" style={{ padding: 0 }}>
+        <Flex
+          align="center"
+          justify="between"
+          px="5"
+          py="3"
+          style={{ borderBottom: "1px solid var(--gray-a4)" }}
+        >
+          <Box>
+            <Heading size="2" weight="bold">
               Invoice history
-            </h2>
-            <p className="text-xs text-ink-500">
+            </Heading>
+            <Text size="1" color="gray">
               Download past invoices as PDF.
-            </p>
-          </div>
-          <button className="btn-ghost text-xs">
+            </Text>
+          </Box>
+          <Button variant="ghost" color="gray" size="1">
             <Download className="h-3.5 w-3.5" />
             Export all
-          </button>
-        </div>
-        <table className="w-full text-sm">
-          <thead className="bg-ink-50/60 text-[11px] font-semibold uppercase tracking-wider text-ink-500">
-            <tr>
-              <th className="px-5 py-2.5 text-left">Invoice</th>
-              <th className="px-5 py-2.5 text-left">Date</th>
-              <th className="px-5 py-2.5 text-left">Amount</th>
-              <th className="px-5 py-2.5 text-left">Status</th>
-              <th className="w-0" />
-            </tr>
-          </thead>
-          <tbody>
-            {INVOICES.map((inv, i) => (
-              <tr
-                key={inv.id}
-                className={i !== 0 ? "border-t border-ink-100" : ""}
-              >
-                <td className="px-5 py-3 font-mono text-[12px] text-ink-800">
-                  {inv.id}
-                </td>
-                <td className="px-5 py-3 text-[12px] text-ink-600">
-                  {inv.date}
-                </td>
-                <td className="px-5 py-3 text-[12px] font-semibold text-ink-900">
-                  {inv.amount}
-                </td>
-                <td className="px-5 py-3">
-                  <span className="chip bg-emerald-50 text-emerald-700">
+          </Button>
+        </Flex>
+        <Table.Root size="2" variant="ghost">
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeaderCell>Invoice</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Amount</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell />
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {INVOICES.map((inv) => (
+              <Table.Row key={inv.id}>
+                <Table.Cell>
+                  <Code variant="ghost" size="1">
+                    {inv.id}
+                  </Code>
+                </Table.Cell>
+                <Table.Cell>
+                  <Text size="1" color="gray">
+                    {inv.date}
+                  </Text>
+                </Table.Cell>
+                <Table.Cell>
+                  <Text size="1" weight="bold">
+                    {inv.amount}
+                  </Text>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge color="green" variant="soft">
                     {inv.status}
-                  </span>
-                </td>
-                <td className="px-5 py-3 text-right">
-                  <button className="rounded-md p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-700">
+                  </Badge>
+                </Table.Cell>
+                <Table.Cell justify="end">
+                  <IconButton variant="ghost" color="gray" size="1">
                     <Download className="h-4 w-4" />
-                  </button>
-                </td>
-              </tr>
+                  </IconButton>
+                </Table.Cell>
+              </Table.Row>
             ))}
-          </tbody>
-        </table>
-      </section>
+          </Table.Body>
+        </Table.Root>
+      </Card>
     </SettingsLayout>
   );
 }

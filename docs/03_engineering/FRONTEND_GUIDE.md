@@ -107,10 +107,12 @@ apps/web/src/
 
 ## 9. Styling
 
-- Tailwind with the tokens defined in [DESIGN_SYSTEM.md](../04_design/DESIGN_SYSTEM.md).
-- No ad-hoc colors. Use tokens: `bg-brand-500`, `text-success-600`.
-- `class-variance-authority` (CVA) for component variants.
-- Dark mode: default; light available via system or toggle. Data colors tuned for both.
+- **Components**: `@radix-ui/themes` is the source of truth. Wrap the app with `<Theme accentColor="violet" grayColor="slate" radius="medium" scaling="100%">` and import `@radix-ui/themes/styles.css`. Use Radix primitives directly (`<Button>`, `<TextField.Root>`, `<Card>`, `<Dialog>`, `<DropdownMenu>`, `<Tooltip>`, `<Badge>`, `<Heading>`, `<Text>`, …) rather than re-styling raw HTML.
+- **Tokens**: colors / radii / shadows / spacing come from Radix's CSS variables — `var(--accent-9)`, `var(--gray-a4)`, `var(--radius-3)`, `var(--shadow-2)`, `var(--space-4)`. See [DESIGN_SYSTEM.md](../04_design/DESIGN_SYSTEM.md).
+- **No ad-hoc hex colors.** If you reach for one, you're missing a Radix scale (try `--gray-*`, `--accent-*`, `--green-*`, `--amber-*`, `--ruby-*`, `--sky-*`).
+- **Tailwind** is retained for layout utilities only: `flex`, `grid`, `gap-*`, padding, sizing, positioning. Avoid Tailwind's color/text/border utilities — those routes go through Radix tokens.
+- **Variants**: Radix's own `variant`, `color`, `size`, `radius` props cover most cases. We do not depend on `class-variance-authority`.
+- **Dark mode**: one prop change (`appearance="light" | "dark" | "inherit"` on `<Theme>`). Token-driven custom CSS already handles dark variants.
 
 ## 10. Internationalisation
 
@@ -126,7 +128,7 @@ See [INTERNATIONALIZATION.md](../04_design/UI_UX_GUIDELINES.md#i18n) (section).
 - Keyboard operability tested per PR affecting UI.
 - Focus ring visible. Do not remove default outlines without replacement.
 - Announcements for async state: `aria-live="polite"` on the commit toolbar, `assertive` for errors.
-- Radix primitives for menus, dialogs, popovers.
+- Radix Themes covers menus, dialogs, popovers, tooltips, dropdowns, tabs, callouts, switches and form controls — all WAI-ARIA compliant out of the box. Don't rebuild any of these.
 
 ## 12. Animation
 
@@ -168,9 +170,11 @@ Enforced by `bundlesize` in CI.
 
 - Global singletons.
 - Shared mutable state across routes without a store.
-- Custom drag/drop when Radix/React Flow covers it.
-- Rolling your own dropdown — use Radix Menu.
+- Custom drag/drop when Radix Themes / React Flow covers it.
+- Rolling your own dropdown / popover / dialog / tooltip — use the Radix Themes primitive.
+- Tailwind color/text utilities (`bg-violet-500`, `text-slate-700`, `border-emerald-200`, …). Reach for `style={{ background: "var(--accent-9)" }}` or a Radix `color` prop instead.
 - Uncontrolled forms, unless trivial.
-- Hard-coded colors.
+- Hard-coded hex colors.
+- `class-variance-authority`. Radix's `variant` / `color` / `size` props cover the same ground.
 
 Related: [Design System](../04_design/DESIGN_SYSTEM.md) · [UI/UX Guidelines](../04_design/UI_UX_GUIDELINES.md) · [Coding Standards](CODING_STANDARDS.md)
