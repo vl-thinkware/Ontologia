@@ -2,7 +2,7 @@
 
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v5 (Ontology-only top level, SKOS built-ins)
 
-Complete schema for the two databases powering Ontologia — Neo4j for the graph domain, PostgreSQL for everything relational and for the authoritative change history.
+Complete schema for the two databases powering Semlify — Neo4j for the graph domain, PostgreSQL for everything relational and for the authoritative change history.
 
 > **MVP scope**: MVP uses an *append-only ChangeEvent log* in Postgres and a materialised current-state view in Neo4j. The commit-graph / branch / review tables described in Section 6 are **deferred** until the branches feature (S1 / S2) ships.
 >
@@ -75,7 +75,7 @@ Relationships:
 ### 2.2 T-Box — the ontology / schema layer
 
 ```cypher
-// Artefact container. Every top-level artefact in Ontologia is an Ontology. The
+// Artefact container. Every top-level artefact in Semlify is an Ontology. The
 // ontology owns the T-Box (classes + relation types) and the language configuration
 // for every concept underneath it.
 (:Ontology {
@@ -461,7 +461,7 @@ More detail in [VERSIONING_SYSTEM.md](VERSIONING_SYSTEM.md).
 
 ### 2.6 Concept attributes — six SKOS built-ins plus custom ClassProperties
 
-Every class authored in Ontologia surfaces the same six built-in attribute slots in the class editor. These are **always present** on every Concept of every class — they are not declared in the class's `properties` array. They map 1:1 to SKOS:
+Every class authored in Semlify surfaces the same six built-in attribute slots in the class editor. These are **always present** on every Concept of every class — they are not declared in the class's `properties` array. They map 1:1 to SKOS:
 
 | Slot           | SKOS                | Cardinality                | Purpose                                                                    |
 | -------------- | ------------------- | -------------------------- | -------------------------------------------------------------------------- |
@@ -501,7 +501,7 @@ type ConceptPropertyValue =
 
 ### 2.7 Multilingual labels (SKOS)
 
-Customers operate across multiple countries and business units. A single concept (e.g. the Tesla *Model 3*) needs to carry native-language prefLabels, alternative labels, definitions, and selected custom attributes in every language the ontology has opted into — without forking the graph. Ontologia models this on top of SKOS, with two deliberate choices: labels sit on the concept (not as separate `:Label` nodes), and localisation is opt-in per class property (the six SKOS built-ins are always multilingual where SKOS itself is multilingual).
+Customers operate across multiple countries and business units. A single concept (e.g. the Tesla *Model 3*) needs to carry native-language prefLabels, alternative labels, definitions, and selected custom attributes in every language the ontology has opted into — without forking the graph. Semlify models this on top of SKOS, with two deliberate choices: labels sit on the concept (not as separate `:Label` nodes), and localisation is opt-in per class property (the six SKOS built-ins are always multilingual where SKOS itself is multilingual).
 
 **Language configuration lives on the Ontology**, not on each Concept. `Ontology.languages` is a closed set of BCP-47 tags (e.g. `['en','fr','de']`); `Ontology.defaultLanguage` picks the canonical one. Every localised value written under that ontology must carry a `lang` tag from this set — the write layer rejects writes to unknown languages. This keeps the "language universe" of an artefact declared and queryable, and gives the UI a single source of truth for which columns to render in the side-by-side view.
 
@@ -810,7 +810,7 @@ Deferred (ship with S1 / S2):
 
 ## 5. Import / export formats
 
-The T-Box / A-Box split makes the mapping to Semantic Web standards direct — Ontologia no longer has to *guess* what's a class and what's an instance on export.
+The T-Box / A-Box split makes the mapping to Semantic Web standards direct — Semlify no longer has to *guess* what's a class and what's an instance on export.
 
 | Format       | T-Box coverage                                            | A-Box coverage                                 | Round-trip? |
 | ------------ | --------------------------------------------------------- | ---------------------------------------------- | ----------- |
@@ -820,13 +820,13 @@ The T-Box / A-Box split makes the mapping to Semantic Web standards direct — O
 | **JSON (native)** | full                                                    | full                                           | ✅           |
 | **CSV**      | classes and relation types in separate files               | `concepts.csv`, `relations.csv`                | partial     |
 
-Column contracts and JSON-LD `@context` (`ontologia.com/schemas/context.jsonld`) are documented in [API_SPECIFICATION.md](API_SPECIFICATION.md). TTL import ships in Phase 2.
+Column contracts and JSON-LD `@context` (`semlify.com/schemas/context.jsonld`) are documented in [API_SPECIFICATION.md](API_SPECIFICATION.md). TTL import ships in Phase 2.
 
 ---
 
 ## 6. Deferred schema — branches and reviews (S1 / S2)
 
-The following Neo4j nodes and Postgres tables are designed and documented but **not shipped in MVP**. They will be added once branches and review requests ship (Phase 4 in [ROADMAP.md](../00_overview/ROADMAP.md)).
+The following Neo4j nodes and Postgres tables are designed and documented but **not shipped in MVP**. They will be added once branches and review requests ship (Phase 4 in [ROADMAP.md](ROADMAP%20(imported%20to%20notion).md)).
 
 ### 6.1 Neo4j additions when S1 ships
 

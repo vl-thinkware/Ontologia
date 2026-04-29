@@ -1,0 +1,77 @@
+import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead } from '../../chunks/astro/server_Dvld-7Qp.mjs';
+import 'kleur/colors';
+import { $ as $$Layout } from '../../chunks/Layout_BYDX0w6H.mjs';
+import { $ as $$UseCasePageNav, a as $$UseCaseHero } from '../../chunks/UseCaseHero_CkUIn6k0.mjs';
+import { $ as $$ProductFeatureBlock } from '../../chunks/ProductFeatureBlock_DS6uqNcp.mjs';
+import { $ as $$GovernanceIllustration, a as $$ValidationIllustration } from '../../chunks/ValidationIllustration_B9c2Fbxe.mjs';
+import { $ as $$CtaBlock } from '../../chunks/CtaBlock_Chml4FMl.mjs';
+export { renderers } from '../../renderers.mjs';
+
+const $$Governance = createComponent(($$result, $$props, $$slots) => {
+  const breadcrumbsLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://semlify.com/" },
+      { "@type": "ListItem", position: 2, name: "Use cases", item: "https://semlify.com/use-cases/rag" },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Data governance",
+        item: "https://semlify.com/use-cases/governance"
+      }
+    ]
+  };
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Data governance \u2014 Glossary, taxonomy, ontology in one tool \xB7 Semlify", "description": "Replace your data dictionary, business glossary, and taxonomy spreadsheet with one governed graph \u2014 versioned, attributed, reversible, audit-ready by default.", "current": "/use-cases/governance", "jsonLd": breadcrumbsLd }, { "default": ($$result2) => renderTemplate` ${renderComponent($$result2, "UseCasePageNav", $$UseCasePageNav, { "current": "/use-cases/governance" })} ${renderComponent($$result2, "UseCaseHero", $$UseCaseHero, { "eyebrow": "Use case \xB7 Data governance", "title": "Glossary, taxonomy, ontology \u2014 one tool, one record.", "subtitle": "The data dictionary, the business glossary, and the taxonomy don't have to live in three places. Semlify is the single governed graph that exposes every depth." })} ${maybeRenderHead()}<section class="py-16 md:py-20"> <div class="container-page mx-auto max-w-3xl"> <p class="text-eyebrow">The problem</p> <h2 class="text-headline mt-3" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+Your governance program is fighting its own tooling.
+</h2> <p class="mt-5 text-[16px] leading-relaxed" style="color: var(--gray-11);">
+The business glossary lives in Confluence. The data dictionary lives in
+        Atlan or Collibra. The taxonomy lives in PoolParty (or, more often, in
+        a Google Sheet). The audit log lives nowhere. When a definition
+        changes, three teams have to re-sync four artefacts. They miss steps.
+        The auditor finds them.
+</p> <p class="mt-4 text-[16px] leading-relaxed" style="color: var(--gray-11);">
+The boundary between &ldquo;glossary&rdquo;, &ldquo;taxonomy&rdquo; and
+        &ldquo;ontology&rdquo; is a vocabulary problem, not a product problem.
+        All three are different depths of the same primitive — a typed graph
+        of concepts, governed and exposed through the same API.
+</p> </div> </section> ${renderComponent($$result2, "ProductFeatureBlock", $$ProductFeatureBlock, { "eyebrow": "The shape", "title": "Every change is a record.", "body": "Every edit in Semlify produces a ChangeEvent: who, what, when, why. The timeline is the audit log. Tag a known-good state when you ship a release. Diff two tags to show the auditor what changed between Q1 and Q2.", "bullets": [
+    "Six event kinds \u2014 create / update / delete / revert / tag / bulk_import",
+    "Author, timestamp, optional human-readable message on every event",
+    "Tag-to-tag diff with added / modified / removed counts",
+    "Audit log exportable via API (Business+ tier)"
+  ] }, { "default": ($$result3) => renderTemplate` ${renderComponent($$result3, "GovernanceIllustration", $$GovernanceIllustration, {})} ` })} ${renderComponent($$result2, "ProductFeatureBlock", $$ProductFeatureBlock, { "eyebrow": "Validation", "title": "Catch the drift before the auditor does.", "body": "The Validation panel runs five rules on every edit: orphan concepts, domain/range violations, duplicate prefLabels per scheme, deprecated-but-still-referenced, missing class. Errors block exports. Warnings show in the UI. Issues link to the offending entity.", "reverse": true, "bullets": [
+    "Errors: domain violations, missing class, broken references",
+    "Warnings: duplicates, orphans, deprecated-still-in-use",
+    "Click any issue to jump to the affected entity",
+    "Validation results exposed via the API so downstream pipelines can react"
+  ] }, { "default": ($$result3) => renderTemplate` ${renderComponent($$result3, "ValidationIllustration", $$ValidationIllustration, {})} ` })} ${renderComponent($$result2, "ProductFeatureBlock", $$ProductFeatureBlock, { "eyebrow": "Deprecation, not deletion", "title": "Retire concepts without breaking downstream consumers.", "body": "Mark a concept deprecated. Optionally point at a replacement via `dct:isReplacedBy`. Downstream API clients keep their existing references \u2014 but follow the redirect on next sync. Strike-through banners surface the status everywhere the concept appears.", "bullets": [
+    "Optional replacement pointer \xB7 downstream auto-redirect",
+    "Free-text reason captured at deprecation time",
+    "Validation panel flags every active relation still pointing at the deprecated concept",
+    "Reactivation is an ordinary update \u2014 appended, not destructive"
+  ] }, { "default": ($$result3) => renderTemplate` ${renderComponent($$result3, "GovernanceIllustration", $$GovernanceIllustration, {})} ` })}  <section class="py-16 md:py-20" style="background: var(--gray-2);"> <div class="container-page mx-auto max-w-3xl"> <p class="text-eyebrow">Compliance posture</p> <h2 class="text-headline mt-3" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+Built for the people procurement audits.
+</h2> <ul class="mt-8 space-y-3" role="list"> ${[
+    "Append-only change history \u2014 no event is ever destroyed.",
+    "Audit log API for export to your own retention pipeline (Business+).",
+    "Per-tenant data residency in EU or US (Pro+).",
+    "GDPR-aligned from day one \u2014 DPA, sub-processors list, SCCs.",
+    "SOC 2 Type I within 12 months of GA, Type II within 24 months.",
+    "Annual third-party penetration test."
+  ].map((line) => renderTemplate`<li class="flex items-start gap-2.5 rounded-[var(--radius-3)] p-3" style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4);" data-fade-up> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green-9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-top: 3px; flex-shrink: 0;"> <path d="M20 6 9 17l-5-5"></path> </svg> <span class="text-[14px]" style="color: var(--gray-12);"> ${line} </span> </li>`)} </ul> </div> </section> ${renderComponent($$result2, "CtaBlock", $$CtaBlock, { "title": "One graph. One audit log. One source of truth.", "subtitle": "Free workspace. Real governance from day one." })} ` })}`;
+}, "/sessions/bold-blissful-hawking/mnt/Ontologia/website/src/pages/use-cases/governance.astro", void 0);
+
+const $$file = "/sessions/bold-blissful-hawking/mnt/Ontologia/website/src/pages/use-cases/governance.astro";
+const $$url = "/use-cases/governance";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$Governance,
+  file: $$file,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };

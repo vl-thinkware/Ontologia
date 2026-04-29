@@ -1,0 +1,252 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import PillarStrip from "../components/PillarStrip.astro";
+import WalkthroughStep from "../components/WalkthroughStep.astro";
+import IntegrationsStrip from "../components/IntegrationsStrip.astro";
+import ComparisonTable from "../components/ComparisonTable.astro";
+import FaqSection from "../components/FaqSection.astro";
+import CtaBlock from "../components/CtaBlock.astro";
+import CodeBlock from "../components/CodeBlock.astro";
+
+const homeFaqs = [
+  {
+    q: "How is this different from Atlan or Collibra?",
+    a: "Data catalogs document the tables and columns you already have. Semlify documents the <em>concepts</em> those tables try to represent — and serves them through a typed, versioned graph. We're upstream of the catalog. Many teams run both.",
+  },
+  {
+    q: "Is this just Protégé in the cloud?",
+    a: "No — Protégé is a desktop OWL editor for the academic ontology community. Semlify is multi-tenant SaaS for product teams, with version control, drag-drop reparenting, multilingual labels, an API, and a validation panel. We export OWL faithfully, so an architect using Protégé can open our exports — but the day-to-day shape of work is different.",
+  },
+  {
+    q: "Do you support OWL?",
+    a: "Yes — we export full OWL/RDF/XML for any ontology, and the AI tab includes class suggestion that can populate a basic OWL shape from labels. Description-logic inference is on the roadmap.",
+  },
+  {
+    q: "Where does the data live?",
+    a: "Postgres for tenant data, billing, members. Neo4j Aura for the graph. EU and US regions; Pro and above pick at workspace creation. Enterprise can pin to a dedicated single-region cluster or self-host.",
+  },
+  {
+    q: "Will you lock me in?",
+    a: "No. Every ontology exports faithfully to JSON-LD, SKOS Turtle, OWL RDF/XML, and CSV. The exports round-trip — you can re-import them anywhere that speaks SKOS or OWL. Your concepts are yours.",
+  },
+];
+
+// Strip basic HTML out of FAQ answers so the JSON-LD plain-text is clean.
+function stripHtml(s: string): string {
+  return s.replace(/<[^>]+>/g, "");
+}
+
+const homeJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Semlify",
+    applicationCategory: "DeveloperApplication",
+    applicationSubCategory: "Knowledge Graph Platform",
+    operatingSystem: "Web",
+    url: "https://semlify.com/",
+    description:
+      "Design, version and ship the ontology your AI and data pipelines depend on. SKOS-aligned, graph-native, with revertable change history and a stable JSON-LD API.",
+    offers: [
+      {
+        "@type": "Offer",
+        name: "Free",
+        price: "0",
+        priceCurrency: "USD",
+        url: "https://semlify.com/pricing",
+      },
+      {
+        "@type": "Offer",
+        name: "Team",
+        price: "499",
+        priceCurrency: "USD",
+        url: "https://semlify.com/pricing",
+      },
+      {
+        "@type": "Offer",
+        name: "Business",
+        price: "1990",
+        priceCurrency: "USD",
+        url: "https://semlify.com/pricing",
+      },
+      {
+        "@type": "Offer",
+        name: "Enterprise",
+        url: "https://semlify.com/pricing",
+      },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: homeFaqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: stripHtml(f.a),
+      },
+    })),
+  },
+];
+---
+
+<Layout
+  title="Semlify — Versioned ontology platform for AI & RAG"
+  description="Design, version, and ship the ontology your AI and RAG pipelines depend on. SKOS-aligned, graph-native, with revertable change history and a stable JSON-LD API."
+  jsonLd={homeJsonLd}
+>
+  <Hero
+    title="The source of truth for your concepts."
+    subtitle="Design, version and ship the ontology your AI and data pipelines depend on. SKOS-aligned. Graph-native. Zero PhD required."
+  />
+
+  <PillarStrip />
+
+  <!-- Walkthrough — three steps -->
+  <section class="py-14 md:py-28" style="background: var(--gray-2);">
+    <div class="container-page">
+      <header class="mx-auto mb-10 max-w-2xl text-center md:mb-16" data-fade-up>
+        <p class="text-eyebrow">How it works</p>
+        <h2 class="text-headline mt-3">From schema to API in three moves.</h2>
+        <p
+          class="mx-auto mt-4 max-w-xl text-[15.5px] leading-relaxed"
+          style="color: var(--gray-11);"
+        >
+          One graph behind every view. Edit it from any side &mdash; canvas,
+          tree, table &mdash; and ship it through the same versioned API.
+        </p>
+      </header>
+
+      <div class="space-y-14 md:space-y-28">
+        <WalkthroughStep
+          step={1}
+          title="Design your T-Box."
+          body="Classes, attributes, and relation types — the schema your concepts will conform to. Every class gets the six SKOS slots for free, plus typed attributes you define."
+        >
+          <div
+            class="rounded-[var(--radius-4)] p-6"
+            style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4); box-shadow: var(--shadow-2);"
+          >
+            <div class="mb-4 flex items-center gap-2">
+              <span
+                class="text-[10px] font-semibold uppercase tracking-wider"
+                style="color: var(--violet-11);">SCHEMA</span
+              >
+              <span class="text-[12px]" style="color: var(--gray-11);">·</span>
+              <span class="text-[12px]" style="color: var(--gray-11);"
+                >9 classes · 13 relation types</span
+              >
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              {
+                ["Manufacturer", "Model", "Engine", "BodyStyle"].map(
+                  (cls, i) => (
+                    <div
+                      class="rounded-[var(--radius-3)] p-3"
+                      style={`background: var(--violet-${i % 2 === 0 ? 2 : 3}); border: 1px solid var(--violet-a4);`}
+                    >
+                      <div
+                        class="text-[12px] font-bold"
+                        style="color: var(--violet-12);"
+                      >
+                        {cls}
+                      </div>
+                      <div class="mt-1 font-mono text-[10px]" style="color: var(--violet-11);">
+                        + 4 attributes
+                      </div>
+                    </div>
+                  )
+                )
+              }
+            </div>
+          </div>
+        </WalkthroughStep>
+
+        <WalkthroughStep
+          step={2}
+          title="Curate your taxonomies."
+          body="Concepts live in schemes. One ontology can host as many schemes as you need — Cars catalogue, body-style taxonomy, market segments — all sharing the same T-Box."
+          reverse
+        >
+          <div
+            class="rounded-[var(--radius-4)] p-6"
+            style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4); box-shadow: var(--shadow-2);"
+          >
+            <div class="mb-3 flex items-center gap-2">
+              <span
+                class="text-[10px] font-semibold uppercase tracking-wider"
+                style="color: var(--green-11);">TAXONOMIES TREE</span
+              >
+            </div>
+            <ul class="space-y-1.5 font-mono text-[12px]" role="list">
+              {
+                [
+                  { label: "Toyota", depth: 0, type: "violet" },
+                  { label: "Camry", depth: 1, type: "green" },
+                  { label: "Corolla", depth: 1, type: "green" },
+                  { label: "Honda", depth: 0, type: "violet" },
+                  { label: "Civic", depth: 1, type: "green" },
+                  { label: "CR-V", depth: 1, type: "green" },
+                ].map((row) => (
+                  <li
+                    class="flex items-center gap-2 rounded px-2 py-1"
+                    style={`padding-left: ${row.depth * 16 + 8}px; ${row.depth === 0 ? "background: var(--gray-a3);" : ""}`}
+                  >
+                    <span
+                      class="h-1.5 w-1.5 rounded-full"
+                      style={`background: var(--${row.type}-9);`}
+                    />
+                    <span style="color: var(--gray-12);">{row.label}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </WalkthroughStep>
+
+        <WalkthroughStep
+          step={3}
+          title="Ship to your stack."
+          body="Pin your RAG pipeline to a tagged snapshot. Negotiate language. Pick JSON-LD, SKOS Turtle, OWL XML, or CSV — every export is faithful to what's in the editor."
+        >
+          <CodeBlock
+            language="bash"
+            filename="GET /v1/ontologies/cars/concepts"
+            code={`curl -X GET "https://api.semlify.com/v1/ontologies/cars/concepts \\
+  ?tag=v1.3 \\
+  &lang=en \\
+  &format=jsonld" \\
+  -H "Authorization: Bearer $ONTOLOGIA_TOKEN"
+
+# 200 OK · application/ld+json
+{
+  "@context": "https://semlify.com/ctx/v1",
+  "ontology": "cars",
+  "tag": "v1.3",
+  "data": [
+    {
+      "id": "c_model_camry",
+      "skos:prefLabel": "Toyota Camry",
+      "manufacturer": "c_mfg_toyota"
+    }
+  ]
+}`}
+          />
+        </WalkthroughStep>
+      </div>
+    </div>
+  </section>
+
+  <IntegrationsStrip />
+
+  <ComparisonTable />
+
+  <FaqSection
+    title="Questions we get every week."
+    faqs={homeFaqs}
+  />
+
+  <CtaBlock />
+</Layout>

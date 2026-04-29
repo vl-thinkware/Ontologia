@@ -3,9 +3,9 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
 
 
-Ontologia is committed to providing a harassment-free, welcoming, and productive environment for everyone — team members, customers, contributors, and community participants — regardless of gender, gender identity, sexual orientation, disability, physical appearance, body size, ethnicity, nationality, age, religion, or level of experience.
+Semlify is committed to providing a harassment-free, welcoming, and productive environment for everyone — team members, customers, contributors, and community participants — regardless of gender, gender identity, sexual orientation, disability, physical appearance, body size, ethnicity, nationality, age, religion, or level of experience.
 
-This code applies to every Ontologia space: our workplaces, online channels (Slack, Discord, GitHub, LinkedIn), events we host or sponsor, customer interactions, and representations of the company in public.
+This code applies to every Semlify space: our workplaces, online channels (Slack, Discord, GitHub, LinkedIn), events we host or sponsor, customer interactions, and representations of the company in public.
 
 ---
 
@@ -33,19 +33,19 @@ This code applies to every Ontologia space: our workplaces, online channels (Sla
 ## 3. Scope
 
 This code applies to:
-- All Ontologia employees, contractors, advisors, and board members.
+- All Semlify employees, contractors, advisors, and board members.
 - Customers when interacting with our team or community.
 - Open-source contributors on our public repos.
-- Event attendees at Ontologia-hosted or -sponsored events.
-- Anyone representing Ontologia in public (conference talks, social media).
+- Event attendees at Semlify-hosted or -sponsored events.
+- Anyone representing Semlify in public (conference talks, social media).
 
 ## 4. Reporting
 
 If you experience or witness unacceptable behaviour, report it promptly:
 
-- Internal channel: `conduct@ontologia.com`.
-- Escalation: CEO directly (valentin@ontologia.com — placeholder) if the first channel is inappropriate.
-- Anonymous reports: `ontologia.com/conduct-report` (managed by a third-party whistleblower service).
+- Internal channel: `conduct@semlify.com`.
+- Escalation: CEO directly (valentin@semlify.com — placeholder) if the first channel is inappropriate.
+- Anonymous reports: `semlify.com/conduct-report` (managed by a third-party whistleblower service).
 
 Reports are handled confidentially by a dedicated team (People ops + a designated leadership sponsor). We will:
 
@@ -77,7 +77,7 @@ Legal action in cases involving criminal conduct.
 
 ## 7. Retaliation
 
-Retaliation against a person who reports in good faith, or who participates in an investigation, is itself a serious violation of this code and of Ontologia policy.
+Retaliation against a person who reports in good faith, or who participates in an investigation, is itself a serious violation of this code and of Semlify policy.
 
 ## 8. Good-faith reporting
 
@@ -85,7 +85,7 @@ We commit to treating all reports seriously. We also acknowledge that a maliciou
 
 ## 9. Leadership accountability
 
-Leaders at Ontologia are held to a higher standard of conduct. The same rules apply, and more is expected: modelling the behaviour we want to see, paying attention, and taking action.
+Leaders at Semlify are held to a higher standard of conduct. The same rules apply, and more is expected: modelling the behaviour we want to see, paying attention, and taking action.
 
 ## 10. Training & awareness
 
@@ -119,7 +119,7 @@ Moderators in our public Slack / Discord / GitHub apply this code uniformly. Mod
 
 ## 15. Attribution
 
-This code of conduct is adapted from the Contributor Covenant (v2.1) and the IETF Code of Conduct, with additions specific to Ontologia.
+This code of conduct is adapted from the Contributor Covenant (v2.1) and the IETF Code of Conduct, with additions specific to Semlify.
 
 ## 16. Review
 

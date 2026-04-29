@@ -3,13 +3,13 @@
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
 
-Public-facing SLA structure. The marketing-friendly version lives at `ontologia.com/legal/sla`. Enterprise contracts may supersede these defaults with MSA-specific terms.
+Public-facing SLA structure. The marketing-friendly version lives at `semlify.com/legal/sla`. Enterprise contracts may supersede these defaults with MSA-specific terms.
 
 ---
 
 ## 1. Scope
 
-This SLA covers the Ontologia hosted SaaS service at `api.ontologia.com` and `app.ontologia.com`. It does not cover:
+This SLA covers the Semlify hosted SaaS service at `api.semlify.com` and `app.semlify.com`. It does not cover:
 
 - Free tier workspaces.
 - Customer-caused issues (self-inflicted rate limits, invalid inputs).
@@ -81,7 +81,7 @@ Detailed in [SECURITY.md](../06_security_compliance/SECURITY.md):
 - SOC 2 Type I within 12 months of GA, Type II within 24 months.
 - Annual penetration test.
 - 72 h notification for confirmed security incidents affecting customer data (Pro+).
-- Sub-processors list public at `ontologia.com/legal/subprocessors`; 30 days' notice before material changes.
+- Sub-processors list public at `semlify.com/legal/subprocessors`; 30 days' notice before material changes.
 
 ## 8. Exceptions
 
@@ -98,8 +98,8 @@ Detailed in [SECURITY.md](../06_security_compliance/SECURITY.md):
 
 ## 10. Requesting credits
 
-1. Email `support@ontologia.com` within 30 days of the affected month.
-2. Include the dashboard screenshot or Ontologia-confirmed incident identifier.
+1. Email `support@semlify.com` within 30 days of the affected month.
+2. Include the dashboard screenshot or Semlify-confirmed incident identifier.
 3. Credits applied on the next invoice.
 
 ## 11. Changes to this SLA

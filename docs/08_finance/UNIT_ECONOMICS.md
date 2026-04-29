@@ -232,4 +232,4 @@ Reviewed every Monday; Valentin owns commercial metrics, Alexandre owns product-
 
 ---
 
-Related: [Pricing Model](PRICING_MODEL.md) · [Cost Analysis](COST_ANALYSIS.md) · [Financial Projections](FINANCIAL_PROJECTIONS.md) · [Business Strategy](../07_business/BUSINESS_STRATEGY.md) · [Customer Success](../07_business/CUSTOMER_SUCCESS.md)
+Related: [Pricing Model](PRICING_MODEL.md) · [Cost Analysis](COST_ANALYSIS.md) · [Financial Projections](FINANCIAL_PROJECTIONS.md) · [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md) · [Customer Success](../07_business/CUSTOMER_SUCCESS.md)

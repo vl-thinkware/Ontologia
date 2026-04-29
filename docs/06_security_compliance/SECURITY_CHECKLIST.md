@@ -99,7 +99,7 @@ Actionable list to tick before we turn on a new environment, new feature or GA t
 
 - [ ] Privacy policy live and up to date.
 - [ ] Terms of service live.
-- [ ] DPA template available at `ontologia.com/legal/dpa`.
+- [ ] DPA template available at `semlify.com/legal/dpa`.
 - [ ] Sub-processor list published.
 - [ ] Cookie consent banner in EU traffic.
 

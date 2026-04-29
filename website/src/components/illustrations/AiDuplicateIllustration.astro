@@ -1,0 +1,318 @@
+---
+// Duplicate detection — two concept cards side by side with overlap match line
+// and merge action.
+---
+
+<div
+  class="relative mx-auto w-full max-w-[520px]"
+  role="img"
+  aria-label="Two similar concepts side by side with an overlap percentage and merge suggestion."
+>
+  <svg
+    viewBox="0 0 520 420"
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-auto w-full"
+    role="img"
+  >
+    <title>AI duplicate detection — concept overlap with merge suggestion</title>
+    <desc>Two similar concept cards side by side with an overlap percentage and a suggested merge action.</desc>
+    <defs>
+      <linearGradient id="dupCard" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--color-panel-solid)"></stop>
+        <stop offset="1" stop-color="var(--gray-2)"></stop>
+      </linearGradient>
+      <filter id="dupShadow" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow
+          dx="0"
+          dy="3"
+          stdDeviation="6"
+          flood-color="rgb(15 23 42)"
+          flood-opacity="0.18"></feDropShadow>
+      </filter>
+    </defs>
+
+    <pattern
+      id="dupDots"
+      x="0"
+      y="0"
+      width="20"
+      height="20"
+      patternUnits="userSpaceOnUse"
+    >
+      <circle cx="1" cy="1" r="1" fill="var(--gray-a4)"></circle>
+    </pattern>
+    <rect width="520" height="420" fill="url(#dupDots)" opacity="0.45"></rect>
+
+    <!-- Connector lines between cards (drawn first, behind cards) -->
+    <g
+      stroke="var(--amber-9)"
+      stroke-width="1.5"
+      fill="none"
+      stroke-dasharray="3 3"
+      opacity="0.7"
+    >
+      <line x1="220" y1="170" x2="300" y2="170"></line>
+      <line x1="220" y1="200" x2="300" y2="200"></line>
+      <line x1="220" y1="230" x2="300" y2="230"></line>
+    </g>
+
+    <!-- Center match badge -->
+    <g transform="translate(260, 110)">
+      <circle r="32" fill="var(--amber-3)" stroke="var(--amber-9)" stroke-width="2"
+      ></circle>
+      <text
+        x="0"
+        y="-2"
+        text-anchor="middle"
+        font-family="Inter, sans-serif"
+        font-size="18"
+        font-weight="800"
+        fill="var(--amber-11)">78%</text
+      >
+      <text
+        x="0"
+        y="14"
+        text-anchor="middle"
+        font-family="Inter, sans-serif"
+        font-size="8"
+        font-weight="600"
+        fill="var(--amber-11)"
+        letter-spacing="0.10em">OVERLAP</text
+      >
+    </g>
+
+    <!-- LEFT card: "4-door sedan" -->
+    <g filter="url(#dupShadow)">
+      <rect
+        x="20"
+        y="60"
+        width="200"
+        height="240"
+        rx="12"
+        fill="url(#dupCard)"
+        stroke="var(--violet-7)"
+        stroke-width="1.5"></rect>
+      <rect x="20" y="60" width="200" height="6" rx="3" fill="var(--violet-9)"
+      ></rect>
+      <text
+        x="36"
+        y="88"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--violet-11)"
+        letter-spacing="0.12em">CONCEPT · CANDIDATE A</text
+      >
+      <text
+        x="36"
+        y="108"
+        font-family="Inter, sans-serif"
+        font-size="14"
+        font-weight="700"
+        fill="var(--gray-12)">"4-door sedan"</text
+      >
+      <line
+        x1="36"
+        y1="120"
+        x2="204"
+        y2="120"
+        stroke="var(--gray-a4)"></line>
+
+      <text
+        x="36"
+        y="140"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--gray-11)"
+        letter-spacing="0.10em">altLabels</text
+      >
+      <g
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-12)"
+      >
+        <text x="36" y="158">"saloon"</text>
+        <text x="36" y="174">"four-door"</text>
+        <text x="36" y="190">"sedan"</text>
+        <text x="36" y="206">"4-dr"</text>
+      </g>
+
+      <text
+        x="36"
+        y="232"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--gray-11)"
+        letter-spacing="0.10em">SCHEME</text
+      >
+      <text
+        x="36"
+        y="248"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)">body_styles</text
+      >
+
+      <text
+        x="36"
+        y="274"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--gray-11)"
+        letter-spacing="0.10em">CREATED</text
+      >
+      <text
+        x="36"
+        y="290"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)">2024-09-12</text
+      >
+    </g>
+
+    <!-- RIGHT card: "Sedan" -->
+    <g filter="url(#dupShadow)">
+      <rect
+        x="300"
+        y="60"
+        width="200"
+        height="240"
+        rx="12"
+        fill="url(#dupCard)"
+        stroke="var(--violet-7)"
+        stroke-width="1.5"></rect>
+      <rect x="300" y="60" width="200" height="6" rx="3" fill="var(--violet-9)"
+      ></rect>
+      <text
+        x="316"
+        y="88"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--violet-11)"
+        letter-spacing="0.12em">CONCEPT · CANDIDATE B</text
+      >
+      <text
+        x="316"
+        y="108"
+        font-family="Inter, sans-serif"
+        font-size="14"
+        font-weight="700"
+        fill="var(--gray-12)">"Sedan"</text
+      >
+      <line
+        x1="316"
+        y1="120"
+        x2="484"
+        y2="120"
+        stroke="var(--gray-a4)"></line>
+
+      <text
+        x="316"
+        y="140"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--gray-11)"
+        letter-spacing="0.10em">altLabels</text
+      >
+      <g
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-12)"
+      >
+        <text x="316" y="158">"saloon"</text>
+        <text x="316" y="174">"four-door"</text>
+        <text x="316" y="190">"passenger car"</text>
+        <text x="316" y="206">"family"</text>
+      </g>
+
+      <text
+        x="316"
+        y="232"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--gray-11)"
+        letter-spacing="0.10em">SCHEME</text
+      >
+      <text
+        x="316"
+        y="248"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)">body_styles</text
+      >
+
+      <text
+        x="316"
+        y="274"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--gray-11)"
+        letter-spacing="0.10em">CREATED</text
+      >
+      <text
+        x="316"
+        y="290"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)">2026-02-18</text
+      >
+    </g>
+
+    <!-- Action band -->
+    <g filter="url(#dupShadow)">
+      <rect
+        x="60"
+        y="324"
+        width="400"
+        height="64"
+        rx="12"
+        fill="var(--amber-2)"
+        stroke="var(--amber-a5)"></rect>
+    </g>
+    <text
+      x="80"
+      y="344"
+      font-family="Inter, sans-serif"
+      font-size="9"
+      font-weight="600"
+      fill="var(--amber-11)"
+      letter-spacing="0.12em">AI SUGGESTION · POSSIBLE DUPLICATE</text
+    >
+    <text
+      x="80"
+      y="362"
+      font-family="Inter, sans-serif"
+      font-size="11.5"
+      font-weight="600"
+      fill="var(--gray-12)">Merge "4-door sedan" → "Sedan"</text
+    >
+    <text
+      x="80"
+      y="378"
+      font-family="Inter, sans-serif"
+      font-size="10"
+      fill="var(--gray-11)">Accepting records
+      <tspan font-family="ui-monospace, monospace" font-size="9.5" fill="var(--amber-11)">dct:isReplacedBy</tspan>
+      .</text
+    >
+    <g transform="translate(366, 342)">
+      <rect width="80" height="28" rx="14" fill="var(--violet-9)"></rect>
+      <text
+        x="40"
+        y="18"
+        text-anchor="middle"
+        font-family="Inter, sans-serif"
+        font-size="11"
+        font-weight="600"
+        fill="white">Review</text
+      >
+    </g>
+  </svg>
+</div>

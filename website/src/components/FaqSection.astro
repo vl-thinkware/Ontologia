@@ -1,0 +1,64 @@
+---
+interface Faq {
+  q: string;
+  a: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  faqs: Faq[];
+}
+
+const {
+  eyebrow = "Frequently asked",
+  title = "Common questions, direct answers.",
+  faqs,
+} = Astro.props;
+---
+
+<section class="py-14 md:py-28">
+  <div class="container-page">
+    <header class="mx-auto mb-8 max-w-2xl text-center md:mb-12">
+      <p class="text-eyebrow">{eyebrow}</p>
+      <h2
+        class="text-headline mt-2"
+        style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);"
+      >
+        {title}
+      </h2>
+    </header>
+
+    <div class="mx-auto max-w-3xl space-y-3">
+      {
+        faqs.map((faq) => (
+          <details
+            class="group rounded-[var(--radius-4)] p-5 transition-colors"
+            style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4);"
+            data-fade-up
+          >
+            <summary
+              class="cursor-pointer list-none text-[15px] font-semibold"
+              style="color: var(--gray-12);"
+            >
+              <span class="flex items-start justify-between gap-4">
+                <span>{faq.q}</span>
+                <span
+                  class="shrink-0 transition-transform group-open:rotate-45"
+                  style="color: var(--gray-9); font-size: 22px; line-height: 1;"
+                >
+                  +
+                </span>
+              </span>
+            </summary>
+            <div
+              class="mt-3 text-[14px] leading-relaxed"
+              style="color: var(--gray-11);"
+              set:html={faq.a}
+            />
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

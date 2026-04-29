@@ -1,0 +1,44 @@
+---
+// The Semlify logomark + wordmark, mirrored from the in-app sidebar header.
+// Use `compact` for the tab bar / mobile menu (mark only).
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<a
+  href="/"
+  class="inline-flex items-center gap-2 no-underline"
+  aria-label="Semlify home"
+>
+  {/* Mark-A in brand indigo, no pill (option B, 2026-04-29).
+     The mark stands directly in brand colour; the wordmark uses --gray-12
+     which auto-adapts to light/dark mode for both Nav and Footer. */}
+  <svg
+    width="28"
+    height="28"
+    viewBox="0 0 64 64"
+    fill="none"
+    aria-hidden="true"
+    style="color: var(--violet-9);"
+  >
+    <path d="M14 50 L14 14" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+    <path d="M14 32 C 14 22, 28 22, 36 22" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"></path>
+    <path d="M14 32 C 14 42, 36 42, 44 42" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"></path>
+    <circle cx="14" cy="14" r="4.5" fill="currentColor"></circle>
+    <circle cx="14" cy="50" r="4.5" fill="currentColor"></circle>
+    <circle cx="40" cy="22" r="6" fill="currentColor"></circle>
+    <circle cx="48" cy="42" r="6" fill="currentColor"></circle>
+  </svg>
+  {
+    !compact && (
+      <span
+        class="text-base font-bold tracking-tight"
+        style="color: var(--gray-12);"
+      >
+        Semlify
+      </span>
+    )
+  }
+</a>

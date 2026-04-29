@@ -3,7 +3,7 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
 
 
-The definitive pre-GA checklist. Every box ticked, every owner signed off, every gate green. When this doc is 100% done, we turn Ontologia from "beta" to "generally available".
+The definitive pre-GA checklist. Every box ticked, every owner signed off, every gate green. When this doc is 100% done, we turn Semlify from "beta" to "generally available".
 
 ---
 
@@ -92,7 +92,7 @@ The definitive pre-GA checklist. Every box ticked, every owner signed off, every
 
 ## 9. Docs readiness
 
-- [ ] `docs.ontologia.com` live with searchable content.
+- [ ] `docs.semlify.com` live with searchable content.
 - [ ] Getting Started under 10 minutes validated by 3 external users.
 - [ ] API reference generated from OpenAPI.
 - [ ] SDK (TypeScript) published to npm.
@@ -109,7 +109,7 @@ The definitive pre-GA checklist. Every box ticked, every owner signed off, every
 - [ ] Canned responses for top 30 anticipated tickets.
 - [ ] Community channel (Slack/Discord) active with moderators.
 - [ ] Self-serve knowledge base: at least 80 articles.
-- [ ] Status page live at `status.ontologia.com`.
+- [ ] Status page live at `status.semlify.com`.
 
 ## 11. Customer success readiness
 
@@ -226,4 +226,4 @@ If launch goes sideways:
 | CS / Support | CS lead | ☐ |
 | CEO | CEO | ☐ |
 
-Related: [Beta Program](BETA_PROGRAM.md) · [Support](SUPPORT.md) · [Release Process](../05_operations/RELEASE_PROCESS.md) · [Security Checklist](../06_security_compliance/SECURITY_CHECKLIST.md) · [Roadmap](../00_overview/ROADMAP.md)
+Related: [Beta Program](BETA_PROGRAM.md) · [Support](SUPPORT.md) · [Release Process](../05_operations/RELEASE_PROCESS.md) · [Security Checklist](../06_security_compliance/SECURITY_CHECKLIST.md) · [Roadmap](ROADMAP%20(imported%20to%20notion).md)

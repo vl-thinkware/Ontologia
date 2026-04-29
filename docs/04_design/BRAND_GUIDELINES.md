@@ -3,16 +3,16 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
 
 
-Rules for presenting Ontologia in public. Covers logo, palette usage in marketing, typography, voice, photography, motion and partner co-branding.
+Rules for presenting Semlify in public. Covers logo, palette usage in marketing, typography, voice, photography, motion and partner co-branding.
 
 ---
 
 ## 1. Brand positioning
 
-> **Ontologia — Version-controlled knowledge graphs for modern data teams.**
+> **Semlify — Version-controlled knowledge graphs for modern data teams.**
 
 Elevator pitch:
-"Ontologia is the GitHub + Notion of enterprise ontologies. Teams design, govern and ship their domain models with commits, branches, reviews and a native graph — so AI and data pipelines downstream can trust what they see."
+"Semlify is the GitHub + Notion of enterprise ontologies. Teams design, govern and ship their domain models with commits, branches, reviews and a native graph — so AI and data pipelines downstream can trust what they see."
 
 Pillars:
 - **Graph-native.** Powered by Neo4j, built for graphs from the inside.
@@ -97,21 +97,21 @@ Matches the product: Lucide stroke icons, stroke 1.5. Avoid mixing styles.
 
 ## 10. Naming conventions
 
-- Product: **Ontologia** (always capitalised; never "ontologia").
+- Product: **Semlify** (always capitalised; never "Semlify").
 - Noun forms: an *ontology*, a *workspace*, a *commit*, a *review request*.
 - Avoid "schema" outside engineering contexts — it connotes rigidity to buyers.
 
 ## 11. Partner & ecosystem co-branding
 
 - Partner logos rendered monochrome where possible; maintain clear space equal to the partner logo height.
-- Sentence structure: "Ontologia + Neo4j" (no slashes, no "&" in titles).
+- Sentence structure: "Semlify + Neo4j" (no slashes, no "&" in titles).
 - Certified integration badges (L2 partners) are issued from the design system; do not modify.
 
-## 12. Writing the Ontologia name in prose
+## 12. Writing the Semlify name in prose
 
-- First mention on a page: "Ontologia — the version-controlled knowledge graph platform…"
-- Subsequent: "Ontologia".
-- Never "Ontologia.io" or "Ontologia, Inc." in body copy (reserved for legal contexts).
+- First mention on a page: "Semlify — the version-controlled knowledge graph platform…"
+- Subsequent: "Semlify".
+- Never "Semlify.io" or "Semlify, Inc." in body copy (reserved for legal contexts).
 
 ## 13. Do / Don't summary
 
@@ -124,6 +124,6 @@ Don't:
 - Rewrite the logomark or tagline.
 - Add gradients over logos.
 - Use colors outside the approved palette.
-- Use the name as a verb ("Ontologia it!") — just don't.
+- Use the name as a verb ("Semlify it!") — just don't.
 
 Related: [Design System](DESIGN_SYSTEM.md) · [Marketing Strategy](../07_business/MARKETING_STRATEGY.md)

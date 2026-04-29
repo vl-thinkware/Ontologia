@@ -3,15 +3,15 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
 
 
-How Ontologia handles personal data, where it lives, who can access it, and how customers exercise their rights. Aligns with GDPR (EU/EEA) and CCPA/CPRA (California). This is an operational document; legal primary texts live at `ontologia.com/legal`.
+How Semlify handles personal data, where it lives, who can access it, and how customers exercise their rights. Aligns with GDPR (EU/EEA) and CCPA/CPRA (California). This is an operational document; legal primary texts live at `semlify.com/legal`.
 
 ---
 
 ## 1. Roles
 
-- For **customer data in workspaces**, Ontologia is a **data processor**; the customer (Organisation) is the data controller.
-- For **account data** (user emails, billing), Ontologia is a **data controller**.
-- Sub-processors used for hosting, email, billing, analytics, observability are listed at `ontologia.com/legal/subprocessors`.
+- For **customer data in workspaces**, Semlify is a **data processor**; the customer (Organisation) is the data controller.
+- For **account data** (user emails, billing), Semlify is a **data controller**.
+- Sub-processors used for hosting, email, billing, analytics, observability are listed at `semlify.com/legal/subprocessors`.
 
 ## 2. Personal data we process
 
@@ -56,7 +56,7 @@ Retention exceeded only for legal obligation (tax records, disputes).
 
 ## 6. Rights management (data subject requests)
 
-Contact: `privacy@ontologia.com`.
+Contact: `privacy@semlify.com`.
 
 ### Access
 - Users can export their own account data from the profile page.
@@ -81,7 +81,7 @@ Contact: `privacy@ontologia.com`.
 
 ## 7. Processor obligations (for customer workspaces)
 
-- DPA available at `ontologia.com/legal/dpa`.
+- DPA available at `semlify.com/legal/dpa`.
 - Sub-processor list with 30-day notice of material changes.
 - Security measures per [SECURITY.md](SECURITY.md).
 - Breach notification within 72 h of confirmed unauthorised access to personal data.

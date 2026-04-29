@@ -2,11 +2,11 @@
 
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v4 (ontology-only product) · **Last updated**: April 2026
 
-The practical field guide for running the Ontologia sales motion with two founders. Valentin carries every deal through the first 25 paying logos; Alexandre joins for one technical call per opportunity, typically the SPARQL / JSON-LD / SKOS round-trip conversation. Written for us now, and for the first AE whenever we can afford one.
+The practical field guide for running the Semlify sales motion with two founders. Valentin carries every deal through the first 25 paying logos; Alexandre joins for one technical call per opportunity, typically the SPARQL / JSON-LD / SKOS round-trip conversation. Written for us now, and for the first AE whenever we can afford one.
 
 > **Operating model.** Founder-led through the first 25 paying logos. No SDR, no outbound sequencer, no discount pressure, no forecasting theatre. The CRM is a Notion database. The target is a handful of well-run deals per month, not a funnel to feed.
 >
-> **One product, three segments.** Ontologia is one product — an ontology editor. Every workspace artefact is an Ontology; taxonomies live as ConceptSchemes inside an ontology. The sales motion is one process. What changes is the segment we identify in discovery — **AI & data teams**, **catalogue-heavy mid-market**, or **data governance** — which shifts the vocabulary we use, the competitor benchmark we're measured against, and which parts of the demo we linger on. Same product, same price list, same demo flow.
+> **One product, three segments.** Semlify is one product — an ontology editor. Every workspace artefact is an Ontology; taxonomies live as ConceptSchemes inside an ontology. The sales motion is one process. What changes is the segment we identify in discovery — **AI & data teams**, **catalogue-heavy mid-market**, or **data governance** — which shifts the vocabulary we use, the competitor benchmark we're measured against, and which parts of the demo we linger on. Same product, same price list, same demo flow.
 
 ---
 
@@ -31,7 +31,7 @@ The practical field guide for running the Ontologia sales motion with two founde
 
 Do not hire an SDR to "feed the pipeline" until founder-led outbound has produced at least 10 signed Business-tier deals. If we can't close them, an SDR won't change that.
 
-## 3. The Ontologia sales process
+## 3. The Semlify sales process
 
 ```
 Identify → Qualify → Discover → Demo → Pilot (optional) → Propose → Negotiate → Close → Handoff → Expand
@@ -95,7 +95,7 @@ Exit criteria are mandatory. Deals do not advance on optimism.
 
 ## 4. Qualification criteria (MEDDPICC-lite)
 
-- **M — Metrics**: what KPI does Ontologia move? How much is it worth? If they can't answer, dig. If still no answer, disqualify.
+- **M — Metrics**: what KPI does Semlify move? How much is it worth? If they can't answer, dig. If still no answer, disqualify.
 - **E — Economic buyer**: identified, reachable, has approved a budget range.
 - **D — Decision process**: named stages, owners, likely timing.
 - **D — Decision criteria**: what will drive the choice? What would kill the deal?
@@ -146,7 +146,7 @@ No deal is qualified for a pilot until at least five of these are filled and wri
 
 ### Outcome, process, champion (all segments)
 - If this were solved, what would be different? Who benefits most internally?
-- What tools were tried before Ontologia showed up?
+- What tools were tried before Semlify showed up?
 - What's the budget source? Who signs? Is there a deadline tied to a business event?
 - Who else should I bring in? Who would actively object? Why?
 
@@ -242,7 +242,7 @@ Grouped by category, not by segment. Segment-specific phrasing is in the "when t
 
 | Objection | Response | When |
 |---|---|---|
-| "Who owns this internally?" | Three people, one weekly review: data architect holds the T-Box, catalogue maintainer (or data steward, or content lead) runs the A-Box, platform engineer owns the API key. That's enough. See [PERSONAS.md](../01_product/PERSONAS.md). | All |
+| "Who owns this internally?" | Three people, one weekly review: data architect holds the T-Box, catalogue maintainer (or data steward, or content lead) runs the A-Box, platform engineer owns the API key. That's enough. See [PERSONAS.md](PERSONAS%20(imported%20to%20notion).md). | All |
 | "We'll build it internally." | Some companies should. Most discover authoring UX is a 12–18 month project with ongoing maintenance. What would that cost your team? And what do you de-prioritise to build it? | AI |
 | "Not the right time." | Understood. What event would make now the right time — budget cycle, initiative milestone, audit? We'll check back on that date, not before. | All |
 | "Security review is heavy." | SSO + audit log ship in the Business tier; SOC 2 Type I readiness is underway. For now: our DPA, architecture doc, data residency options. Happy to walk your security team through each. | All |
@@ -255,12 +255,12 @@ Detail and current pricing in [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)
 | Competitor | Where they win | Where we win | Our cheat-code move |
 |---|---|---|---|
 | **Protégé** (OSS) | DL reasoning, academic credibility, free | Web-native, multi-user, API, hosted runtime, SKOS export, modern UX | Load the Cars ontology and invite the prospect to co-edit live. Protégé can't do that. |
-| **TopBraid EDG** (TopQuadrant) | End-to-end SHACL + governance, pharma references | Transparent mid-market pricing, modern UX, multi-scheme on one T-Box without three projects | Side-by-side: same model in EDG (30 min of project setup) vs Ontologia (2 minutes to first class). |
+| **TopBraid EDG** (TopQuadrant) | End-to-end SHACL + governance, pharma references | Transparent mid-market pricing, modern UX, multi-scheme on one T-Box without three projects | Side-by-side: same model in EDG (30 min of project setup) vs Semlify (2 minutes to first class). |
 | **PoolParty** (Semantic Web Company) | Mature SKOS, text extraction, multilingual | Tree-native UX, multi-scheme on one T-Box, workspace pricing 10× cheaper at entry | Open the Cars workspace and toggle the 5 schemes. "This is three PoolParty projects." |
 | **Synaptica** | ISO 25964, polyhierarchy, library-science depth | SKOS 80/20 at a fraction of the price, also does the ontology layer they can't | Be honest: if they need 25964, stay on Synaptica. If they only use SKOS, we're the upgrade. |
 | **Smartlogic / Semaphore** (Progress) | Classification depth, SharePoint stack | Mid-market price point below their floor, same SKOS interop, API-first | "You're their customer until your CMS renewal. We'll still be here at a tenth the cost." |
 | **Graphwise** (Ontotext, post-rebrand) | GraphDB engine, FIBO, research lineage | Lighter, API-first, mid-market pricing | Position as complementary when GraphDB is already in place; export to their engine. |
-| **Collibra** | Deep data-governance breadth, lineage, enterprise fit | Focused glossary/ontology non-data stakeholders can edit, feed-first into their catalogue | JSON-LD feed demo: Ontologia → Collibra glossary, live, in the call. |
+| **Collibra** | Deep data-governance breadth, lineage, enterprise fit | Focused glossary/ontology non-data stakeholders can edit, feed-first into their catalogue | JSON-LD feed demo: Semlify → Collibra glossary, live, in the call. |
 | **Alation** | Query-log popularity, analytics-team adoption | Stakeholder-editable glossary, 10× cheaper, richer structure | Same feed-first pattern as Collibra. |
 | **Atlan** | Modern catalogue UX, collaboration | Ontology-layer depth their catalogue doesn't reach | Partnership angle, not replacement; position upstream. |
 | **Secoda / DataHub** | Lower entry pricing / open-source | Structured glossary, typed relations, richer export | DataHub has a native hook — ship the integration on the call. |
@@ -269,7 +269,7 @@ Detail and current pricing in [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)
 
 ## 9. Proposal & pricing guide
 
-- Default to list price at `ontologia.com/pricing`. Team $499/mo or $4,990/yr. Business $1,990/mo or $19,900/yr. Enterprise from $40k/yr.
+- Default to list price at `semlify.com/pricing`. Team $499/mo or $4,990/yr. Business $1,990/mo or $19,900/yr. Enterprise from $40k/yr.
 - Annual commit already includes ~17% off monthly — that's the headline discount. We do not stack another 10% on top by default.
 - 2-year commit: additional 5% off. Cap at 20% total off list without both-founder approval.
 - Founder-approved discounting bands:
@@ -283,7 +283,7 @@ Pricing is the same across segments. An AI team, a catalogue team and a governan
 
 ## 10. Redline & legal
 
-- Standard MSA and DPA posted publicly at `ontologia.com/legal`.
+- Standard MSA and DPA posted publicly at `semlify.com/legal`.
 - Known acceptable redlines catalogued in a Notion page so we don't re-negotiate resolved issues.
 - Legal escalation path: Valentin → outside counsel (fractional, via Ironclad or a boutique B2B SaaS firm) → both founders aligned before countersignature.
 - We avoid: unlimited indemnity, IP assignment clauses outside standard carveouts, MFN clauses, custom SLA uptime commitments beyond [SLA.md](../05_operations/SLA.md).
@@ -362,4 +362,4 @@ NRR / GRR reported quarterly once we have >20 customers through at least one ren
 - **Alexandre**: technical deep-dive call per opportunity — especially SPARQL, JSON-LD, SKOS round-trips, OWL exports, webhook patterns. Also: security questionnaire responses, custom-feature scoping, trust-center content.
 - Monday founder standup covers open pipeline; Wednesday async Slack update covers stalls and blockers.
 
-Related: [Go-to-Market](GO_TO_MARKET.md) · [Marketing Strategy](MARKETING_STRATEGY.md) · [Competitive Analysis](COMPETITIVE_ANALYSIS.md) · [Pricing Model](../08_finance/PRICING_MODEL.md) · [Personas](../01_product/PERSONAS.md) · [Customer Success](CUSTOMER_SUCCESS.md) · [Business Strategy](BUSINESS_STRATEGY.md)
+Related: [Go-to-Market](GO_TO_MARKET.md) · [Marketing Strategy](MARKETING_STRATEGY.md) · [Competitive Analysis](COMPETITIVE_ANALYSIS.md) · [Pricing Model](../08_finance/PRICING_MODEL.md) · [Personas](PERSONAS%20(imported%20to%20notion).md) · [Customer Success](CUSTOMER_SUCCESS.md) · [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md)

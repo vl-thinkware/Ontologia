@@ -1,0 +1,97 @@
+---
+// Logo wall of frameworks and tools that consume Semlify. We don't have
+// official partner logos yet, so each tile uses a Lucide icon + label as a
+// stand-in until we ship real lockups (post-GA per BRAND_GUIDELINES §11).
+import {
+  BookOpen,
+  Database,
+  Workflow,
+  Search,
+  Brain,
+  GitBranch,
+  Cloud,
+  Webhook,
+} from "lucide-react";
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  eyebrow = "Integrations",
+  title = "Plug Semlify into the stack you already run.",
+  subtitle = "REST, JSON-LD, SKOS Turtle, OWL XML, webhooks, and an MCP server. The downstream side is your call.",
+} = Astro.props;
+
+const integrations = [
+  { icon: Brain, label: "LangChain" },
+  { icon: BookOpen, label: "LlamaIndex" },
+  { icon: Search, label: "Elastic" },
+  { icon: Search, label: "Algolia" },
+  { icon: Database, label: "dbt" },
+  { icon: Database, label: "Snowflake" },
+  { icon: Workflow, label: "Airflow" },
+  { icon: Workflow, label: "Dagster" },
+  { icon: Cloud, label: "AWS" },
+  { icon: GitBranch, label: "GitHub" },
+  { icon: Webhook, label: "Zapier" },
+  { icon: BookOpen, label: "Notion" },
+];
+---
+
+<section class="py-14 md:py-28">
+  <div class="container-page">
+    <header class="mx-auto mb-8 max-w-2xl text-center md:mb-10">
+      <p class="text-eyebrow">{eyebrow}</p>
+      <h2 class="text-headline mt-3">{title}</h2>
+      <p
+        class="mx-auto mt-4 max-w-xl text-[15.5px] leading-relaxed"
+        style="color: var(--gray-11);"
+      >
+        {subtitle}
+      </p>
+    </header>
+
+    <ul
+      class="mx-auto grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
+      role="list"
+    >
+      {
+        integrations.map((it, i) => {
+          const Icon = it.icon;
+          return (
+            <li
+              class="flex h-16 items-center justify-center gap-2 rounded-[var(--radius-3)]"
+              style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4);"
+              data-fade-up
+              data-delay={String(Math.min(Math.floor(i / 6), 3))}
+            >
+              <Icon size={16} style={{ color: "var(--gray-10)" }} aria-hidden="true" />
+              <span
+                class="text-[12.5px] font-medium"
+                style="color: var(--gray-11);"
+              >
+                {it.label}
+              </span>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <p
+      class="mt-6 text-center text-[12.5px]"
+      style="color: var(--gray-10);"
+    >
+      Don't see your tool?{" "}
+      <a
+        href="/product/api"
+        style="color: var(--accent-11); font-weight: 500;"
+      >
+        The REST and SKOS endpoints work with everything.
+      </a>
+    </p>
+  </div>
+</section>

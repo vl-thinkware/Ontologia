@@ -3,7 +3,7 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
 
 
-The first 30, 60, 90 days at Ontologia. How to land smoothly, do your best work, and feel at home in a remote-first, async-heavy team.
+The first 30, 60, 90 days at Semlify. How to land smoothly, do your best work, and feel at home in a remote-first, async-heavy team.
 
 ---
 
@@ -32,7 +32,7 @@ Security: laptops arrive pre-enrolled with MDM, FileVault on, SSH keys generated
 - 1:1 with the manager: goals, expectations, cadence.
 - 1:1 with CEO (for the first 20 hires, later replaced by a founder AMA).
 - Access audit: tickle every tool; note what's missing.
-- Read: this page, [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [VISION.md](../00_overview/VISION.md).
+- Read: this page, [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [VISION.md](VISION%20(imported%20to%20notion).md).
 
 ## 4. Week 1 — orient
 
@@ -193,4 +193,4 @@ We hope you stay. If you don't:
 - **Buddy** owns day-to-day friction removal.
 - Feedback loop: post-onboarding survey at day 30 and day 90, reviewed quarterly to improve the program.
 
-Related: [Code of Conduct](CODE_OF_CONDUCT.md) · [Contributing](CONTRIBUTING.md) · [Hiring Plan](HIRING_PLAN.md) · [Vision](../00_overview/VISION.md)
+Related: [Code of Conduct](CODE_OF_CONDUCT.md) · [Contributing](CONTRIBUTING.md) · [Hiring Plan](HIRING_PLAN.md) · [Vision](VISION%20(imported%20to%20notion).md)

@@ -3,7 +3,7 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v3 (multi-artefact framing)
 
 
-How Ontologia grows with and through other companies — technology alliances, channel partners, systems integrators, communities, and academic ties.
+How Semlify grows with and through other companies — technology alliances, channel partners, systems integrators, communities, and academic ties.
 
 > **Three tracks, three partner neighbourhoods.** Partner strategy mirrors the three discovery tracks: ontology-track partners (graph DBs, AI/RAG platforms, semantic-web standards), taxonomy-track partners (CMS, DAM, PIM, search, e-commerce), glossary-track partners (data catalogs, data governance, BI). Each track has its own lighthouse alliances and its own conversation.
 
@@ -14,7 +14,7 @@ How Ontologia grows with and through other companies — technology alliances, c
 - Our TAM includes many organisations we cannot reach alone.
 - Buyers of ontology tools increasingly buy *ecosystems*, not point tools.
 - Partners amplify credibility with enterprises where a 30-person company cannot stand alone.
-- Integrations widen the moat: Ontologia becomes the hub in a larger workflow.
+- Integrations widen the moat: Semlify becomes the hub in a larger workflow.
 
 ## 2. Partner categories
 
@@ -102,10 +102,10 @@ We pursue marketplace listings primarily because enterprise buyers can burn comm
 
 We coexist with data catalogues. Integration patterns:
 
-- Ontologia glossaries visible in the catalogue as a first-class vocabulary source, with JSON-LD backlinks.
-- Catalogue assets (tables, columns, dashboards) taggable with Ontologia terms.
-- Events from Ontologia (`change.created`, `tag.created`) feed catalogue workflows and lineage.
-- Reverse direction: Ontologia concepts can reference catalogue assets so a glossary term stays anchored to the real column it describes.
+- Semlify glossaries visible in the catalogue as a first-class vocabulary source, with JSON-LD backlinks.
+- Catalogue assets (tables, columns, dashboards) taggable with Semlify terms.
+- Events from Semlify (`change.created`, `tag.created`) feed catalogue workflows and lineage.
+- Reverse direction: Semlify concepts can reference catalogue assets so a glossary term stays anchored to the real column it describes.
 
 Priority integrations: Collibra, Atlan, Alation, Secoda, DataHub. Partnerships start as integrations; if both sides see pipeline benefit, we formalise co-marketing. See also: [INTEGRATIONS.md](../02_architecture/INTEGRATIONS.md).
 
@@ -113,24 +113,24 @@ Priority integrations: Collibra, Atlan, Alation, Secoda, DataHub. Partnerships s
 
 Taxonomy-track buyers want a tree that drives faceted navigation, product categorisation, and content tagging across the stack.
 
-- **CMS**: Sitecore, Optimizely, Contentful, Contentstack — Ontologia serves SKOS feeds that drive taxonomy terms and content tagging.
-- **DAM**: Bynder, Brandfolder, Adobe AEM Assets — tree-based asset taxonomies imported from Ontologia.
+- **CMS**: Sitecore, Optimizely, Contentful, Contentstack — Semlify serves SKOS feeds that drive taxonomy terms and content tagging.
+- **DAM**: Bynder, Brandfolder, Adobe AEM Assets — tree-based asset taxonomies imported from Semlify.
 - **PIM**: Akeneo, Salsify, inRiver — category trees, attribute taxonomies, variant models.
 - **Search / merchandising**: Algolia, Coveo, Bloomreach, Lucidworks — synonym lists, facet taxonomies, `broader`/`narrower` for query expansion.
-- **Translation / localisation**: Smartling, Lokalise — multilingual `prefLabel`/`altLabel` flows out of Ontologia into the translation pipeline.
+- **Translation / localisation**: Smartling, Lokalise — multilingual `prefLabel`/`altLabel` flows out of Semlify into the translation pipeline.
 
 All of these are delivered via the SKOS export endpoint (`?format=skos`) plus webhooks. Priority first year: one CMS partner (Contentful or Sitecore), one PIM (Akeneo), one search (Algolia).
 
 ## 8c. AI / RAG / knowledge-graph platform partners (Ontology track)
 
-Ontology-track buyers increasingly use Ontologia as the structured backbone of RAG pipelines, copilots, and knowledge-graph applications.
+Ontology-track buyers increasingly use Semlify as the structured backbone of RAG pipelines, copilots, and knowledge-graph applications.
 
 - **RAG / LLM frameworks**: LangChain, LlamaIndex, Haystack — reference integrations that pull concept definitions into retrieval.
-- **Vector DBs**: Pinecone, Weaviate, Qdrant — hybrid retrieval over Ontologia concepts + embeddings.
+- **Vector DBs**: Pinecone, Weaviate, Qdrant — hybrid retrieval over Semlify concepts + embeddings.
 - **MLOps / observability**: Arize, LangSmith — ontology coverage as a first-class evaluation dimension.
 - **AI platforms**: AWS Bedrock, Azure AI Foundry, GCP Vertex — reference architectures for grounding LLMs in versioned ontologies.
 
-Deliverables: JSON-LD + OWL exports, a lightweight Python SDK (`ontologia-py`), and a LangChain/LlamaIndex connector as reference.
+Deliverables: JSON-LD + OWL exports, a lightweight Python SDK (`semlify-py`), and a LangChain/LlamaIndex connector as reference.
 
 ## 9. Standards bodies & communities
 
@@ -216,4 +216,4 @@ No pay-to-play; participation is via technical contribution and presence at comm
 - Quarterly partner business reviews with top-tier partners.
 - Annual partner summit.
 
-Related: [Business Strategy](BUSINESS_STRATEGY.md) · [Go-to-Market](GO_TO_MARKET.md) · [Sales Playbook](SALES_PLAYBOOK.md) · [Customer Acquisition](CUSTOMER_ACQUISITION.md) · [Integrations](../02_architecture/INTEGRATIONS.md)
+Related: [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md) · [Go-to-Market](GO_TO_MARKET.md) · [Sales Playbook](SALES_PLAYBOOK.md) · [Customer Acquisition](CUSTOMER_ACQUISITION%20(imported%20to%20notion).md) · [Integrations](../02_architecture/INTEGRATIONS.md)

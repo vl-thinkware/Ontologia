@@ -1,0 +1,260 @@
+---
+// Hero illustration: Schema (T-Box) → Taxonomies (A-Box) → API.
+// Pure SVG, gentle CSS motion, reduced-motion friendly.
+---
+
+<div
+  class="relative mx-auto w-full max-w-[520px]"
+  role="img"
+  aria-label="Diagram showing how a Semlify schema flows into taxonomies and is served via API"
+>
+  <svg
+    viewBox="0 0 520 460"
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-auto w-full"
+    role="img"
+  >
+    <title>From schema to taxonomies to API — the Semlify flow</title>
+    <desc>Three stacked cards showing a T-Box schema, an A-Box taxonomy tree, and a JSON-LD API response, connected by violet flow lines.</desc>
+    <defs>
+      <linearGradient id="cardGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--color-panel-solid)"></stop>
+        <stop offset="1" stop-color="var(--gray-2)"></stop>
+      </linearGradient>
+      <linearGradient id="violetGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--violet-9)"></stop>
+        <stop offset="1" stop-color="var(--violet-11)"></stop>
+      </linearGradient>
+      <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow
+          dx="0"
+          dy="2"
+          stdDeviation="4"
+          flood-color="rgb(15 23 42)"
+          flood-opacity="0.06"></feDropShadow>
+      </filter>
+    </defs>
+
+    <!-- Background dots, very subtle -->
+    <g style="opacity: 0.35;">
+      <pattern
+        id="dots"
+        x="0"
+        y="0"
+        width="20"
+        height="20"
+        patternUnits="userSpaceOnUse"
+      >
+        <circle cx="1" cy="1" r="1" fill="var(--gray-a4)"></circle>
+      </pattern>
+      <rect width="520" height="460" fill="url(#dots)"></rect>
+    </g>
+
+    <!-- Card 1: T-Box (Schema) -->
+    <g class="card card-1" filter="url(#cardShadow)">
+      <rect
+        x="20"
+        y="40"
+        width="180"
+        height="160"
+        rx="12"
+        fill="url(#cardGrad)"
+        stroke="var(--gray-a5)"
+        stroke-width="1"></rect>
+      <text
+        x="36"
+        y="62"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--violet-11)"
+        letter-spacing="0.12em">T-BOX · SCHEMA</text
+      >
+      <text
+        x="36"
+        y="84"
+        font-family="Inter, sans-serif"
+        font-size="13"
+        font-weight="700"
+        fill="var(--gray-12)">Manufacturer</text
+      >
+      <line
+        x1="36"
+        y1="92"
+        x2="184"
+        y2="92"
+        stroke="var(--gray-a4)"
+        stroke-width="1"></line>
+      <text
+        x="36"
+        y="108"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)">name : string</text
+      >
+      <text
+        x="36"
+        y="124"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)">country : reference</text
+      >
+      <text
+        x="36"
+        y="140"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)">founded : date</text
+      >
+
+      <!-- Relation pill -->
+      <rect
+        x="36"
+        y="156"
+        width="148"
+        height="22"
+        rx="4"
+        fill="var(--violet-3)"></rect>
+      <text
+        x="44"
+        y="171"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--violet-11)" font-weight="600">manufactures → Model</text
+      >
+    </g>
+
+    <!-- Card 2: A-Box (Taxonomies) -->
+    <g class="card card-2" filter="url(#cardShadow)" transform="translate(0,0)">
+      <rect
+        x="170"
+        y="160"
+        width="180"
+        height="160"
+        rx="12"
+        fill="url(#cardGrad)"
+        stroke="var(--gray-a5)"
+        stroke-width="1"></rect>
+      <text
+        x="186"
+        y="182"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--green-11)"
+        letter-spacing="0.12em">A-BOX · TAXONOMY</text
+      >
+      <text
+        x="186"
+        y="204"
+        font-family="Inter, sans-serif"
+        font-size="13"
+        font-weight="700"
+        fill="var(--gray-12)">Model catalogue</text
+      >
+      <line
+        x1="186"
+        y1="212"
+        x2="334"
+        y2="212"
+        stroke="var(--gray-a4)"
+        stroke-width="1"></line>
+
+      <!-- Tree items -->
+      <g font-family="Inter, sans-serif" font-size="11" fill="var(--gray-12)">
+        <circle cx="194" cy="232" r="3" fill="var(--violet-9)"></circle>
+        <text x="204" y="236">Toyota</text>
+
+        <circle cx="208" cy="252" r="3" fill="var(--green-9)"></circle>
+        <text x="218" y="256" fill="var(--gray-11)">Camry</text>
+
+        <circle cx="208" cy="272" r="3" fill="var(--green-9)"></circle>
+        <text x="218" y="276" fill="var(--gray-11)">Corolla</text>
+
+        <circle cx="194" cy="292" r="3" fill="var(--violet-9)"></circle>
+        <text x="204" y="296">Honda</text>
+      </g>
+
+      <!-- Connector lines between tree -->
+      <path
+        d="M 194 235 L 194 252 L 205 252"
+        stroke="var(--gray-a6)"
+        stroke-width="1"
+        fill="none"></path>
+      <path
+        d="M 194 252 L 194 272 L 205 272"
+        stroke="var(--gray-a6)"
+        stroke-width="1"
+        fill="none"></path>
+    </g>
+
+    <!-- Card 3: API -->
+    <g class="card card-3" filter="url(#cardShadow)">
+      <rect
+        x="320"
+        y="280"
+        width="180"
+        height="140"
+        rx="12"
+        fill="var(--gray-12)"
+        stroke="var(--gray-a6)"
+        stroke-width="1"></rect>
+      <text
+        x="336"
+        y="302"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--violet-7)"
+        letter-spacing="0.12em">API · JSON-LD</text
+      >
+      <g
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-3)"
+      >
+        <text x="336" y="322">GET /v1/concepts</text>
+        <text x="336" y="338" fill="var(--gray-7)">  ?tag=v1.3</text>
+        <text x="336" y="354" fill="var(--gray-7)">  &amp;lang=en</text>
+        <text x="336" y="378" fill="var(--green-7)">200 OK</text>
+        <text x="336" y="394" fill="var(--gray-5)">{"{ \"data\": [...] }"}</text>
+      </g>
+    </g>
+
+    <!-- Connector arrows (T-Box → A-Box → API) -->
+    <g
+      stroke="var(--violet-9)"
+      stroke-width="1.75"
+      fill="none"
+      stroke-linecap="round"
+      stroke-dasharray="0"
+    >
+      <path d="M 200 130 C 230 130, 230 200, 220 220" opacity="0.55"></path>
+      <path
+        d="M 350 240 C 380 240, 380 290, 380 300"
+        opacity="0.55"></path>
+    </g>
+    <g fill="var(--violet-9)" style="opacity: 0.65;">
+      <circle cx="220" cy="220" r="3"></circle>
+      <circle cx="380" cy="300" r="3"></circle>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .card {
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card-1 {
+      animation: floatGently 5s ease-in-out 0s infinite;
+    }
+    .card-2 {
+      animation: floatGently 5s ease-in-out 0.6s infinite;
+    }
+    .card-3 {
+      animation: floatGently 5s ease-in-out 1.2s infinite;
+    }
+  }
+</style>

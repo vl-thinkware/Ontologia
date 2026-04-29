@@ -1,0 +1,271 @@
+---
+// AI helpers: floating suggestion cards with sparkle accents.
+---
+
+<div
+  class="relative mx-auto w-full max-w-[480px]"
+  role="img"
+  aria-label="AI suggestion cards offering synonyms, translations, and a duplicate-detection match."
+>
+  <svg
+    viewBox="0 0 480 420"
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-auto w-full"
+    role="img"
+  >
+    <title>AI helpers — synonym, translation, and duplicate suggestions</title>
+    <desc>Floating AI suggestion cards offering synonyms, translations, and a duplicate-detection match.</desc>
+    <defs>
+      <linearGradient id="aiCard" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--color-panel-solid)"></stop>
+        <stop offset="1" stop-color="var(--gray-2)"></stop>
+      </linearGradient>
+      <linearGradient id="aiHeader" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="var(--violet-9)"></stop>
+        <stop offset="1" stop-color="var(--violet-11)"></stop>
+      </linearGradient>
+      <filter id="aiShadow" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow
+          dx="0"
+          dy="3"
+          stdDeviation="6"
+          flood-color="rgb(15 23 42)"
+          flood-opacity="0.07"></feDropShadow>
+      </filter>
+    </defs>
+
+    <pattern
+      id="aiDots"
+      x="0"
+      y="0"
+      width="20"
+      height="20"
+      patternUnits="userSpaceOnUse"
+    >
+      <circle cx="1" cy="1" r="1" fill="var(--gray-a4)"></circle>
+    </pattern>
+    <rect width="480" height="420" fill="url(#aiDots)" opacity="0.4"></rect>
+
+    <!-- Sparkle accents -->
+    <g fill="var(--violet-9)" opacity="0.4">
+      <circle cx="60" cy="60" r="2"></circle>
+      <circle cx="420" cy="80" r="3"></circle>
+      <circle cx="40" cy="380" r="2.5"></circle>
+      <circle cx="450" cy="380" r="2"></circle>
+    </g>
+
+    <!-- Card 1: Synonyms -->
+    <g class="ai-card ai-card-1" filter="url(#aiShadow)">
+      <rect
+        x="30"
+        y="40"
+        width="280"
+        height="100"
+        rx="12"
+        fill="url(#aiCard)"
+        stroke="var(--green-7)"
+        stroke-width="1"></rect>
+      <rect
+        x="30"
+        y="40"
+        width="6"
+        height="100"
+        rx="3"
+        fill="var(--green-9)"></rect>
+      <g transform="translate(50,52)">
+        <circle cx="12" cy="12" r="14" fill="var(--green-3)"></circle>
+        <path
+          d="M 8 12 L 11 15 L 17 9"
+          stroke="var(--green-11)"
+          stroke-width="2.2"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </g>
+      <text
+        x="86"
+        y="68"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--green-11)"
+        letter-spacing="0.12em">SYNONYM SUGGESTION</text
+      >
+      <text
+        x="86"
+        y="88"
+        font-family="Inter, sans-serif"
+        font-size="13"
+        font-weight="700"
+        fill="var(--gray-12)">Add 4 altLabels to "Sedan"</text
+      >
+      <g
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)"
+      >
+        <text x="86" y="108">saloon, four-door,</text>
+        <text x="86" y="124">passenger car, family</text>
+      </g>
+    </g>
+
+    <!-- Card 2: Translation -->
+    <g class="ai-card ai-card-2" filter="url(#aiShadow)">
+      <rect
+        x="170"
+        y="160"
+        width="280"
+        height="100"
+        rx="12"
+        fill="url(#aiCard)"
+        stroke="var(--sky-7)"
+        stroke-width="1"></rect>
+      <rect
+        x="170"
+        y="160"
+        width="6"
+        height="100"
+        rx="3"
+        fill="var(--sky-9)"></rect>
+      <g transform="translate(190,172)">
+        <circle cx="12" cy="12" r="14" fill="var(--sky-3)"></circle>
+        <text
+          x="12"
+          y="16"
+          text-anchor="middle"
+          font-family="Inter, sans-serif"
+          font-size="11"
+          font-weight="700"
+          fill="var(--sky-11)">FR</text
+        >
+      </g>
+      <text
+        x="226"
+        y="188"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--sky-11)"
+        letter-spacing="0.12em">TRANSLATE TO FR</text
+      >
+      <text
+        x="226"
+        y="208"
+        font-family="Inter, sans-serif"
+        font-size="13"
+        font-weight="700"
+        fill="var(--gray-12)">"Berline"</text
+      >
+      <text
+        x="226"
+        y="226"
+        font-family="Inter, sans-serif"
+        font-size="11"
+        fill="var(--gray-11)">For "Sedan" prefLabel · 96% confidence</text
+      >
+      <rect
+        x="226"
+        y="234"
+        width="60"
+        height="22"
+        rx="11"
+        fill="var(--violet-9)"></rect>
+      <text
+        x="256"
+        y="248"
+        text-anchor="middle"
+        font-family="Inter, sans-serif"
+        font-size="11"
+        font-weight="600"
+        fill="white">Accept</text
+      >
+    </g>
+
+    <!-- Card 3: Duplicate detection -->
+    <g class="ai-card ai-card-3" filter="url(#aiShadow)">
+      <rect
+        x="60"
+        y="280"
+        width="280"
+        height="100"
+        rx="12"
+        fill="url(#aiCard)"
+        stroke="var(--amber-7)"
+        stroke-width="1"></rect>
+      <rect
+        x="60"
+        y="280"
+        width="6"
+        height="100"
+        rx="3"
+        fill="var(--amber-9)"></rect>
+      <g transform="translate(80,292)">
+        <circle cx="12" cy="12" r="14" fill="var(--amber-3)"></circle>
+        <path
+          d="M 12 8 L 12 14 M 12 17 L 12 17.5"
+          stroke="var(--amber-11)"
+          stroke-width="2.2"
+          stroke-linecap="round"></path>
+      </g>
+      <text
+        x="116"
+        y="308"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--amber-11)"
+        letter-spacing="0.12em">POSSIBLE DUPLICATE</text
+      >
+      <text
+        x="116"
+        y="328"
+        font-family="Inter, sans-serif"
+        font-size="13"
+        font-weight="700"
+        fill="var(--gray-12)">"4-door" overlaps "Sedan" · 78%</text
+      >
+      <text
+        x="116"
+        y="346"
+        font-family="Inter, sans-serif"
+        font-size="11"
+        fill="var(--gray-11)">Merge with dct:isReplacedBy?</text
+      >
+      <rect
+        x="116"
+        y="354"
+        width="60"
+        height="22"
+        rx="11"
+        fill="var(--gray-3)"
+        stroke="var(--gray-a5)"></rect>
+      <text
+        x="146"
+        y="368"
+        text-anchor="middle"
+        font-family="Inter, sans-serif"
+        font-size="11"
+        font-weight="600"
+        fill="var(--gray-12)">Review</text
+      >
+    </g>
+  </svg>
+</div>
+
+<style>
+  .ai-card {
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ai-card-1 {
+      animation: floatGently 5s ease-in-out 0s infinite;
+    }
+    .ai-card-2 {
+      animation: floatGently 5s ease-in-out 0.6s infinite;
+    }
+    .ai-card-3 {
+      animation: floatGently 5s ease-in-out 1.2s infinite;
+    }
+  }
+</style>

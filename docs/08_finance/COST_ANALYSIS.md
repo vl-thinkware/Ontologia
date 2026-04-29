@@ -2,7 +2,7 @@
 
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
-What it costs to build and run Ontologia — month by month, as a two-founder bootstrapped company, with a deliberate bias toward free tiers, usage-based pricing, and deferring every expense that is not customer-visible.
+What it costs to build and run Semlify — month by month, as a two-founder bootstrapped company, with a deliberate bias toward free tiers, usage-based pricing, and deferring every expense that is not customer-visible.
 
 > All figures in USD. Cost bands based on public pricing observed in April 2026. Reviewed monthly.
 
@@ -202,7 +202,7 @@ We publish a clear compliance roadmap (see [COMPLIANCE.md](../06_security_compli
 
 - Engineering: Alexandre, ~2 weeks.
 - Runs on existing infra; marginal hosting $0 in year 1.
-- Strategic value: positions Ontologia as the canonical ontology source for agent ecosystems.
+- Strategic value: positions Semlify as the canonical ontology source for agent ecosystems.
 
 ## 16. Cost efficiency levers (bootstrap-specific)
 
@@ -250,4 +250,4 @@ We publish a clear compliance roadmap (see [COMPLIANCE.md](../06_security_compli
 
 ---
 
-Related: [Pricing Model](PRICING_MODEL.md) · [Financial Projections](FINANCIAL_PROJECTIONS.md) · [Unit Economics](UNIT_ECONOMICS.md) · [Infrastructure](../05_operations/INFRASTRUCTURE.md) · [Business Strategy](../07_business/BUSINESS_STRATEGY.md)
+Related: [Pricing Model](PRICING_MODEL.md) · [Financial Projections](FINANCIAL_PROJECTIONS.md) · [Unit Economics](UNIT_ECONOMICS.md) · [Infrastructure](../05_operations/INFRASTRUCTURE.md) · [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md)

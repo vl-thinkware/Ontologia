@@ -17,7 +17,7 @@ Opinions live here so debates don't live in PRs. When something is missing, prop
 
 - `eslint` with `@typescript-eslint`, `eslint-plugin-unicorn`, `eslint-plugin-security`, project-specific rules in `packages/eslint-config`.
 - `prettier` — no arguments about it. Run on save. `printWidth: 100`.
-- `import/order` enforced; absolute imports via `@ontologia/*` aliases.
+- `import/order` enforced; absolute imports via `@semlify/*` aliases.
 - `no-default-export` in `apps/api/*` (exception: Next-style handlers in docs site).
 
 ## 3. Project conventions

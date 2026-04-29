@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="140" viewBox="0 0 220 140" fill="none">
+  
+  <g transform="translate(78 0)">
+  <path d="M14 50 L14 14" stroke="#6366F1" stroke-width="3" stroke-linecap="round"></path>
+  <path d="M14 32 C 14 22, 28 22, 36 22" stroke="#6366F1" stroke-width="3" stroke-linecap="round" fill="none"></path>
+  <path d="M14 32 C 14 42, 36 42, 44 42" stroke="#6366F1" stroke-width="3" stroke-linecap="round" fill="none"></path>
+  <circle cx="14" cy="14" r="4.5" fill="#6366F1"></circle>
+  <circle cx="14" cy="50" r="4.5" fill="#6366F1"></circle>
+  <circle cx="40" cy="22" r="6" fill="#6366F1"></circle>
+  <circle cx="48" cy="42" r="6" fill="#6366F1"></circle>
+  </g>
+  <text x="110" y="124" class="wm" fill="#0B0B14">Semlify</text>
+</svg>

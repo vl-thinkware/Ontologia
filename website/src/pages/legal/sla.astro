@@ -1,0 +1,144 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CtaBlock from "../../components/CtaBlock.astro";
+
+const breadcrumbsLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://semlify.com/" },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Service Level Agreement",
+      item: "https://semlify.com/legal/sla",
+    },
+  ],
+};
+---
+
+<Layout
+  title="Service Level Agreement — Semlify"
+  description="Uptime commitments, support response targets, and credit policies for every paid Semlify tier (Team 99.5%, Business 99.9%, Enterprise 99.95%)."
+  current="/legal/sla"
+  jsonLd={breadcrumbsLd}
+>
+  <article class="container-page mx-auto max-w-prose py-16 md:py-24">
+    <p class="text-eyebrow">Legal · SLA</p>
+    <h1 class="text-display mt-3" style="font-size: clamp(2rem, 1.5rem + 2vw, 3rem);">
+      Service Level Agreement
+    </h1>
+    <p class="mt-4 text-[14px]" style="color: var(--gray-11);">
+      Last updated: 25 April 2026 · Version 1.0
+    </p>
+
+    <div style="color: var(--gray-12); font-size: 16px; line-height: 1.7;">
+      <p class="mt-10">
+        This page summarises the public-facing service level commitments for
+        Semlify's hosted SaaS. Enterprise contracts may supersede these
+        defaults with terms negotiated in the MSA.
+      </p>
+
+      <h2 class="mt-10 text-2xl font-bold tracking-tight">Uptime commitments</h2>
+      <div class="mt-4 overflow-hidden rounded-[var(--radius-4)]" style="border: 1px solid var(--gray-a4);">
+        <table class="w-full text-[14px]">
+          <thead style="background: var(--gray-2); border-bottom: 1px solid var(--gray-a4);">
+            <tr>
+              <th class="px-4 py-3 text-left" style="color: var(--gray-11);">Plan</th>
+              <th class="px-4 py-3 text-left" style="color: var(--gray-11);">Monthly uptime</th>
+              <th class="px-4 py-3 text-left" style="color: var(--gray-11);">Remedy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-top: 1px solid var(--gray-a3);">
+              <td class="px-4 py-3 font-medium">Free</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">No SLA</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">—</td>
+            </tr>
+            <tr style="border-top: 1px solid var(--gray-a3);">
+              <td class="px-4 py-3 font-medium">Team</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">99.5%</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">Up to 5% credit on next invoice</td>
+            </tr>
+            <tr style="border-top: 1px solid var(--gray-a3);">
+              <td class="px-4 py-3 font-medium">Business</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">99.9%</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">Up to 10% credit</td>
+            </tr>
+            <tr style="border-top: 1px solid var(--gray-a3);">
+              <td class="px-4 py-3 font-medium">Enterprise</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">99.95% (default; negotiable higher)</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">Up to 20% credit, or as contracted</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="mt-4 text-[13px]" style="color: var(--gray-10);">
+        "Uptime" measured per minute on `/v1/*` endpoints and aggregated monthly. Scheduled maintenance announced ≥ 5 business days in advance is excluded.
+      </p>
+
+      <h2 class="mt-10 text-2xl font-bold tracking-tight">Support response</h2>
+      <div class="mt-4 overflow-hidden rounded-[var(--radius-4)]" style="border: 1px solid var(--gray-a4);">
+        <table class="w-full text-[14px]">
+          <thead style="background: var(--gray-2); border-bottom: 1px solid var(--gray-a4);">
+            <tr>
+              <th class="px-4 py-3 text-left" style="color: var(--gray-11);">Plan</th>
+              <th class="px-4 py-3 text-left" style="color: var(--gray-11);">Business hours</th>
+              <th class="px-4 py-3 text-left" style="color: var(--gray-11);">24×7</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-top: 1px solid var(--gray-a3);">
+              <td class="px-4 py-3 font-medium">Free</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">Best effort, community forum</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">—</td>
+            </tr>
+            <tr style="border-top: 1px solid var(--gray-a3);">
+              <td class="px-4 py-3 font-medium">Team</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">≤ 24 h email response</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">—</td>
+            </tr>
+            <tr style="border-top: 1px solid var(--gray-a3);">
+              <td class="px-4 py-3 font-medium">Business</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">≤ 8 h email response</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">—</td>
+            </tr>
+            <tr style="border-top: 1px solid var(--gray-a3);">
+              <td class="px-4 py-3 font-medium">Enterprise</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">≤ 2 h (P1), ≤ 8 h (P2)</td>
+              <td class="px-4 py-3" style="color: var(--gray-11);">P1 only</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="mt-10 text-2xl font-bold tracking-tight">Credit calculation</h2>
+      <p class="mt-4">
+        Service credits are calculated on the affected month's recurring fee for the affected workspace. Customers must request credits within 30 days of the affected month by emailing <a href="mailto:support@semlify.com" style="color: var(--accent-11);">support@semlify.com</a>. Credits do not exceed the cap per plan and are applied to the next invoice.
+      </p>
+
+      <h2 class="mt-10 text-2xl font-bold tracking-tight">Exceptions</h2>
+      <ul class="mt-4 list-disc pl-6 space-y-2">
+        <li>Free-tier workspaces.</li>
+        <li>Customer-caused issues (self-inflicted rate limits, invalid inputs).</li>
+        <li>Third-party identity provider outages beyond our acknowledged scope.</li>
+        <li>Force majeure, internet routing, scheduled maintenance.</li>
+        <li>Beta or experimental features (always labelled in-product).</li>
+      </ul>
+
+      <p class="mt-10 text-[13.5px]" style="color: var(--gray-10);">
+        This page is the public-friendly version. The legally binding SLA is part of your subscription contract. For the full text or to negotiate Enterprise terms, contact <a href="mailto:hello@semlify.com" style="color: var(--accent-11);">hello@semlify.com</a>.
+      </p>
+    </div>
+  </article>
+
+  <CtaBlock
+    title="Need a custom SLA?"
+    subtitle="Enterprise contracts can negotiate higher uptime targets, faster response times, and dedicated support channels."
+    primaryLabel="Talk to sales"
+    primaryHref="mailto:hello@semlify.com?subject=Enterprise%20SLA"
+    secondaryLabel="See pricing"
+    secondaryHref="/pricing"
+  />
+</Layout>

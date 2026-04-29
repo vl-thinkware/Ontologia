@@ -1,0 +1,242 @@
+---
+// Validation panel: stack of issues with severity tints + summary header.
+---
+
+<div
+  class="relative mx-auto w-full max-w-[480px]"
+  role="img"
+  aria-label="Validation panel showing several detected issues with severity badges."
+>
+  <svg
+    viewBox="0 0 480 420"
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-auto w-full"
+    role="img"
+  >
+    <title>Ontology validation panel with severity-tagged issues</title>
+    <desc>A list of detected ontology violations — orphans, domain/range mismatches, duplicate labels — each tagged with a severity badge.</desc>
+    <defs>
+      <linearGradient id="valCard" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--color-panel-solid)"></stop>
+        <stop offset="1" stop-color="var(--gray-2)"></stop>
+      </linearGradient>
+      <filter id="valShadow" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow
+          dx="0"
+          dy="3"
+          stdDeviation="6"
+          flood-color="rgb(15 23 42)"
+          flood-opacity="0.07"></feDropShadow>
+      </filter>
+    </defs>
+
+    <pattern
+      id="valDots"
+      x="0"
+      y="0"
+      width="20"
+      height="20"
+      patternUnits="userSpaceOnUse"
+    >
+      <circle cx="1" cy="1" r="1" fill="var(--gray-a4)"></circle>
+    </pattern>
+    <rect width="480" height="420" fill="url(#valDots)" opacity="0.4"></rect>
+
+    <g filter="url(#valShadow)">
+      <rect
+        x="40"
+        y="30"
+        width="400"
+        height="360"
+        rx="12"
+        fill="url(#valCard)"
+        stroke="var(--gray-a5)"></rect>
+
+      <!-- Header -->
+      <text
+        x="56"
+        y="58"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--gray-11)"
+        letter-spacing="0.12em">VALIDATION</text
+      >
+      <text
+        x="56"
+        y="78"
+        font-family="Inter, sans-serif"
+        font-size="14"
+        font-weight="700"
+        fill="var(--gray-12)">3 issues detected</text
+      >
+
+      <!-- Severity badges -->
+      <g font-family="Inter, sans-serif" font-size="10" font-weight="600">
+        <rect
+          x="220"
+          y="62"
+          width="60"
+          height="20"
+          rx="10"
+          fill="var(--ruby-3)"></rect>
+        <text x="250" y="76" text-anchor="middle" fill="var(--ruby-11)"
+          >2 errors</text
+        >
+
+        <rect
+          x="288"
+          y="62"
+          width="68"
+          height="20"
+          rx="10"
+          fill="var(--amber-3)"></rect>
+        <text x="322" y="76" text-anchor="middle" fill="var(--amber-11)"
+          >1 warning</text
+        >
+      </g>
+
+      <line
+        x1="40"
+        y1="100"
+        x2="440"
+        y2="100"
+        stroke="var(--gray-a4)"></line>
+
+      <!-- Issue 1: Domain violation (error) -->
+      <g>
+        <rect
+          x="40"
+          y="100"
+          width="4"
+          height="80"
+          fill="var(--ruby-9)"></rect>
+        <text
+          x="60"
+          y="124"
+          font-family="Inter, sans-serif"
+          font-size="9"
+          font-weight="600"
+          fill="var(--ruby-11)"
+          letter-spacing="0.10em">DOMAIN VIOLATION</text
+        >
+        <text
+          x="60"
+          y="144"
+          font-family="Inter, sans-serif"
+          font-size="13"
+          font-weight="700"
+          fill="var(--gray-12)"
+          >poweredBy: "BodyStyle" isn't an Engine</text
+        >
+        <text
+          x="60"
+          y="162"
+          font-family="Inter, sans-serif"
+          font-size="11"
+          fill="var(--gray-11)"
+          >Expected domain "Engine" but got "BodyStyle".</text
+        >
+      </g>
+
+      <line
+        x1="40"
+        y1="180"
+        x2="440"
+        y2="180"
+        stroke="var(--gray-a3)"></line>
+
+      <!-- Issue 2: Duplicate prefLabel (warn) -->
+      <g>
+        <rect
+          x="40"
+          y="180"
+          width="4"
+          height="80"
+          fill="var(--amber-9)"></rect>
+        <text
+          x="60"
+          y="204"
+          font-family="Inter, sans-serif"
+          font-size="9"
+          font-weight="600"
+          fill="var(--amber-11)"
+          letter-spacing="0.10em">DUPLICATE PREFLABEL</text
+        >
+        <text
+          x="60"
+          y="224"
+          font-family="Inter, sans-serif"
+          font-size="13"
+          font-weight="700"
+          fill="var(--gray-12)">Two concepts share "Highlander"</text
+        >
+        <text
+          x="60"
+          y="242"
+          font-family="Inter, sans-serif"
+          font-size="11"
+          fill="var(--gray-11)"
+          >Both c_h2024 and c_h2025 carry this label in en.</text
+        >
+      </g>
+
+      <line
+        x1="40"
+        y1="260"
+        x2="440"
+        y2="260"
+        stroke="var(--gray-a3)"></line>
+
+      <!-- Issue 3: Orphan (error) -->
+      <g>
+        <rect
+          x="40"
+          y="260"
+          width="4"
+          height="80"
+          fill="var(--ruby-9)"></rect>
+        <text
+          x="60"
+          y="284"
+          font-family="Inter, sans-serif"
+          font-size="9"
+          font-weight="600"
+          fill="var(--ruby-11)"
+          letter-spacing="0.10em">ORPHAN CONCEPT</text
+        >
+        <text
+          x="60"
+          y="304"
+          font-family="Inter, sans-serif"
+          font-size="13"
+          font-weight="700"
+          fill="var(--gray-12)">"Avalon (legacy)" is not connected</text
+        >
+        <text
+          x="60"
+          y="322"
+          font-family="Inter, sans-serif"
+          font-size="11"
+          fill="var(--gray-11)"
+          >Add a broader/narrower relation, or deprecate.</text
+        >
+      </g>
+
+      <!-- Footer hint -->
+      <rect
+        x="40"
+        y="340"
+        width="400"
+        height="50"
+        fill="var(--violet-2)"></rect>
+      <text
+        x="60"
+        y="370"
+        font-family="Inter, sans-serif"
+        font-size="11"
+        fill="var(--violet-11)">Click any issue to jump to the offender.</text
+      >
+    </g>
+  </svg>
+</div>

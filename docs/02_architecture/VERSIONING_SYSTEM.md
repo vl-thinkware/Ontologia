@@ -2,7 +2,7 @@
 
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (MVP scope trimmed)
 
-This is Ontologia's most distinctive subsystem. It must be simple enough to explain to a domain expert and robust enough for a knowledge architect. This document describes the conceptual model, the algorithms, and the invariants we protect.
+This is Semlify's most distinctive subsystem. It must be simple enough to explain to a domain expert and robust enough for a knowledge architect. This document describes the conceptual model, the algorithms, and the invariants we protect.
 
 > **MVP scope (v2 of this doc)**: MVP ships with an *immutable change history* at the concept and ontology level, plus revert and tags. The git-like *branches / merge / review* workflow is deferred until at least two paying customers on Business or Enterprise have demonstrated a real need. Section 1–6 describe the MVP. Section 7–10 describe the deferred branch/merge design we will revisit.
 
@@ -208,8 +208,8 @@ Measured on the canonical Neo4j Aura instance (4 GB shared tenant) plus Neon Pos
 
 ## 14. Open design choices
 
-Tracked in [REFINEMENTS.md](../01_product/REFINEMENTS.md). Most notably: when exactly we ship S1 branches, whether we enforce optional linear history once branches exist, and how we handle multi-entity events (one change touching many concepts via a schema rename).
+Tracked in [REFINEMENTS.md](REFINEMENTS%20(imported%20to%20notion).md). Most notably: when exactly we ship S1 branches, whether we enforce optional linear history once branches exist, and how we handle multi-entity events (one change touching many concepts via a schema rename).
 
 ---
 
-Related: [Data Model](DATA_MODEL.md) · [API Specification](API_SPECIFICATION.md) · [Architecture](ARCHITECTURE.md) · [Testing Strategy](../03_engineering/TESTING_STRATEGY.md) · [Features](../01_product/FEATURES.md)
+Related: [Data Model](DATA_MODEL.md) · [API Specification](API_SPECIFICATION.md) · [Architecture](ARCHITECTURE.md) · [Testing Strategy](../03_engineering/TESTING_STRATEGY.md) · [Features](FEATURES%20(imported%20to%20notion).md)

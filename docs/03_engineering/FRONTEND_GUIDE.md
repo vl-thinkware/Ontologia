@@ -3,7 +3,7 @@
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
 
-Principles, patterns and recipes for the Ontologia web app.
+Principles, patterns and recipes for the Semlify web app.
 
 ---
 
@@ -91,7 +91,7 @@ apps/web/src/
 
 ## 7. API layer
 
-- SDK (`@ontologia/sdk-js`) wraps the REST API.
+- SDK (`@semlify/sdk-js`) wraps the REST API.
 - Query hooks import the SDK — never `fetch` directly in components.
 - Auth token attached by an SDK interceptor.
 - Retries: 2 for idempotent ops on 429/503 with backoff; none on 4xx.

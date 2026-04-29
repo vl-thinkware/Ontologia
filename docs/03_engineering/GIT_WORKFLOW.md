@@ -108,7 +108,7 @@ Owners are auto-requested on PRs touching their area. Merges require their appro
 - Semver: `vMAJOR.MINOR.PATCH`.
 - Tag on every GA release. Release notes auto-generated from Conventional Commits between tags, curated by the release lead.
 - Pre-releases: `v1.0.0-rc.1`.
-- Changelog published at `docs.ontologia.com/changelog`.
+- Changelog published at `docs.semlify.com/changelog`.
 
 ## 8. Hotfix flow
 

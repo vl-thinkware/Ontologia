@@ -1,0 +1,279 @@
+---
+// Synonym suggestions — one focused AI suggestion card with checkable altLabel
+// proposals + an Accept button.
+---
+
+<div
+  class="relative mx-auto w-full max-w-[480px]"
+  role="img"
+  aria-label="AI suggestion card proposing alternative labels for a concept."
+>
+  <svg
+    viewBox="0 0 480 420"
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-auto w-full"
+    role="img"
+  >
+    <title>AI synonym suggestions — alternative labels for a concept</title>
+    <desc>An AI suggestion card listing proposed SKOS altLabels with check toggles and an Accept action.</desc>
+    <defs>
+      <linearGradient id="synCard" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--color-panel-solid)"></stop>
+        <stop offset="1" stop-color="var(--gray-2)"></stop>
+      </linearGradient>
+      <filter id="synShadow" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow
+          dx="0"
+          dy="3"
+          stdDeviation="6"
+          flood-color="rgb(15 23 42)"
+          flood-opacity="0.18"></feDropShadow>
+      </filter>
+    </defs>
+
+    <pattern
+      id="synDots"
+      x="0"
+      y="0"
+      width="20"
+      height="20"
+      patternUnits="userSpaceOnUse"
+    >
+      <circle cx="1" cy="1" r="1" fill="var(--gray-a4)"></circle>
+    </pattern>
+    <rect width="480" height="420" fill="url(#synDots)" opacity="0.45"></rect>
+
+    <!-- Sparkle accents -->
+    <g fill="var(--violet-9)">
+      <g opacity="0.55">
+        <path d="M 60 60 L 60 72 M 54 66 L 66 66" stroke="var(--violet-9)" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+      <g opacity="0.5">
+        <path d="M 420 70 L 420 80 M 415 75 L 425 75" stroke="var(--violet-9)" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+      <g opacity="0.45">
+        <path d="M 50 360 L 50 370 M 45 365 L 55 365" stroke="var(--violet-9)" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+      <g opacity="0.55">
+        <path d="M 430 350 L 430 362 M 424 356 L 436 356" stroke="var(--violet-9)" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+    </g>
+
+    <!-- Concept context (small, top) -->
+    <g filter="url(#synShadow)">
+      <rect
+        x="100"
+        y="40"
+        width="280"
+        height="56"
+        rx="10"
+        fill="url(#synCard)"
+        stroke="var(--gray-a5)"></rect>
+      <text
+        x="116"
+        y="62"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--gray-11)"
+        letter-spacing="0.12em">CONCEPT</text
+      >
+      <text
+        x="116"
+        y="82"
+        font-family="Inter, sans-serif"
+        font-size="14"
+        font-weight="700"
+        fill="var(--gray-12)">Sedan</text
+      >
+      <text
+        x="170"
+        y="82"
+        font-family="ui-monospace, monospace"
+        font-size="10"
+        fill="var(--gray-11)">· prefLabel · en</text
+      >
+    </g>
+
+    <!-- Main suggestion card -->
+    <g filter="url(#synShadow)">
+      <rect
+        x="60"
+        y="120"
+        width="360"
+        height="240"
+        rx="14"
+        fill="url(#synCard)"
+        stroke="var(--violet-7)"
+        stroke-width="1.5"></rect>
+      <rect x="60" y="120" width="360" height="6" rx="3" fill="var(--violet-9)"
+      ></rect>
+
+      <!-- Header -->
+      <g transform="translate(76, 142)">
+        <circle cx="14" cy="14" r="14" fill="var(--violet-3)"></circle>
+        <path
+          d="M 14 7 L 14 14 M 14 14 L 14 21 M 14 14 L 7 14 M 14 14 L 21 14"
+          stroke="var(--violet-11)"
+          stroke-width="2"
+          stroke-linecap="round"></path>
+        <path
+          d="M 11 11 L 17 17 M 11 17 L 17 11"
+          stroke="var(--violet-11)"
+          stroke-width="2"
+          stroke-linecap="round"></path>
+      </g>
+      <text
+        x="116"
+        y="152"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--violet-11)"
+        letter-spacing="0.12em">AI SUGGESTION · SYNONYMS</text
+      >
+      <text
+        x="116"
+        y="170"
+        font-family="Inter, sans-serif"
+        font-size="13"
+        font-weight="700"
+        fill="var(--gray-12)">Add 4 altLabels</text
+      >
+
+      <line
+        x1="76"
+        y1="190"
+        x2="404"
+        y2="190"
+        stroke="var(--gray-a4)"></line>
+
+      <!-- Checkable rows -->
+      <g font-family="ui-monospace, monospace" font-size="11.5">
+        <!-- Row 1: saloon (checked) -->
+        <rect
+          x="76"
+          y="200"
+          width="328"
+          height="28"
+          rx="6"
+          fill="var(--green-2)"
+          stroke="var(--green-a5)"></rect>
+        <rect
+          x="86"
+          y="208"
+          width="14"
+          height="14"
+          rx="3"
+          fill="var(--green-9)"></rect>
+        <path
+          d="M 89 215 L 92 218 L 97 211"
+          stroke="white"
+          stroke-width="2"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <text x="110" y="219" fill="var(--gray-12)">"saloon"</text>
+        <text x="180" y="219" font-size="9.5" fill="var(--gray-10)">EN-GB</text>
+
+        <!-- Row 2: four-door (checked) -->
+        <rect
+          x="76"
+          y="234"
+          width="328"
+          height="28"
+          rx="6"
+          fill="var(--green-2)"
+          stroke="var(--green-a5)"></rect>
+        <rect
+          x="86"
+          y="242"
+          width="14"
+          height="14"
+          rx="3"
+          fill="var(--green-9)"></rect>
+        <path
+          d="M 89 249 L 92 252 L 97 245"
+          stroke="white"
+          stroke-width="2"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <text x="110" y="253" fill="var(--gray-12)">"four-door"</text>
+        <text x="195" y="253" font-size="9.5" fill="var(--gray-10)">common</text>
+
+        <!-- Row 3: passenger car (unchecked) -->
+        <rect
+          x="76"
+          y="268"
+          width="328"
+          height="28"
+          rx="6"
+          fill="var(--color-panel-solid)"
+          stroke="var(--gray-a4)"></rect>
+        <rect
+          x="86"
+          y="276"
+          width="14"
+          height="14"
+          rx="3"
+          fill="var(--color-panel-solid)"
+          stroke="var(--gray-a6)"
+          stroke-width="1.5"></rect>
+        <text x="110" y="287" fill="var(--gray-12)">"passenger car"</text>
+
+        <!-- Row 4: family (unchecked) -->
+        <rect
+          x="76"
+          y="302"
+          width="328"
+          height="28"
+          rx="6"
+          fill="var(--color-panel-solid)"
+          stroke="var(--gray-a4)"></rect>
+        <rect
+          x="86"
+          y="310"
+          width="14"
+          height="14"
+          rx="3"
+          fill="var(--color-panel-solid)"
+          stroke="var(--gray-a6)"
+          stroke-width="1.5"></rect>
+        <text x="110" y="321" fill="var(--gray-12)">"family"</text>
+        <text x="180" y="321" font-size="9.5" fill="var(--gray-10)">low confidence</text>
+      </g>
+
+      <!-- Accept button -->
+      <g transform="translate(76, 340)">
+        <rect width="120" height="28" rx="14" fill="var(--violet-9)"></rect>
+        <text
+          x="60"
+          y="18"
+          text-anchor="middle"
+          font-family="Inter, sans-serif"
+          font-size="11"
+          font-weight="600"
+          fill="white">Accept 2 selected</text
+        >
+      </g>
+      <g transform="translate(206, 340)">
+        <rect
+          width="80"
+          height="28"
+          rx="14"
+          fill="transparent"
+          stroke="var(--gray-a5)"></rect>
+        <text
+          x="40"
+          y="18"
+          text-anchor="middle"
+          font-family="Inter, sans-serif"
+          font-size="11"
+          font-weight="600"
+          fill="var(--gray-11)">Skip</text
+        >
+      </g>
+    </g>
+  </svg>
+</div>

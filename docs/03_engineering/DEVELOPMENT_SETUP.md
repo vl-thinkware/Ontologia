@@ -3,7 +3,7 @@
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
 
-From a blank laptop to a running Ontologia stack in under 30 minutes. If anything here is wrong or slow, file an issue — the onboarding experience is a product.
+From a blank laptop to a running Semlify stack in under 30 minutes. If anything here is wrong or slow, file an issue — the onboarding experience is a product.
 
 ---
 
@@ -25,8 +25,8 @@ Optional:
 ## 2. Clone and bootstrap
 
 ```bash
-git clone git@github.com:ontologia/ontologia.git
-cd ontologia
+git clone git@github.com:semlify/semlify.git
+cd semlify
 cp .env.example .env
 pnpm install
 pnpm dev:services      # starts docker-compose with Postgres, Neo4j, Redis, MinIO
@@ -84,13 +84,13 @@ APP_URL=http://localhost:3000
 API_URL=http://localhost:3001
 
 # postgres
-DATABASE_URL=postgres://ontologia:password@localhost:5432/ontologia_dev
+DATABASE_URL=postgres://semlify:password@localhost:5432/semlify_dev
 
 # neo4j
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=changeme
-NEO4J_DATABASE=ontologia_shared
+NEO4J_DATABASE=semlify_shared
 NEO4J_MODE=shared           # shared | dedicated
 
 # redis
@@ -100,7 +100,7 @@ REDIS_URL=redis://localhost:6379
 S3_ENDPOINT=http://localhost:9000
 S3_ACCESS_KEY=minio
 S3_SECRET_KEY=minio123
-S3_BUCKET=ontologia-local
+S3_BUCKET=semlify-local
 
 # auth
 CLERK_SECRET_KEY=

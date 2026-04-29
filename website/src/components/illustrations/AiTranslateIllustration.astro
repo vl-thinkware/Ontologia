@@ -1,0 +1,334 @@
+---
+// Auto-translate — multilingual rows with per-language confidence bars + status.
+---
+
+<div
+  class="relative mx-auto w-full max-w-[480px]"
+  role="img"
+  aria-label="Multilingual concept view with auto-translation suggestions and confidence scores."
+>
+  <svg
+    viewBox="0 0 480 420"
+    xmlns="http://www.w3.org/2000/svg"
+    class="h-auto w-full"
+    role="img"
+  >
+    <title>AI translation — multilingual concept rows with confidence</title>
+    <desc>Multilingual concept rows showing auto-translated SKOS prefLabels with per-language confidence bars and status.</desc>
+    <defs>
+      <linearGradient id="trCard" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--color-panel-solid)"></stop>
+        <stop offset="1" stop-color="var(--gray-2)"></stop>
+      </linearGradient>
+      <filter id="trShadow" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow
+          dx="0"
+          dy="3"
+          stdDeviation="6"
+          flood-color="rgb(15 23 42)"
+          flood-opacity="0.18"></feDropShadow>
+      </filter>
+    </defs>
+
+    <pattern
+      id="trDots"
+      x="0"
+      y="0"
+      width="20"
+      height="20"
+      patternUnits="userSpaceOnUse"
+    >
+      <circle cx="1" cy="1" r="1" fill="var(--gray-a4)"></circle>
+    </pattern>
+    <rect width="480" height="420" fill="url(#trDots)" opacity="0.45"></rect>
+
+    <g filter="url(#trShadow)">
+      <rect
+        x="40"
+        y="40"
+        width="400"
+        height="340"
+        rx="14"
+        fill="url(#trCard)"
+        stroke="var(--sky-7)"
+        stroke-width="1.5"></rect>
+      <rect x="40" y="40" width="400" height="6" rx="3" fill="var(--sky-9)"
+      ></rect>
+
+      <!-- Header: globe icon + title -->
+      <g transform="translate(56, 60)">
+        <circle cx="14" cy="14" r="14" fill="var(--sky-3)"></circle>
+        <circle
+          cx="14"
+          cy="14"
+          r="9"
+          fill="none"
+          stroke="var(--sky-11)"
+          stroke-width="1.5"></circle>
+        <ellipse
+          cx="14"
+          cy="14"
+          rx="9"
+          ry="4"
+          fill="none"
+          stroke="var(--sky-11)"
+          stroke-width="1.5"></ellipse>
+        <line
+          x1="14"
+          y1="5"
+          x2="14"
+          y2="23"
+          stroke="var(--sky-11)"
+          stroke-width="1.5"></line>
+        <line
+          x1="5"
+          y1="14"
+          x2="23"
+          y2="14"
+          stroke="var(--sky-11)"
+          stroke-width="1.5"></line>
+      </g>
+      <text
+        x="96"
+        y="69"
+        font-family="Inter, sans-serif"
+        font-size="9"
+        font-weight="600"
+        fill="var(--sky-11)"
+        letter-spacing="0.12em">PREFLABEL · MULTILINGUAL</text
+      >
+      <text
+        x="96"
+        y="87"
+        font-family="Inter, sans-serif"
+        font-size="14"
+        font-weight="700"
+        fill="var(--gray-12)">Sedan</text
+      >
+
+      <line
+        x1="56"
+        y1="106"
+        x2="424"
+        y2="106"
+        stroke="var(--gray-a4)"></line>
+
+      <!-- Language rows -->
+      <g font-family="ui-monospace, monospace" font-size="12">
+        <!-- EN row (set, no AI) -->
+        <g transform="translate(56, 124)">
+          <rect
+            x="0"
+            y="0"
+            width="32"
+            height="22"
+            rx="4"
+            fill="var(--gray-3)"></rect>
+          <text
+            x="16"
+            y="15"
+            text-anchor="middle"
+            font-family="Inter, sans-serif"
+            font-size="11"
+            font-weight="600"
+            fill="var(--gray-12)">EN</text
+          >
+          <text x="44" y="15" fill="var(--gray-12)" font-weight="600">"Sedan"</text>
+          <g transform="translate(280, 4)">
+            <rect
+              width="80"
+              height="14"
+              rx="7"
+              fill="var(--green-3)"></rect>
+            <text
+              x="40"
+              y="10"
+              text-anchor="middle"
+              font-family="Inter, sans-serif"
+              font-size="9"
+              font-weight="600"
+              fill="var(--green-11)">SOURCE</text
+            >
+          </g>
+        </g>
+
+        <!-- FR row (high confidence) -->
+        <g transform="translate(56, 158)">
+          <rect
+            x="0"
+            y="0"
+            width="32"
+            height="22"
+            rx="4"
+            fill="var(--violet-3)"></rect>
+          <text
+            x="16"
+            y="15"
+            text-anchor="middle"
+            font-family="Inter, sans-serif"
+            font-size="11"
+            font-weight="600"
+            fill="var(--violet-11)">FR</text
+          >
+          <text x="44" y="15" fill="var(--gray-12)">"Berline"</text>
+          <!-- Confidence bar -->
+          <g transform="translate(232, 8)">
+            <rect width="100" height="6" rx="3" fill="var(--gray-3)"></rect>
+            <rect width="96" height="6" rx="3" fill="var(--green-9)"></rect>
+          </g>
+          <text
+            x="346"
+            y="15"
+            font-family="Inter, sans-serif"
+            font-size="10"
+            fill="var(--gray-11)">96%</text
+          >
+        </g>
+
+        <!-- JA row (high confidence) -->
+        <g transform="translate(56, 192)">
+          <rect
+            x="0"
+            y="0"
+            width="32"
+            height="22"
+            rx="4"
+            fill="var(--violet-3)"></rect>
+          <text
+            x="16"
+            y="15"
+            text-anchor="middle"
+            font-family="Inter, sans-serif"
+            font-size="11"
+            font-weight="600"
+            fill="var(--violet-11)">JA</text
+          >
+          <text x="44" y="15" fill="var(--gray-12)">"セダン"</text>
+          <g transform="translate(232, 8)">
+            <rect width="100" height="6" rx="3" fill="var(--gray-3)"></rect>
+            <rect width="91" height="6" rx="3" fill="var(--green-9)"></rect>
+          </g>
+          <text
+            x="346"
+            y="15"
+            font-family="Inter, sans-serif"
+            font-size="10"
+            fill="var(--gray-11)">91%</text
+          >
+        </g>
+
+        <!-- DE row (med confidence) -->
+        <g transform="translate(56, 226)">
+          <rect
+            x="0"
+            y="0"
+            width="32"
+            height="22"
+            rx="4"
+            fill="var(--violet-3)"></rect>
+          <text
+            x="16"
+            y="15"
+            text-anchor="middle"
+            font-family="Inter, sans-serif"
+            font-size="11"
+            font-weight="600"
+            fill="var(--violet-11)">DE</text
+          >
+          <text x="44" y="15" fill="var(--gray-12)">"Limousine"</text>
+          <g transform="translate(232, 8)">
+            <rect width="100" height="6" rx="3" fill="var(--gray-3)"></rect>
+            <rect width="78" height="6" rx="3" fill="var(--amber-9)"></rect>
+          </g>
+          <text
+            x="346"
+            y="15"
+            font-family="Inter, sans-serif"
+            font-size="10"
+            fill="var(--gray-11)">78%</text
+          >
+        </g>
+
+        <!-- ES row (low confidence — review) -->
+        <g transform="translate(56, 260)">
+          <rect
+            x="0"
+            y="0"
+            width="32"
+            height="22"
+            rx="4"
+            fill="var(--violet-3)"></rect>
+          <text
+            x="16"
+            y="15"
+            text-anchor="middle"
+            font-family="Inter, sans-serif"
+            font-size="11"
+            font-weight="600"
+            fill="var(--violet-11)">ES</text
+          >
+          <text x="44" y="15" fill="var(--gray-11)">"Sedán"</text>
+          <g transform="translate(232, 8)">
+            <rect width="100" height="6" rx="3" fill="var(--gray-3)"></rect>
+            <rect width="62" height="6" rx="3" fill="var(--amber-9)"></rect>
+          </g>
+          <text
+            x="346"
+            y="15"
+            font-family="Inter, sans-serif"
+            font-size="10"
+            fill="var(--gray-11)">62%</text
+          >
+        </g>
+      </g>
+
+      <line
+        x1="56"
+        y1="298"
+        x2="424"
+        y2="298"
+        stroke="var(--gray-a4)"></line>
+
+      <!-- Footer hint -->
+      <text
+        x="56"
+        y="320"
+        font-family="Inter, sans-serif"
+        font-size="11"
+        fill="var(--gray-11)"
+        >Translations land as ordinary change events — accept, edit, or revert.</text
+      >
+
+      <!-- Action buttons -->
+      <g transform="translate(56, 332)">
+        <rect width="160" height="28" rx="14" fill="var(--violet-9)"></rect>
+        <text
+          x="80"
+          y="18"
+          text-anchor="middle"
+          font-family="Inter, sans-serif"
+          font-size="11"
+          font-weight="600"
+          fill="white">Accept all 4</text
+        >
+      </g>
+      <g transform="translate(226, 332)">
+        <rect
+          width="124"
+          height="28"
+          rx="14"
+          fill="transparent"
+          stroke="var(--gray-a5)"></rect>
+        <text
+          x="62"
+          y="18"
+          text-anchor="middle"
+          font-family="Inter, sans-serif"
+          font-size="11"
+          font-weight="600"
+          fill="var(--gray-11)">Review one by one</text
+        >
+      </g>
+    </g>
+  </svg>
+</div>

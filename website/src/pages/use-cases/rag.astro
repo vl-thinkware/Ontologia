@@ -1,0 +1,202 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import UseCasePageNav from "../../components/UseCasePageNav.astro";
+import UseCaseHero from "../../components/UseCaseHero.astro";
+import ProductFeatureBlock from "../../components/ProductFeatureBlock.astro";
+import SchemaCanvasIllustration from "../../components/illustrations/SchemaCanvasIllustration.astro";
+import ApiPlaygroundIllustration from "../../components/illustrations/ApiPlaygroundIllustration.astro";
+import CodeBlock from "../../components/CodeBlock.astro";
+import CtaBlock from "../../components/CtaBlock.astro";
+
+const breadcrumbsLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://semlify.com/" },
+    { "@type": "ListItem", position: 2, name: "Use cases", item: "https://semlify.com/use-cases/rag" },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "RAG",
+      item: "https://semlify.com/use-cases/rag",
+    },
+  ],
+};
+---
+
+<Layout
+  title="RAG ontology — Ground your AI in a versioned graph · Semlify"
+  description="Pin your RAG retrieval index to a tagged ontology snapshot, negotiate language, and re-index on tag.created webhooks. Stop watching your AI drift when a concept moves."
+  current="/use-cases/rag"
+  jsonLd={breadcrumbsLd}
+>
+  <UseCasePageNav current="/use-cases/rag" />
+
+  <UseCaseHero
+    eyebrow="Use case · Retrieval-augmented generation"
+    title="Ground your RAG in a versioned ontology."
+    subtitle="The same concept, the same labels, the same definitions — every time your model retrieves. Tag a known-good state. Re-index when you choose. Stop watching your AI drift."
+  />
+
+  <!-- Problem -->
+  <section class="py-16 md:py-20">
+    <div class="container-page mx-auto max-w-3xl">
+      <p class="text-eyebrow">The problem</p>
+      <h2 class="text-headline mt-3" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+        Your model is grounded in a moving target.
+      </h2>
+      <p class="mt-5 text-[16px] leading-relaxed" style="color: var(--gray-11);">
+        Most RAG pipelines pull domain knowledge from a wiki, a Notion page, or
+        a flat-file glossary. The content moves around. Definitions get
+        rewritten without notice. A maintainer renames a concept on Tuesday and
+        every retrieval after lunch returns subtly wrong context. You discover
+        it on Friday when a customer support call goes sideways.
+      </p>
+      <p class="mt-4 text-[16px] leading-relaxed" style="color: var(--gray-11);">
+        The AI didn't hallucinate. The data did. And there's no log, no
+        revert, no way to point at the change that broke things — because the
+        upstream system was never built to track them.
+      </p>
+    </div>
+  </section>
+
+  <!-- Solution -->
+  <ProductFeatureBlock
+    eyebrow="The shape"
+    title="A typed graph your pipeline can pin to."
+    body="Semlify gives every concept a stable id, a SKOS-aligned label set, and a typed relation map. Your retriever indexes the JSON-LD or SKOS Turtle export. When you're ready to ship a change, you tag it. Until then, your pipeline pins to the last-known-good tag."
+    bullets={[
+      "Stable concept ids that survive label changes",
+      "Multilingual labels — your retriever can pick a locale per query",
+      "Typed relations let you walk neighbours during retrieval",
+      "Every change is reversible — a botched edit can be undone in one click",
+    ]}
+  >
+    <SchemaCanvasIllustration />
+  </ProductFeatureBlock>
+
+  <!-- Code -->
+  <section class="py-16 md:py-20">
+    <div class="container-page mx-auto max-w-4xl">
+      <p class="text-eyebrow">Wire it in</p>
+      <h2 class="text-headline mt-3" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+        From the editor to your retriever.
+      </h2>
+      <p class="mt-4 text-[15.5px] leading-relaxed" style="color: var(--gray-11);">
+        Three calls — fetch the concepts, index them, subscribe to tag webhooks
+        for incremental re-indexing.
+      </p>
+      <div class="mt-6">
+        <CodeBlock
+          language="python"
+          filename="indexer.py"
+          code={`import requests, os
+
+ONT = "https://api.semlify.com/v1/ontologies/your_ontology"
+TOKEN = os.environ["ONTOLOGIA_TOKEN"]
+TAG = os.environ.get("ONTOLOGIA_TAG", "latest")
+
+# 1. Pull the latest tagged snapshot as JSON-LD
+resp = requests.get(
+    f"{ONT}/concepts",
+    params={"tag": TAG, "lang": "en", "format": "jsonld"},
+    headers={"Authorization": f"Bearer {TOKEN}"},
+)
+graph = resp.json()["@graph"]
+
+# 2. Index each concept — id is stable across label changes
+for c in graph:
+    embed_and_upsert(
+        id=c["@id"],
+        text=" ".join([
+            c["skos:prefLabel"][0]["@value"],
+            *[a["@value"] for a in c.get("skos:altLabel", [])],
+            c.get("skos:definition", [{}])[0].get("@value", ""),
+        ]),
+        meta={"tag": TAG, "scheme": c["skos:inScheme"]},
+    )
+
+# 3. Subscribe to tag webhooks for incremental re-indexing
+# POST /v1/webhooks {url, events: ["tag.created"]}`}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Week one -->
+  <section class="py-16 md:py-20" style="background: var(--gray-2);">
+    <div class="container-page mx-auto max-w-3xl">
+      <p class="text-eyebrow">Your first week</p>
+      <h2 class="text-headline mt-3" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+        From signup to grounded retrieval in seven days.
+      </h2>
+      <ol class="mt-8 space-y-6" style="counter-reset: step;">
+        {
+          [
+            {
+              h: "Day 1 · Pick a starter and add the first 30 concepts",
+              p: "The Catalog template seeds you with a usable T-Box and a scheme. Replace the example concepts with your own using the CSV import wizard or the New Concept modal.",
+            },
+            {
+              h: "Day 2 · Tag v0.1 and wire the indexer",
+              p: "Tag the current state. Point your retrieval pipeline at the JSON-LD export. Run a quality check on retrieval against ten known queries.",
+            },
+            {
+              h: "Day 3–4 · Curate, fix, re-tag",
+              p: "Use the Validation panel to catch orphans, duplicates, and domain violations. Accept the AI-suggested altLabels for the queries that under-recalled. Re-tag as v0.2.",
+            },
+            {
+              h: "Day 5 · Subscribe to tag webhooks",
+              p: "Ship the webhook listener so the indexer re-runs whenever a maintainer publishes a new tag. Production pipelines pin to a known tag, dev pipelines follow latest.",
+            },
+            {
+              h: "Day 6–7 · Multilingual or multi-scheme",
+              p: "Add a second language with the auto-translate AI helper. Or split your ontology into two schemes (e.g. products vs. categories) and index them as separate Faiss / Pinecone namespaces.",
+            },
+          ].map((step, i) => (
+            <li
+              class="flex gap-4"
+              data-fade-up
+              data-delay={String(Math.min(i, 3))}
+            >
+              <span
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[14px] font-bold"
+                style="background: var(--accent-9); color: var(--accent-contrast);"
+              >
+                {i + 1}
+              </span>
+              <div>
+                <h3
+                  class="text-[15px] font-bold"
+                  style="color: var(--gray-12);"
+                >
+                  {step.h}
+                </h3>
+                <p
+                  class="mt-1 text-[14px] leading-relaxed"
+                  style="color: var(--gray-11);"
+                >
+                  {step.p}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <ProductFeatureBlock
+    eyebrow="Stable on the wire"
+    title="Your retriever sees the API, not the editor."
+    body="The Schema, Taxonomies, and AI work happens in the editor. Your retrieval pipeline only sees the API. Pin to a tag. Negotiate language. Pick JSON-LD or SKOS Turtle. The shape doesn't change between releases — only the data inside it does."
+    reverse
+  >
+    <ApiPlaygroundIllustration />
+  </ProductFeatureBlock>
+
+  <CtaBlock
+    title="Stop debugging upstream drift."
+    subtitle="Free workspace. Catalog starter pre-loaded. Wire your retriever in an afternoon."
+  />
+</Layout>

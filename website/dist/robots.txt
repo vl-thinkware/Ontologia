@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ontologia.com/sitemap-index.xml

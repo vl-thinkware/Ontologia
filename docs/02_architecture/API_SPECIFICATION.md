@@ -2,7 +2,7 @@
 
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v4 (ontology-only, SKOS built-ins)
 
-Ontologia exposes a versioned, OpenAPI-described REST API for programmatic use. This document summarises the contract; the canonical source is the auto-generated OpenAPI 3.1 spec at `https://api.ontologia.com/v1/openapi.json`.
+Semlify exposes a versioned, OpenAPI-described REST API for programmatic use. This document summarises the contract; the canonical source is the auto-generated OpenAPI 3.1 spec at `https://api.semlify.com/v1/openapi.json`.
 
 > **MVP scope**: the `/branches`, `/commits`, and `/reviews` endpoints are deferred to the S1/S2 release. MVP mutations happen via change events applied directly to an ontology. See [VERSIONING_SYSTEM.md](VERSIONING_SYSTEM.md).
 >
@@ -14,7 +14,7 @@ Ontologia exposes a versioned, OpenAPI-described REST API for programmatic use. 
 
 ## 1. Conventions
 
-- **Base URL.** `https://api.ontologia.com/v1`
+- **Base URL.** `https://api.semlify.com/v1`
 - **Content type.** `application/json; charset=utf-8` by default. `application/ld+json` on export endpoints.
 - **Time.** ISO-8601 (RFC 3339), UTC.
 - **IDs.** String UUIDs (v7 preferred).
@@ -22,7 +22,7 @@ Ontologia exposes a versioned, OpenAPI-described REST API for programmatic use. 
 
 ```json
 {
-  "type": "https://errors.ontologia.com/validation",
+  "type": "https://errors.semlify.com/validation",
   "title": "Validation failed",
   "status": 400,
   "detail": "field 'name' is required",
@@ -405,7 +405,7 @@ GET    /exports/{exportId}/download         (presigned URL)
 | `json` | `application/json` | Flat JSON for generic pipelines and BI |
 | `csv` | `text/csv` | Spreadsheets, BI warehouses, flat-file consumers |
 
-Import formats mirror exports: `csv`, `skos` (Turtle / RDF / XML), `owl` (simplified OWL), `jsonld`. File format is auto-detected on upload. See [USER_FLOWS.md](../01_product/USER_FLOWS.md) §5 for the import wizard.
+Import formats mirror exports: `csv`, `skos` (Turtle / RDF / XML), `owl` (simplified OWL), `jsonld`. File format is auto-detected on upload. See [USER_FLOWS.md](USER_FLOWS%20(imported%20to%20notion).md) §5 for the import wizard.
 
 ### 3.13 Webhooks
 
@@ -499,7 +499,7 @@ Example — every Tesla model with its horsepower, read at the `2026-Q2` tag:
 
 ```sparql
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX cars: <https://ontologia.com/ont/ont_cars#>
+PREFIX cars: <https://semlify.com/ont/ont_cars#>
 
 SELECT ?model ?label ?hp WHERE {
   ?model a cars:Model ;
@@ -563,7 +563,7 @@ When these ship, they will not break the MVP routes; the change-events endpoint 
 
 Every webhook:
 - Method: `POST`.
-- Headers: `X-Ontologia-Event`, `X-Ontologia-Delivery`, `X-Ontologia-Signature: t=…,v1=hex`.
+- Headers: `X-Semlify-Event`, `X-Semlify-Delivery`, `X-Semlify-Signature: t=…,v1=hex`.
 - Signature: `HMAC_SHA256(secret, "{t}.{body}")`.
 - Timeout: 10 s.
 - Retries: `1s, 5s, 30s, 2m, 10m, 1h, 6h, 24h` then DLQ.
@@ -636,8 +636,8 @@ Large responses respect a 5 MB cap; beyond that, clients must paginate.
 
 ## 8. SDKs
 
-- `ontologia-python` (official). Auto-generated from OpenAPI with hand-crafted ergonomics for change events and diffs.
-- `ontologia-js`. Isomorphic (Node + browser).
+- `semlify-python` (official). Auto-generated from OpenAPI with hand-crafted ergonomics for change events and diffs.
+- `semlify-js`. Isomorphic (Node + browser).
 
 Both SDKs:
 - Type-safe with the latest spec.
@@ -670,19 +670,19 @@ ONT=ont_cars
 CATALOGUE=sch_catalogue
 
 # --- Ontology setup with enabled languages ---
-curl -X PATCH https://api.ontologia.com/v1/ontologies/$ONT \
+curl -X PATCH https://api.semlify.com/v1/ontologies/$ONT \
   -H "Authorization: Bearer sk_live_..." \
   -H "Content-Type: application/json" \
   -d '{"defaultLanguage":"en"}'
 
-curl -X PUT https://api.ontologia.com/v1/ontologies/$ONT/languages \
+curl -X PUT https://api.semlify.com/v1/ontologies/$ONT/languages \
   -H "Authorization: Bearer sk_live_..." \
   -H "Content-Type: application/json" \
   -d '{"languages":["en","fr"],"defaultLanguage":"en"}'
 
 # --- T-Box ---
 # Define class Model with custom horsepower + priceMsrp properties
-curl -X POST https://api.ontologia.com/v1/ontologies/$ONT/concept-classes \
+curl -X POST https://api.semlify.com/v1/ontologies/$ONT/concept-classes \
   -H "Authorization: Bearer sk_live_..." \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
@@ -696,7 +696,7 @@ curl -X POST https://api.ontologia.com/v1/ontologies/$ONT/concept-classes \
 # → {"id":"cls_model", ...}
 
 # Define class Manufacturer
-curl -X POST https://api.ontologia.com/v1/ontologies/$ONT/concept-classes \
+curl -X POST https://api.semlify.com/v1/ontologies/$ONT/concept-classes \
   -H "Authorization: Bearer sk_live_..." \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
@@ -704,7 +704,7 @@ curl -X POST https://api.ontologia.com/v1/ontologies/$ONT/concept-classes \
 # → {"id":"cls_manufacturer", ...}
 
 # Define relation type manufacturedBy: Model → Manufacturer
-curl -X POST https://api.ontologia.com/v1/ontologies/$ONT/relation-types \
+curl -X POST https://api.semlify.com/v1/ontologies/$ONT/relation-types \
   -H "Authorization: Bearer sk_live_..." \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
@@ -713,7 +713,7 @@ curl -X POST https://api.ontologia.com/v1/ontologies/$ONT/relation-types \
 
 # --- A-Box ---
 # Create Tesla, the manufacturer
-curl -X POST https://api.ontologia.com/v1/schemes/$CATALOGUE/concepts \
+curl -X POST https://api.semlify.com/v1/schemes/$CATALOGUE/concepts \
   -H "Authorization: Bearer sk_live_..." \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
@@ -725,7 +725,7 @@ curl -X POST https://api.ontologia.com/v1/schemes/$CATALOGUE/concepts \
 # → {"id":"c_mfr_tesla", ...}
 
 # Create Model 3 with built-ins + custom properties
-curl -X POST https://api.ontologia.com/v1/schemes/$CATALOGUE/concepts \
+curl -X POST https://api.semlify.com/v1/schemes/$CATALOGUE/concepts \
   -H "Authorization: Bearer sk_live_..." \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
@@ -747,7 +747,7 @@ curl -X POST https://api.ontologia.com/v1/schemes/$CATALOGUE/concepts \
 # → {"id":"c_model_model_3", ...}
 
 # Add the French translation in a single call
-curl -X POST https://api.ontologia.com/v1/concepts/c_model_model_3/translations \
+curl -X POST https://api.semlify.com/v1/concepts/c_model_model_3/translations \
   -H "Authorization: Bearer sk_live_..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -758,7 +758,7 @@ curl -X POST https://api.ontologia.com/v1/concepts/c_model_model_3/translations 
   }'
 
 # Read back in French (lang negotiation — collapsed projection)
-curl "https://api.ontologia.com/v1/ontologies/$ONT/concepts/c_model_model_3?lang=fr" \
+curl "https://api.semlify.com/v1/ontologies/$ONT/concepts/c_model_model_3?lang=fr" \
   -H "Authorization: Bearer sk_live_..."
 # → {
 #     "id":"c_model_model_3",
@@ -769,29 +769,29 @@ curl "https://api.ontologia.com/v1/ontologies/$ONT/concepts/c_model_model_3?lang
 #   }
 
 # Side-by-side projection — both languages at once, JSON-LD serializer
-curl "https://api.ontologia.com/v1/ontologies/$ONT/concepts/c_model_model_3?expand=labels,definitions,properties,examples&format=jsonld" \
+curl "https://api.semlify.com/v1/ontologies/$ONT/concepts/c_model_model_3?expand=labels,definitions,properties,examples&format=jsonld" \
   -H "Authorization: Bearer sk_live_..."
 
 # Link them with manufacturedBy
-curl -X POST https://api.ontologia.com/v1/schemes/$CATALOGUE/relations \
+curl -X POST https://api.semlify.com/v1/schemes/$CATALOGUE/relations \
   -H "Authorization: Bearer sk_live_..." \
   -H "Idempotency-Key: $(uuidgen)" \
   -H "Content-Type: application/json" \
   -d '{"subjectConceptId":"c_model_model_3","targetConceptId":"c_mfr_tesla","relationTypeId":"rt_manufactured_by"}'
 
 # --- Tag ---
-curl -X POST https://api.ontologia.com/v1/ontologies/$ONT/tags \
+curl -X POST https://api.semlify.com/v1/ontologies/$ONT/tags \
   -H "Authorization: Bearer sk_live_..." \
   -H "Content-Type: application/json" \
   -d '{"name":"2026-Q2","changeEventId":"ce_01J..."}'
 
 # --- Read back at the tag, via SPARQL ---
-curl -X POST "https://api.ontologia.com/v1/ontologies/$ONT/sparql?tag=2026-Q2&lang=en" \
+curl -X POST "https://api.semlify.com/v1/ontologies/$ONT/sparql?tag=2026-Q2&lang=en" \
   -H "Authorization: Bearer sk_live_..." \
   -H "Content-Type: application/sparql-query" \
   --data '
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX cars: <https://ontologia.com/ont/ont_cars#>
+PREFIX cars: <https://semlify.com/ont/ont_cars#>
 SELECT ?label ?hp WHERE {
   ?m a cars:Model ;
      cars:manufacturedBy cars:c_mfr_tesla ;

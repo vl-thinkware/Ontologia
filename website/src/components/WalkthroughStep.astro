@@ -1,0 +1,32 @@
+---
+interface Props {
+  step: number;
+  title: string;
+  body: string;
+  reverse?: boolean;
+}
+
+const { step, title, body, reverse = false } = Astro.props;
+---
+
+<div
+  class={`grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16 ${
+    reverse ? "md:[&>:first-child]:order-2" : ""
+  }`}
+>
+  <div>
+    <p class="text-eyebrow">Step {step}</p>
+    <h3 class="text-headline mt-2" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+      {title}
+    </h3>
+    <p
+      class="mt-4 max-w-md text-[15.5px] leading-relaxed"
+      style="color: var(--gray-11);"
+    >
+      {body}
+    </p>
+  </div>
+  <div>
+    <slot />
+  </div>
+</div>

@@ -3,7 +3,7 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
 
 
-Design tokens, components and rules that keep Ontologia's UI consistent, accessible and fast to build for.
+Design tokens, components and rules that keep Semlify's UI consistent, accessible and fast to build for.
 
 ---
 
@@ -150,7 +150,7 @@ Dark mode uses the same scale; Radix already swaps the alpha values internally.
 
 ## 9. Core components
 
-The component library is **Radix Themes**, imported directly from `@radix-ui/themes`. We do not maintain a fork in `packages/ui`; that package is reserved for Ontologia-specific compositions on top of Radix.
+The component library is **Radix Themes**, imported directly from `@radix-ui/themes`. We do not maintain a fork in `packages/ui`; that package is reserved for Semlify-specific compositions on top of Radix.
 
 ### From Radix Themes (no wrapping)
 - `Button` (variants: `solid`, `soft`, `surface`, `outline`, `ghost`, `classic`; sizes 1–4; with `color` prop for semantic tints)
@@ -167,7 +167,7 @@ The component library is **Radix Themes**, imported directly from `@radix-ui/the
 - `ScrollArea`, `Separator`, `Spinner`, `Progress`, `Skeleton`
 - `Heading`, `Text`, `Link`, `Em`, `Strong`, `Quote`, `Blockquote`, `Reset`
 
-### Ontologia compositions (in `apps/web/src/components` for the mockup, `packages/ui` once we have a real app)
+### Semlify compositions (in `apps/web/src/components` for the mockup, `packages/ui` once we have a real app)
 - `Modal` — thin wrapper around Radix `<Dialog>` that keeps the legacy `{open, onClose, title, subtitle, footer, width}` API for in-app forms.
 - `Toaster` — bottom-right toast queue using `Card` + `IconButton`.
 - `CommandPalette` — `⌘K` overlay using Radix `TextField` + custom list (Radix doesn't ship a command-palette primitive).
@@ -179,7 +179,7 @@ The component library is **Radix Themes**, imported directly from `@radix-ui/the
   - `RelationEdge` (planned)
   - `DiffNode` / `DiffEdge` (planned)
 
-Each Ontologia composition ships with Storybook stories and an axe check.
+Each Semlify composition ships with Storybook stories and an axe check.
 
 ## 10. Canvas specifics
 

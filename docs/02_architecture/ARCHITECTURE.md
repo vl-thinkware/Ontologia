@@ -2,7 +2,7 @@
 
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (MVP scope trimmed)
 
-High-level architecture for Ontologia. This document is the starting point for engineers; it links to deeper documents for each subsystem.
+High-level architecture for Semlify. This document is the starting point for engineers; it links to deeper documents for each subsystem.
 
 > **MVP scope**: the branch / commit / review layer is deferred (see [VERSIONING_SYSTEM.md](VERSIONING_SYSTEM.md)). MVP persists ontologies as current state in Neo4j plus an append-only change-event log in Postgres.
 

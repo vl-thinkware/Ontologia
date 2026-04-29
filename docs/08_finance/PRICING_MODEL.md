@@ -2,7 +2,7 @@
 
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v4 (ontology-only product)
 
-How Ontologia is packaged, priced, and evolved. This plan is built for a two-founder, bootstrapped company that must reach sustainability on revenue, not funding rounds.
+How Semlify is packaged, priced, and evolved. This plan is built for a two-founder, bootstrapped company that must reach sustainability on revenue, not funding rounds.
 
 > **Currency**: USD is the list currency. We bill in EUR / GBP at published conversion rates for the corresponding regions. Enterprise contracts in local currency on request.
 
@@ -176,7 +176,7 @@ Fair-use caps apply; we do not subsidise commercial spin-offs.
 - **Container-scoped roles**: a user can be granted write on specific ontologies or schemes only — useful for letting a product taxonomist maintain a scheme without touching the T-Box.
 - Roles exist for governance and audit; they do not drive billing.
 
-This is the most visible difference from PoolParty, Collibra, Atlan and TopBraid: a single architect plus a maintainer can run a fully-paid Ontologia organisation without negotiating over seats.
+This is the most visible difference from PoolParty, Collibra, Atlan and TopBraid: a single architect plus a maintainer can run a fully-paid Semlify organisation without negotiating over seats.
 
 ## 14. How we arrived at these prices
 
@@ -247,4 +247,4 @@ Monthly pricing review (Valentin + Alexandre, 30 minutes). Any change signed off
 
 ---
 
-Related: [Cost Analysis](COST_ANALYSIS.md) · [Financial Projections](FINANCIAL_PROJECTIONS.md) · [Unit Economics](UNIT_ECONOMICS.md) · [Business Strategy](../07_business/BUSINESS_STRATEGY.md) · [Go-to-Market](../07_business/GO_TO_MARKET.md)
+Related: [Cost Analysis](COST_ANALYSIS.md) · [Financial Projections](FINANCIAL_PROJECTIONS.md) · [Unit Economics](UNIT_ECONOMICS.md) · [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md) · [Go-to-Market](../07_business/GO_TO_MARKET.md)

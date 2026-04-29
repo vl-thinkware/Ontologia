@@ -3,7 +3,7 @@
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
 
-Ontologia is only valuable if it plugs into the rest of the data stack. This document captures every supported integration, at what maturity, and how engineers should build new ones.
+Semlify is only valuable if it plugs into the rest of the data stack. This document captures every supported integration, at what maturity, and how engineers should build new ones.
 
 ---
 
@@ -11,8 +11,8 @@ Ontologia is only valuable if it plugs into the rest of the data stack. This doc
 
 | Level | Definition | Owned by |
 |---|---|---|
-| L0 — **Platform primitives** | API + webhooks + SDKs. Anyone can build on them. | Ontologia |
-| L1 — **First-party connectors** | Maintained by us, in the Ontologia integrations catalog. | Ontologia |
+| L0 — **Platform primitives** | API + webhooks + SDKs. Anyone can build on them. | Semlify |
+| L1 — **First-party connectors** | Maintained by us, in the Semlify integrations catalog. | Semlify |
 | L2 — **Certified partners** | Third-party build, we test and endorse. | Partner |
 | L3 — **Community** | Community-built, listed with a "community" tag. | Community |
 
@@ -23,8 +23,8 @@ The roadmap below assigns each integration to a level and phase.
 ### L0 — Platform primitives
 - REST API (`/v1`).
 - OpenAPI 3.1 spec.
-- Python SDK (`ontologia-python`).
-- JavaScript SDK (`ontologia-js`).
+- Python SDK (`semlify-python`).
+- JavaScript SDK (`semlify-js`).
 - Webhook subscriptions (signed).
 
 ### L1 — First-party connectors (day-one)
@@ -38,7 +38,7 @@ The roadmap below assigns each integration to a level and phase.
 - **Confluence.** Publish a read-only rendering of an ontology as a Confluence page tree (or space).
 - **Slack.** Summary of daily / weekly changes to a watched ontology; thread-based review reminders.
 - **GitHub.** Commit status checks linked to conceptual PRs.
-- **LangChain / LlamaIndex retriever.** A supported "OntologiaRetriever" class for RAG stacks.
+- **LangChain / LlamaIndex retriever.** A supported "SemlifyRetriever" class for RAG stacks.
 - **Elasticsearch / OpenSearch.** Index-push for search systems.
 
 ## 4. Long-term (v2+)

@@ -1,0 +1,120 @@
+---
+import Logo from "./Logo.astro";
+import MobileNav from "./MobileNav.astro";
+
+interface Props {
+  /** Highlight the current path in the nav. */
+  current?: string;
+}
+const { current = "" } = Astro.props;
+
+const links = [
+  { href: "/product", label: "Product" },
+  {
+    href: "/use-cases/rag",
+    label: "Use cases",
+    matchPrefix: "/use-cases",
+  },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/security", label: "Security" },
+];
+
+function isActive(link: (typeof links)[number]) {
+  if (!current) return false;
+  if (link.matchPrefix) return current.startsWith(link.matchPrefix);
+  return current === link.href || current.startsWith(link.href + "/");
+}
+---
+
+<header
+  class="sticky top-0 z-40 w-full backdrop-blur"
+  style="background: color-mix(in srgb, var(--color-panel-solid) 80%, transparent); border-bottom: 1px solid var(--gray-a4);"
+>
+  <nav
+    class="container-page flex h-16 items-center justify-between gap-4"
+    aria-label="Primary"
+  >
+    <Logo />
+
+    <ul class="hidden items-center gap-1 md:flex" role="list">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class="rounded-md px-3 py-1.5 text-[13.5px] font-medium transition-colors"
+              style={
+                isActive(l)
+                  ? "color: var(--accent-11); background: var(--accent-3);"
+                  : "color: var(--gray-11);"
+              }
+              target={l.external ? "_blank" : undefined}
+              rel={l.external ? "noopener" : undefined}
+              data-nav-link={isActive(l) ? "active" : "idle"}
+            >
+              {l.label}
+              {l.external && (
+                <svg
+                  class="ml-1 inline h-3 w-3 align-[-1px]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M7 17 17 7"></path>
+                  <path d="M7 7h10v10"></path>
+                </svg>
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <a
+        href="/access"
+        class="btn-primary"
+        style="height: 36px; padding: 0 var(--space-3);"
+      >
+        Try free
+      </a>
+
+      <!-- Mobile menu trigger -->
+      <a
+        href="#mobile-nav"
+        class="flex h-9 w-9 items-center justify-center rounded-md md:hidden"
+        style="color: var(--gray-11); border: 1px solid var(--gray-a4);"
+        aria-label="Open menu"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<MobileNav links={links} />
+
+<style>
+  nav a[data-nav-link="idle"]:hover {
+    color: var(--gray-12);
+    background: var(--gray-a3);
+  }
+</style>

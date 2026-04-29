@@ -4,7 +4,7 @@
 
 Bottom-up financial model for a two-founder bootstrapped company. This is a **plan, not a forecast** — we commit to quarterly milestones and re-baseline every three months.
 
-> Currency: USD. All numbers rounded. The detailed working model will live in `docs/08_finance/model/ontologia_model_v2.xlsx` once built.
+> Currency: USD. All numbers rounded. The detailed working model will live in `docs/08_finance/model/semlify_model_v2.xlsx` once built.
 
 ---
 
@@ -243,4 +243,4 @@ If any of these happen, we have pre-agreed "upside infra headroom" budgets ready
 
 ---
 
-Related: [Pricing Model](PRICING_MODEL.md) · [Cost Analysis](COST_ANALYSIS.md) · [Unit Economics](UNIT_ECONOMICS.md) · [Business Strategy](../07_business/BUSINESS_STRATEGY.md) · [Go-to-Market](../07_business/GO_TO_MARKET.md) · [Hiring Plan](../09_team/HIRING_PLAN.md)
+Related: [Pricing Model](PRICING_MODEL.md) · [Cost Analysis](COST_ANALYSIS.md) · [Unit Economics](UNIT_ECONOMICS.md) · [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md) · [Go-to-Market](../07_business/GO_TO_MARKET.md) · [Hiring Plan](../09_team/HIRING_PLAN.md)

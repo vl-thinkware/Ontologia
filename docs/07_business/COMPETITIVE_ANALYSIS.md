@@ -3,9 +3,9 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v4 (ontology-only product)
 
 
-The landscape Ontologia operates in, what distinguishes us, how we win, and where we should be humble.
+The landscape Semlify operates in, what distinguishes us, how we win, and where we should be humble.
 
-> **Frame of reference.** Ontologia is an ontology editor. Our direct competition sits in two bands: the **enterprise taxonomy / ontology management** band (PoolParty, TopBraid EDG / TopQuadrant, Protégé, Graphwise, Semaphore) and the **enterprise data catalog** band (Collibra, Atlan, Alation). A third, fuzzier band — general-purpose knowledge bases (Notion, Confluence, Google Docs) — is where most small concept registries actually live today. We displace all three, but we compete head-on with the first.
+> **Frame of reference.** Semlify is an ontology editor. Our direct competition sits in two bands: the **enterprise taxonomy / ontology management** band (PoolParty, TopBraid EDG / TopQuadrant, Protégé, Graphwise, Semaphore) and the **enterprise data catalog** band (Collibra, Atlan, Alation). A third, fuzzier band — general-purpose knowledge bases (Notion, Confluence, Google Docs) — is where most small concept registries actually live today. We displace all three, but we compete head-on with the first.
 
 ---
 
@@ -77,14 +77,14 @@ We partner with (4). We compete with (1)–(3). We displace (5) and, often, whic
 - **What it is**: Enterprise knowledge graph database with inference and virtualisation.
 - **Strengths**: Query federation, logical inference, tight integration with enterprise data.
 - **Weaknesses**: Primarily a database, not an authoring tool. Their Studio UX is improving but still utilitarian.
-- **Our angle**: Complement — Ontologia models, Stardog (or Neo4j) operates. We export to their formats.
+- **Our angle**: Complement — Semlify models, Stardog (or Neo4j) operates. We export to their formats.
 
 ### 2.9 Neo4j
 
 - **What it is**: Leading property-graph database with Aura managed service and Neo4j Browser / Bloom visualisation.
 - **Strengths**: Dominant graph DB, Cypher, Aura, community.
 - **Weaknesses**: Not an authoring or governance tool for schemas / ontologies / taxonomies.
-- **Our angle**: Technology alliance — we run on Aura, integrate Bloom. The ontology lives in Ontologia; the instance graph can live in Neo4j downstream.
+- **Our angle**: Technology alliance — we run on Aura, integrate Bloom. The ontology lives in Semlify; the instance graph can live in Neo4j downstream.
 
 ### 2.10 Collibra (Glossary module)
 
@@ -92,7 +92,7 @@ We partner with (4). We compete with (1)–(3). We displace (5) and, often, whic
 - **Strengths**: Deep governance breadth, strong audit and lineage, enterprise references across regulated industries.
 - **Weaknesses**: Entry pricing around $150k+/year, slow to deploy, glossary sits inside the data team's tool — Product, Legal and Marketing can't easily edit. Configuration-heavy.
 - **Where it wins**: Large enterprises that need end-to-end data governance in one suite.
-- **Our angle**: Ontologia is the upstream Collibra's glossary should consume via JSON-LD. Editable by non-data stakeholders, priced an order of magnitude below, and richer in structure.
+- **Our angle**: Semlify is the upstream Collibra's glossary should consume via JSON-LD. Editable by non-data stakeholders, priced an order of magnitude below, and richer in structure.
 
 ### 2.11 Alation (Glossary module)
 
@@ -141,7 +141,7 @@ We partner with (4). We compete with (1)–(3). We displace (5) and, often, whic
 ```
                        Modelling depth →
          +-------------+-------------+---------------------+
-  Modern |             | Ontologia   |                     |
+  Modern |             | Semlify   |                     |
   UX     |             | (sweet spot)|                     |
   ↑      +-------------+-------------+---------------------+
          | Notion /    | Atlan /     | TopBraid EDG /      |
@@ -154,7 +154,7 @@ Sweet spot: modern web UX, typed-graph depth, multi-scheme-per-ontology capabili
 
 ## 4. Feature comparison
 
-| Capability | Protégé | TopBraid EDG | PoolParty | Graphwise | Collibra / Atlan / Alation | **Ontologia** |
+| Capability | Protégé | TopBraid EDG | PoolParty | Graphwise | Collibra / Atlan / Alation | **Semlify** |
 |---|---|---|---|---|---|---|
 | Web-native UX | Partial | Partial | ✓ (dated) | ✓ (dated) | ✓ | ✓ (modern) |
 | Typed classes + relation types (T-Box) | ✓ | ✓ | Partial (SKOS-centric) | ✓ | Partial | ✓ |
@@ -190,7 +190,7 @@ Sweet spot: modern web UX, typed-graph depth, multi-scheme-per-ontology capabili
 | Collibra | — | $150k+/yr typical |
 | Alation | — | $100k+/yr |
 | Atlan | — | $60k+/yr |
-| **Ontologia** | Free, $499/mo, $1,990/mo | $40k+/yr |
+| **Semlify** | Free, $499/mo, $1,990/mo | $40k+/yr |
 
 We are intentionally priced for the mid-market band that the incumbents leave unattended. The same workspace tier scales from three classes and one scheme to a hundred classes and a dozen schemes.
 
@@ -236,6 +236,6 @@ Several "competitors" are better treated as partners:
 
 ## 11. Long-term category vision
 
-The "concept infrastructure for AI and content" category is currently unnamed and split across three analyst buckets (data governance for glossary, knowledge-graph tools for ontology, taxonomy management for SKOS). Our job is to collapse those buckets by shipping a product where the answer to "which one do you need?" is "yes, all of them, in the same ontology" — and where the buyer, whatever their starting vocabulary, sees Ontologia as the reference implementation.
+The "concept infrastructure for AI and content" category is currently unnamed and split across three analyst buckets (data governance for glossary, knowledge-graph tools for ontology, taxonomy management for SKOS). Our job is to collapse those buckets by shipping a product where the answer to "which one do you need?" is "yes, all of them, in the same ontology" — and where the buyer, whatever their starting vocabulary, sees Semlify as the reference implementation.
 
-Related: [Business Strategy](BUSINESS_STRATEGY.md) · [Sales Playbook](SALES_PLAYBOOK.md) · [Marketing Strategy](MARKETING_STRATEGY.md) · [Pricing Model](../08_finance/PRICING_MODEL.md)
+Related: [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md) · [Sales Playbook](SALES_PLAYBOOK.md) · [Marketing Strategy](MARKETING_STRATEGY.md) · [Pricing Model](../08_finance/PRICING_MODEL.md)

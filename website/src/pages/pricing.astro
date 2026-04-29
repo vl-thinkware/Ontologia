@@ -1,0 +1,206 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PricingTable from "../components/PricingTable.tsx";
+import CtaBlock from "../components/CtaBlock.astro";
+
+const faqs = [
+  {
+    q: "Can I self-host Semlify?",
+    a: "On Enterprise only. We ship a Docker Compose bundle with Postgres, Neo4j and the API for customers with strict data-residency requirements. Get in touch to see the deployment guide.",
+  },
+  {
+    q: "What happens at the concept ceiling?",
+    a: "We surface a soft block at 100% — the editor stays read-write, but creating new concepts shows an inline upgrade prompt. Existing data stays intact. No silent failures.",
+  },
+  {
+    q: "Do you offer a startup discount?",
+    a: "Yes — 50% off the Team plan for two years for companies under $5M ARR or 10 employees. Apply via hello@semlify.com with a one-line description of what you're building.",
+  },
+  {
+    q: "How do you handle GDPR?",
+    a: "Semlify is hosted in EU regions for European customers (Pro and above). We sign DPAs, maintain a public sub-processors list, and our Standard Contractual Clauses cover non-EU data flows. See /security for the full posture.",
+  },
+  {
+    q: "What's covered by the SLA?",
+    a: "Team: 99.5% monthly uptime, credit on next invoice up to 5%. Business: 99.9%, up to 10%. Enterprise: 99.95% (negotiable higher), up to 20% or as contracted. Full terms at /legal/sla.",
+  },
+  {
+    q: "Can I switch tiers?",
+    a: "Up at any time, prorated to the current billing cycle. Down at the end of the cycle, with a usage check — if you're above the lower tier's limits, the UI walks you through what to archive first.",
+  },
+];
+
+const pricingJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.a,
+      },
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://semlify.com/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Pricing",
+        item: "https://semlify.com/pricing",
+      },
+    ],
+  },
+];
+---
+
+<Layout
+  title="Pricing — Semlify"
+  description="Workspace-based pricing with no per-seat tax. Free tier to evaluate, Team for production AI, Business for compliance, Enterprise for self-host and custom contracts."
+  current="/pricing"
+  jsonLd={pricingJsonLd}
+>
+  <!-- Header -->
+  <section
+    class="py-16 md:py-24"
+    style="background: var(--marketing-gradient-hero);"
+  >
+    <div class="container-page text-center">
+      <p class="text-eyebrow">Pricing</p>
+      <h1 class="text-display mt-3" style="font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);">
+        One workspace, one fair price.
+      </h1>
+      <p
+        class="mx-auto mt-4 max-w-2xl text-lg leading-relaxed md:text-xl"
+        style="color: var(--gray-11);"
+      >
+        No per-seat tax. Invite your whole team. Pay for what you store and
+        how often you read it.
+      </p>
+    </div>
+  </section>
+
+  <!-- Pricing grid -->
+  <section class="py-12 md:py-24">
+    <div class="container-page">
+      <PricingTable client:load />
+    </div>
+  </section>
+
+  <!-- Add-ons -->
+  <section class="py-16 md:py-20" style="background: var(--gray-2);">
+    <div class="container-page">
+      <header class="mx-auto mb-10 max-w-2xl text-center">
+        <p class="text-eyebrow">Add-ons</p>
+        <h2 class="text-headline mt-2" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+          Top up what you need, when you need it.
+        </h2>
+      </header>
+
+      <div class="mx-auto grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {
+          [
+            {
+              title: "+5,000 concepts",
+              price: "$99/mo",
+              body: "Stack up to four for an extra 20,000 concepts on Team.",
+            },
+            {
+              title: "+1M API calls",
+              price: "$49/mo",
+              body: "Heavy RAG pipelines that re-index daily can attach as many as needed.",
+            },
+            {
+              title: "AI pack",
+              price: "$199/mo",
+              body: "Higher rate limits on alt-label, translation and duplicate detection AI helpers.",
+            },
+          ].map((a) => (
+            <div class="marketing-card">
+              <div
+                class="text-[13px] font-bold uppercase tracking-wider"
+                style="color: var(--violet-11);"
+              >
+                {a.title}
+              </div>
+              <div
+                class="mt-2 text-[28px] font-bold tracking-tight"
+                style="color: var(--gray-12); font-variant-numeric: tabular-nums;"
+              >
+                {a.price}
+              </div>
+              <p
+                class="mt-2 text-[13.5px] leading-relaxed"
+                style="color: var(--gray-11);"
+              >
+                {a.body}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 md:py-28">
+    <div class="container-page">
+      <header class="mx-auto mb-12 max-w-2xl text-center">
+        <p class="text-eyebrow">Frequently asked</p>
+        <h2 class="text-headline mt-2" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+          Common questions, direct answers.
+        </h2>
+      </header>
+
+      <div class="mx-auto max-w-3xl space-y-3">
+        {
+          faqs.map((faq) => (
+            <details
+              class="group rounded-[var(--radius-4)] p-5 transition-colors"
+              style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4);"
+            >
+              <summary
+                class="cursor-pointer list-none text-[15px] font-semibold"
+                style="color: var(--gray-12);"
+              >
+                <span class="flex items-start justify-between gap-4">
+                  <span>{faq.q}</span>
+                  <span
+                    class="shrink-0 transition-transform group-open:rotate-45"
+                    style="color: var(--gray-9); font-size: 22px; line-height: 1;"
+                  >
+                    +
+                  </span>
+                </span>
+              </summary>
+              <p
+                class="mt-3 text-[14px] leading-relaxed"
+                style="color: var(--gray-11);"
+              >
+                {faq.a}
+              </p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBlock
+    title="Ready to ship a versioned ontology?"
+    subtitle="Start with the Free tier. Upgrade when your RAG pipeline outgrows it."
+    primaryLabel="Start free"
+    secondaryLabel="See enterprise plans"
+    secondaryHref="mailto:hello@semlify.com?subject=Enterprise%20pricing"
+  />
+</Layout>

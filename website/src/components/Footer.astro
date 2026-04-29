@@ -1,0 +1,165 @@
+---
+import Logo from "./Logo.astro";
+import ThemeToggle from "./ThemeToggle.tsx";
+
+const cols = [
+  {
+    title: "Product",
+    links: [
+      { label: "Overview", href: "/product" },
+      { label: "Schema editor", href: "/product/schema" },
+      { label: "Taxonomies", href: "/product/taxonomies" },
+      { label: "API", href: "/product/api" },
+      { label: "Governance", href: "/product/governance" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Pricing", href: "/pricing" },
+      { label: "Changelog", href: "/changelog" },
+      { label: "Status", href: "https://status.semlify.com", external: true },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: "/company/about" },
+      { label: "Careers", href: "/company/careers" },
+      { label: "Security", href: "/security" },
+      { label: "Contact", href: "mailto:hello@semlify.com" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Terms", href: "/legal/terms" },
+      { label: "Privacy", href: "/legal/privacy" },
+      { label: "DPA", href: "/legal/dpa" },
+      { label: "SLA", href: "/legal/sla" },
+      { label: "Sub-processors", href: "/legal/subprocessors" },
+      { label: "Cookie preferences", href: "#cookie-prefs", openCookies: true },
+    ],
+  },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer
+  class="mt-auto"
+  style="background: var(--gray-2); border-top: 1px solid var(--gray-a4);"
+>
+  <div class="container-page py-12">
+    <div class="grid grid-cols-2 gap-10 md:grid-cols-6">
+      <div class="col-span-2 md:col-span-2">
+        <Logo />
+        <p
+          class="mt-4 max-w-xs text-[13.5px] leading-relaxed"
+          style="color: var(--gray-11);"
+        >
+          The source of truth for your concepts. Design, version and ship the
+          ontology your AI and data pipelines depend on.
+        </p>
+        <div class="mt-4 flex items-center gap-2">
+          <span
+            class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium"
+            style="background: var(--green-3); color: var(--green-11);"
+          >
+            <span
+              class="h-1.5 w-1.5 rounded-full"
+              style="background: var(--green-9);"></span>
+            All systems operational
+          </span>
+        </div>
+        <div class="mt-5 flex items-center gap-2">
+          <a
+            href="https://www.linkedin.com/company/semlify"
+            target="_blank"
+            rel="noopener"
+            aria-label="Semlify on LinkedIn"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-[var(--radius-3)] transition-colors"
+            style="border: 1px solid var(--gray-a4); color: var(--gray-11);"
+            data-social-link
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      {
+        cols.map((col) => (
+          <div>
+            <h3
+              class="mb-3 text-[11px] font-semibold uppercase tracking-wider"
+              style="color: var(--gray-11);"
+            >
+              {col.title}
+            </h3>
+            <ul class="space-y-2" role="list">
+              {col.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="text-[13.5px] no-underline transition-colors"
+                    style="color: var(--gray-11);"
+                    data-footer-link
+                    data-open-cookies={link.openCookies ? "true" : undefined}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noopener" : undefined}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-12 flex flex-col items-start justify-between gap-3 pt-6 md:flex-row md:items-center"
+      style="border-top: 1px solid var(--gray-a4);"
+    >
+      <p class="text-[12px]" style="color: var(--gray-10);">
+        © {year} Semlify SAS. All rights reserved.
+      </p>
+      <div class="flex items-center gap-4">
+        <p class="text-[12px]" style="color: var(--gray-10);">
+          Crafted with care in Paris, France.
+        </p>
+        <ThemeToggle client:load />
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer a[data-footer-link]:hover {
+    color: var(--gray-12) !important;
+  }
+  footer a[data-social-link]:hover {
+    color: var(--violet-11) !important;
+    border-color: var(--violet-7) !important;
+    background: var(--violet-2);
+  }
+</style>
+
+<script is:inline>
+  // Wire the "Cookie preferences" footer link to re-open the banner.
+  document.addEventListener("click", function (e) {
+    const link = e.target && e.target.closest && e.target.closest("[data-open-cookies]");
+    if (!link) return;
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent("semlify:open-cookies"));
+  });
+</script>

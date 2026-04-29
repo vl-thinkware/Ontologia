@@ -6,13 +6,13 @@ How two founders build awareness, educate the mid-market, and generate qualified
 
 > **Operating reality.** No paid ads in Year 1. No agency. No analyst relations. No DevRel hire. Two founders write everything, publish everything, and the company earns trust by being consistently useful on the public internet.
 >
-> **One product, one story.** Ontologia is an ontology editor. The story is "model your concept world at whatever depth you need — classes, relation types and as many taxonomies as you want on a single T-Box — with change history, an API, and SKOS / OWL / JSON-LD exports your pipelines already know how to read." We don't sell three tools in one; we sell one tool that makes the three-tools-in-one problem disappear.
+> **One product, one story.** Semlify is an ontology editor. The story is "model your concept world at whatever depth you need — classes, relation types and as many taxonomies as you want on a single T-Box — with change history, an API, and SKOS / OWL / JSON-LD exports your pipelines already know how to read." We don't sell three tools in one; we sell one tool that makes the three-tools-in-one problem disappear.
 
 ---
 
 ## 1. Marketing goals by phase
 
-Phase labels match [ROADMAP.md](../00_overview/ROADMAP.md).
+Phase labels match [ROADMAP.md](ROADMAP%20(imported%20to%20notion).md).
 
 **Phase 0 — Foundations (months 1–3)**
 - Landing page and waitlist live.
@@ -45,7 +45,7 @@ We do not chase vanity traffic. A smaller audience of the right buyers beats 10�
 
 ## 2. Brand positioning
 
-**Master tagline** (ontologia.com): "The source of truth for your concepts."
+**Master tagline** (semlify.com): "The source of truth for your concepts."
 
 **Sub-head**: "One ontology editor. Classes, relation types and as many taxonomies as you need — on a shared T-Box, with change history, a versioned API, and SKOS / OWL / JSON-LD exports."
 
@@ -92,7 +92,7 @@ Every campaign ties back to at least one pillar.
 
 ## 5. Content strategy
 
-### Content hub: `ontologia.com/learn`
+### Content hub: `semlify.com/learn`
 
 Organised by **use case**, not by tool mode:
 
@@ -113,7 +113,7 @@ Organised by **use case**, not by tool mode:
 
 **Cross-cutting / shared**
 - Market pieces (Valentin): "What mid-market teams actually pay for knowledge tooling", "One T-Box, many taxonomies: why the shape matters", "The workspace-price pattern for collaboration SaaS".
-- Comparison pages (see [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)): Ontologia vs Protégé, vs TopBraid EDG, vs PoolParty, vs Collibra / Atlan / Alation glossaries, vs Graphwise, vs Semaphore, vs "rolling your own".
+- Comparison pages (see [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)): Semlify vs Protégé, vs TopBraid EDG, vs PoolParty, vs Collibra / Atlan / Alation glossaries, vs Graphwise, vs Semaphore, vs "rolling your own".
 
 ### Formats
 - Long-form articles (1,500–3,500 words). The backbone.
@@ -166,7 +166,7 @@ If a week goes by without content, that's acceptable — but we review it. The c
 
 - Public Slack community from month 1 of Phase 2. Hosted free tier. Channels: `#general`, `#showcase`, `#help`, `#architecture`, `#catalogues`, `#api-and-pipelines`, `#feature-requests`, `#changelog`.
 - Monthly community call at 30 minutes — product update, one community member's demo, open Q&A.
-- Open-source sample repos: `ontologia/examples` (Cars reference ontology, product-reference sample, vertical starters), `ontologia/sdk-js`, `ontologia/import-cli`.
+- Open-source sample repos: `semlify/examples` (Cars reference ontology, product-reference sample, vertical starters), `semlify/sdk-js`, `semlify/import-cli`.
 - Hackathons are deferred until we have a community of > 500. No point running one into an empty room.
 - Sponsorships: at most one event in Year 1 if it's a practitioner event with < $5k sponsorship tier. Otherwise attend as speakers only.
 
@@ -334,4 +334,4 @@ We do not buy followers, run engagement pods, automate "thought leadership" post
 - **Alexandre** owns engineering blog, open-source repos, developer-facing content, trust-center content, X / Bluesky presence, conference technical talks.
 - Weekly Monday standup; shared content Notion with drafts in flight.
 
-Related: [Go-to-Market](GO_TO_MARKET.md) · [Sales Playbook](SALES_PLAYBOOK.md) · [Customer Acquisition](CUSTOMER_ACQUISITION.md) · [Competitive Analysis](COMPETITIVE_ANALYSIS.md) · [Partnerships](PARTNERSHIPS.md) · [Brand Guidelines](../04_design/BRAND_GUIDELINES.md) · [Business Strategy](BUSINESS_STRATEGY.md) · [Roadmap](../00_overview/ROADMAP.md)
+Related: [Go-to-Market](GO_TO_MARKET.md) · [Sales Playbook](SALES_PLAYBOOK.md) · [Customer Acquisition](CUSTOMER_ACQUISITION%20(imported%20to%20notion).md) · [Competitive Analysis](COMPETITIVE_ANALYSIS.md) · [Partnerships](PARTNERSHIPS.md) · [Brand Guidelines](../04_design/BRAND_GUIDELINES.md) · [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md) · [Roadmap](ROADMAP%20(imported%20to%20notion).md)

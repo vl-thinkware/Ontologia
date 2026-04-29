@@ -1,0 +1,59 @@
+---
+// Sub-navigation for use-case pages — mirrors ProductPageNav.
+// Sticky strip beneath the global header that lets the reader jump between
+// Overview, RAG, Catalog, Governance.
+interface Props {
+  current: string;
+}
+const { current } = Astro.props;
+
+const links = [
+  { href: "/use-cases/rag", label: "RAG" },
+  { href: "/use-cases/catalog", label: "Catalog" },
+  { href: "/use-cases/governance", label: "Governance" },
+];
+---
+
+<nav
+  class="sticky z-30"
+  style="top: 64px; background: color-mix(in srgb, var(--color-panel-solid) 88%, transparent); border-bottom: 1px solid var(--gray-a4); backdrop-filter: blur(8px);"
+  aria-label="Use case sections"
+>
+  <ul
+    class="container-page flex gap-1 overflow-x-auto py-3 text-[13px]"
+    role="list"
+    style="scrollbar-width: none;"
+  >
+    {
+      links.map((l) => {
+        const active = current === l.href;
+        return (
+          <li class="shrink-0">
+            <a
+              href={l.href}
+              class="rounded-full px-3 py-1.5 font-medium transition-colors"
+              style={
+                active
+                  ? "color: var(--accent-12); background: var(--accent-3); border: 1px solid var(--accent-7);"
+                  : "color: var(--gray-11); border: 1px solid transparent;"
+              }
+              data-usecase-link={active ? "active" : "idle"}
+            >
+              {l.label}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
+
+<style>
+  nav[aria-label="Use case sections"] ul::-webkit-scrollbar {
+    display: none;
+  }
+  a[data-usecase-link="idle"]:hover {
+    background: var(--gray-a3);
+    color: var(--gray-12);
+  }
+</style>

@@ -1,0 +1,229 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductPageNav from "../../components/ProductPageNav.astro";
+import ProductFeatureBlock from "../../components/ProductFeatureBlock.astro";
+import ApiPlaygroundIllustration from "../../components/illustrations/ApiPlaygroundIllustration.astro";
+import InteractivePlayground from "../../components/InteractivePlayground.tsx";
+import CodeBlock from "../../components/CodeBlock.astro";
+import CtaBlock from "../../components/CtaBlock.astro";
+
+const breadcrumbsLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://semlify.com/" },
+    { "@type": "ListItem", position: 2, name: "Product", item: "https://semlify.com/product" },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "API & Playground",
+      item: "https://semlify.com/product/api",
+    },
+  ],
+};
+---
+
+<Layout
+  title="JSON-LD API & playground — Semlify"
+  description="Five clean REST endpoints with tag pinning, language negotiation, and JSON-LD / SKOS / OWL output. Try every call in the in-app playground before you integrate."
+  current="/product/api"
+  jsonLd={breadcrumbsLd}
+>
+  <ProductPageNav current="/product/api" />
+
+  <section
+    class="py-16 md:py-24"
+    style="background: var(--marketing-gradient-hero);"
+  >
+    <div class="container-page grid grid-cols-1 items-center gap-10 md:grid-cols-12 md:gap-12">
+      <div class="md:col-span-6" data-fade-up>
+        <p class="text-eyebrow">Product · API & Playground</p>
+        <h1
+          class="text-display mt-3"
+          style="font-size: clamp(2rem, 1.5rem + 2.5vw, 3.25rem);"
+        >
+          Ship to your stack on day one.
+        </h1>
+        <p
+          class="mt-5 max-w-xl text-lg leading-relaxed"
+          style="color: var(--gray-11);"
+        >
+          Five endpoints. Five output formats. Tag pinning, language
+          negotiation, scheme scoping. The Playground in the app generates
+          every call — copy as cURL or fetch and paste into your codebase.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="/access" class="btn-primary">Try free</a>
+          <a href="/product" class="btn-secondary">All product features</a>
+        </div>
+      </div>
+      <div class="md:col-span-6" data-fade-up data-delay="1">
+        <ApiPlaygroundIllustration />
+      </div>
+    </div>
+  </section>
+
+  <!-- Endpoint table -->
+  <section class="py-20 md:py-28">
+    <div class="container-page">
+      <header class="mx-auto mb-10 max-w-2xl text-center">
+        <p class="text-eyebrow">Endpoints</p>
+        <h2 class="text-headline mt-3" style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);">
+          Five endpoints, no more, no less.
+        </h2>
+        <p
+          class="mx-auto mt-4 max-w-xl text-[15.5px] leading-relaxed"
+          style="color: var(--gray-11);"
+        >
+          We resisted the urge to ship twenty. Most consumer pipelines call
+          three of these.
+        </p>
+      </header>
+
+      <div
+        class="mx-auto max-w-4xl overflow-hidden rounded-[var(--radius-5)]"
+        style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4); box-shadow: var(--shadow-2);"
+        data-fade-up
+      >
+        <table class="w-full text-[13.5px]">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--gray-a4); background: var(--gray-2);">
+              <th class="px-5 py-3 text-left" style="color: var(--gray-11); width: 8%;">Verb</th>
+              <th class="px-5 py-3 text-left" style="color: var(--gray-11); width: 38%;">Path</th>
+              <th class="px-5 py-3 text-left" style="color: var(--gray-11);">Returns</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              [
+                {
+                  verb: "GET",
+                  path: "/v1/ontologies/:id/concepts",
+                  ret: "Every concept in an ontology, optionally scoped to a scheme.",
+                },
+                {
+                  verb: "GET",
+                  path: "/v1/ontologies/:id/relations",
+                  ret: "All relations with their typed endpoints and relation type.",
+                },
+                {
+                  verb: "GET",
+                  path: "/v1/ontologies/:id/schema",
+                  ret: "The T-Box — every class with attributes plus relation types with domain / range.",
+                },
+                {
+                  verb: "GET",
+                  path: "/v1/ontologies/:id/concepts/:conceptId",
+                  ret: "One concept — full SKOS labels, definitions, properties, deprecation pointer.",
+                },
+                {
+                  verb: "POST",
+                  path: "/v1/ontologies/:id/sparql",
+                  ret: "SPARQL query against the ontology (read-only).",
+                  postlike: true,
+                },
+              ].map((row, i) => (
+                <tr
+                  style={`${i !== 0 ? "border-top: 1px solid var(--gray-a3);" : ""}`}
+                >
+                  <td class="px-5 py-4">
+                    <span
+                      class="rounded-md px-1.5 py-0.5 font-mono text-[11px] font-bold"
+                      style={
+                        row.postlike
+                          ? "background: var(--amber-3); color: var(--amber-11);"
+                          : "background: var(--green-3); color: var(--green-11);"
+                      }
+                    >
+                      {row.verb}
+                    </span>
+                  </td>
+                  <td class="px-5 py-4 font-mono text-[12.5px]" style="color: var(--gray-12);">
+                    {row.path}
+                  </td>
+                  <td class="px-5 py-4" style="color: var(--gray-11);">
+                    {row.ret}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live playground -->
+  <section class="py-16 md:py-24" style="background: var(--gray-2);">
+    <div class="container-page mx-auto max-w-5xl">
+      <header class="mx-auto mb-8 max-w-2xl text-center md:mb-10" data-fade-up>
+        <p class="text-eyebrow">Try it</p>
+        <h2
+          class="text-headline mt-3"
+          style="font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);"
+        >
+          The playground, right here.
+        </h2>
+        <p
+          class="mx-auto mt-4 max-w-xl text-[15.5px] leading-relaxed"
+          style="color: var(--gray-11);"
+        >
+          Switch endpoints. Toggle parameters. The URL and JSON response update
+          live — no signup, no auth, no real network call. Copy as cURL when
+          you're ready.
+        </p>
+      </header>
+      <div data-fade-up data-delay="1">
+        <InteractivePlayground client:load />
+      </div>
+    </div>
+  </section>
+
+  <ProductFeatureBlock
+    eyebrow="Tag pinning"
+    title="Pin your pipeline to a known-good state."
+    body="Add `?tag=v1.3` to any read endpoint. Your RAG pipeline gets a stable snapshot — no behavior shifts when a maintainer adds a concept, no surprise breakage on Monday morning. Re-index when you choose to, on `tag.created` webhooks."
+  >
+    <CodeBlock
+      language="bash"
+      filename="Pinned read"
+      code={`# Pin to a tagged snapshot
+curl https://api.semlify.com/v1/ontologies/cars/concepts \\
+  ?tag=v1.3 \\
+  &lang=en \\
+  &format=jsonld \\
+  -H "Authorization: Bearer $TOKEN"
+
+# Roll forward by changing one query param
+curl ".../concepts?tag=v1.4&lang=en&format=jsonld"`}
+    />
+  </ProductFeatureBlock>
+
+  <ProductFeatureBlock
+    eyebrow="Format negotiation"
+    title="JSON, JSON-LD, SKOS Turtle, OWL XML, CSV."
+    body="One endpoint, five outputs. Pick whichever your downstream tool consumes natively. The full ontology export round-trips OWL — your architects can open the same artefact in Protégé."
+    reverse
+  >
+    <CodeBlock
+      language="bash"
+      filename="Format selection"
+      code={`# JSON-LD for a RAG pipeline
+curl ".../concepts?format=jsonld"
+
+# SKOS Turtle for a search index
+curl ".../concepts?format=skos"
+
+# OWL RDF/XML for Protégé / Stardog
+curl ".../schema?format=owl"
+
+# CSV for ad-hoc analysis
+curl ".../concepts?format=csv"`}
+    />
+  </ProductFeatureBlock>
+
+  <CtaBlock
+    title="Try the playground."
+    subtitle="Generate every call against your own data. Copy as cURL, fetch, or Python."
+  />
+</Layout>

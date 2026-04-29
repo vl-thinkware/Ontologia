@@ -136,7 +136,7 @@ Each incident that burns more than 10% of the monthly error budget gets an autom
 - PagerDuty / OpsGenie for paging.
 - Slack for coordination.
 - Google Docs or GitHub incident repo for RCAs.
-- Status page at `status.ontologia.com` (Instatus).
+- Status page at `status.semlify.com` (Instatus).
 
 ## 11. Chaos & game days
 

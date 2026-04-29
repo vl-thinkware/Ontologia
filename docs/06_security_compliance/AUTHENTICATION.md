@@ -120,7 +120,7 @@ Least privilege default suggestion surfaced in UI.
 ## 8. Account recovery
 
 - Standard Clerk recovery via email.
-- Owner recovery with lost access: documented secure process; contact `security@ontologia.com`. Requires proof of business identity (payment method, DNS record).
+- Owner recovery with lost access: documented secure process; contact `security@semlify.com`. Requires proof of business identity (payment method, DNS record).
 
 ## 9. Session security
 

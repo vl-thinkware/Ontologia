@@ -3,7 +3,7 @@
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
 
-How to contribute to Ontologia as a team member, a design partner, or an external contributor on our open-source components.
+How to contribute to Semlify as a team member, a design partner, or an external contributor on our open-source components.
 
 ---
 
@@ -22,11 +22,11 @@ Everyone interacting with our community, repo, Slack, or events agrees to our [C
 
 ## 3. Repositories
 
-- `ontologia/ontologia` — monorepo (apps + packages). Closed-source (proprietary), contributions via internal GitHub.
-- `ontologia/examples` — public ontology examples. MIT license.
-- `ontologia/sdks` — TypeScript SDK and code samples. MIT license.
-- `ontologia/docs-public` — marketing and docs site. MIT for content; CC-BY for images.
-- `ontologia/claude-plugins` — optional integrations. MIT.
+- `semlify/semlify` — monorepo (apps + packages). Closed-source (proprietary), contributions via internal GitHub.
+- `semlify/examples` — public ontology examples. MIT license.
+- `semlify/sdks` — TypeScript SDK and code samples. MIT license.
+- `semlify/docs-public` — marketing and docs site. MIT for content; CC-BY for images.
+- `semlify/claude-plugins` — optional integrations. MIT.
 
 External contributors work in the public repos. Internal contributors work across all.
 
@@ -86,7 +86,7 @@ Read [CODING_STANDARDS.md](../03_engineering/CODING_STANDARDS.md). Must-know rul
 
 - Prettier + ESLint pre-commit.
 - TypeScript strict mode, no `any` without a comment.
-- No direct DB access outside `@ontologia/db`.
+- No direct DB access outside `@semlify/db`.
 - No secrets anywhere near the repo.
 - Public functions documented with JSDoc.
 
@@ -104,7 +104,7 @@ Read [CODING_STANDARDS.md](../03_engineering/CODING_STANDARDS.md). Must-know rul
 
 ## 11. Design system
 
-- Use components from `@ontologia/ui`.
+- Use components from `@semlify/ui`.
 - New components go through design review.
 - No one-off Tailwind values; extend tokens if needed.
 
@@ -112,7 +112,7 @@ Read [CODING_STANDARDS.md](../03_engineering/CODING_STANDARDS.md). Must-know rul
 
 - Follow the [Security Checklist](../06_security_compliance/SECURITY_CHECKLIST.md).
 - Threat-model any change to authz, auth, billing, or public API.
-- Security issues: `security@ontologia.com` (PGP public key published).
+- Security issues: `security@semlify.com` (PGP public key published).
 
 ## 13. Community contributions (public repos)
 
@@ -145,7 +145,7 @@ Post-GA, we accept translations of the docs and marketing site. Translation cont
 
 ## 16. Working with the roadmap
 
-- Public roadmap at `ontologia.com/roadmap`.
+- Public roadmap at `semlify.com/roadmap`.
 - Requests reviewed by PM weekly.
 - Customers can upvote.
 - Status labels: Idea, Considering, Planned, In Progress, Shipped.
@@ -155,8 +155,8 @@ Post-GA, we accept translations of the docs and marketing site. Translation cont
 
 - Public: community Slack/Discord, GitHub discussions.
 - Customers: Intercom / Plain.
-- Security: `security@ontologia.com`.
-- Privacy: `privacy@ontologia.com`.
+- Security: `security@semlify.com`.
+- Privacy: `privacy@semlify.com`.
 
 ## 18. Contributor recognition
 
@@ -166,7 +166,7 @@ Post-GA, we accept translations of the docs and marketing site. Translation cont
 
 ## 19. Hiring path
 
-Community contributors who demonstrate excellent taste and consistency are natural candidates for our team. Reach out at `jobs@ontologia.com` or see [HIRING_PLAN.md](HIRING_PLAN.md).
+Community contributors who demonstrate excellent taste and consistency are natural candidates for our team. Reach out at `jobs@semlify.com` or see [HIRING_PLAN.md](HIRING_PLAN.md).
 
 ## 20. Decision making
 
@@ -178,6 +178,6 @@ Community contributors who demonstrate excellent taste and consistency are natur
 
 - Public repos: MIT unless specified.
 - Docs: CC-BY-4.0.
-- Trademarks & logos: owned by Ontologia SAS. See `TRADEMARKS.md` in public repos.
+- Trademarks & logos: owned by Semlify SAS. See `TRADEMARKS.md` in public repos.
 
 Related: [Onboarding](ONBOARDING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Hiring Plan](HIRING_PLAN.md) · [Coding Standards](../03_engineering/CODING_STANDARDS.md) · [Git Workflow](../03_engineering/GIT_WORKFLOW.md)

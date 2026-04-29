@@ -2,7 +2,7 @@
 
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
-Ontologia's infrastructure is declared as code from day one. This document describes what runs where, how we provision and change it, and how we scale from "two founders on a laptop" to "a real mid-market SaaS" without blowing up the cash chart.
+Semlify's infrastructure is declared as code from day one. This document describes what runs where, how we provision and change it, and how we scale from "two founders on a laptop" to "a real mid-market SaaS" without blowing up the cash chart.
 
 > **Bootstrap posture.** Phase 0 runs on free tiers only (~$25 / month all-in). Paid tiers unlock as customers do. Every vendor choice below has an "exit hatch" — we will not pick a service that locks us in before we can swap.
 
@@ -13,10 +13,10 @@ Ontologia's infrastructure is declared as code from day one. This document descr
 | Environment | Purpose | URL | Data | When we add it |
 |---|---|---|---|---|
 | `dev` | Each founder's laptop | `localhost` | Disposable | Day 1 |
-| `preview` | Per-PR ephemeral deploy (FE only in Y1) | `*.preview.ontologia.com` | Synthetic | Phase 0 |
-| `staging` | Pre-prod, always live | `staging.ontologia.com` | Sanitised clone of prod (weekly refresh) | Phase 2 (paid launch) |
-| `prod` | Production | `app.ontologia.com` / `api.ontologia.com` | Real | Phase 2 |
-| `sandbox` | Customer playground | `sandbox.ontologia.com` | Customer test tenants | Phase 3+ (on demand) |
+| `preview` | Per-PR ephemeral deploy (FE only in Y1) | `*.preview.semlify.com` | Synthetic | Phase 0 |
+| `staging` | Pre-prod, always live | `staging.semlify.com` | Sanitised clone of prod (weekly refresh) | Phase 2 (paid launch) |
+| `prod` | Production | `app.semlify.com` / `api.semlify.com` | Real | Phase 2 |
+| `sandbox` | Customer playground | `sandbox.semlify.com` | Customer test tenants | Phase 3+ (on demand) |
 
 Staging and prod share the same IaC modules with different parameters. In Phase 0 and Phase 1, staging is a branch deploy on the same Render / Neon / Upstash / Neo4j Aura free-tier instance as prod will be — we promote, we don't duplicate.
 

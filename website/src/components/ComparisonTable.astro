@@ -1,0 +1,241 @@
+---
+// Honest comparison vs the alternatives, framed without potshots.
+// Rows correspond to current product capabilities; the "X" / "—" / "✓" semantic
+// is rendered as semantic icons rather than literal characters.
+import { Check, Minus, X } from "lucide-react";
+
+interface Row {
+  feature: string;
+  semlify: "yes" | "partial" | "no";
+  protege: "yes" | "partial" | "no";
+  poolparty: "yes" | "partial" | "no";
+  spreadsheets: "yes" | "partial" | "no";
+}
+
+const rows: Row[] = [
+  {
+    feature: "T-Box editor (classes + relations)",
+    semlify: "yes",
+    protege: "yes",
+    poolparty: "yes",
+    spreadsheets: "no",
+  },
+  {
+    feature: "Multi-taxonomy in one ontology",
+    semlify: "yes",
+    protege: "partial",
+    poolparty: "yes",
+    spreadsheets: "no",
+  },
+  {
+    feature: "Versioned change history with revert",
+    semlify: "yes",
+    protege: "no",
+    poolparty: "partial",
+    spreadsheets: "no",
+  },
+  {
+    feature: "Tags + tag-to-tag diffs",
+    semlify: "yes",
+    protege: "no",
+    poolparty: "partial",
+    spreadsheets: "no",
+  },
+  {
+    feature: "Stable JSON-LD / SKOS / OWL API",
+    semlify: "yes",
+    protege: "no",
+    poolparty: "yes",
+    spreadsheets: "no",
+  },
+  {
+    feature: "Multi-tenant SaaS (no install)",
+    semlify: "yes",
+    protege: "no",
+    poolparty: "partial",
+    spreadsheets: "yes",
+  },
+  {
+    feature: "Live validation panel",
+    semlify: "yes",
+    protege: "partial",
+    poolparty: "yes",
+    spreadsheets: "no",
+  },
+  {
+    feature: "AI helpers (synonyms, translations, dupes)",
+    semlify: "yes",
+    protege: "no",
+    poolparty: "no",
+    spreadsheets: "no",
+  },
+  {
+    feature: "Free tier",
+    semlify: "yes",
+    protege: "yes",
+    poolparty: "no",
+    spreadsheets: "yes",
+  },
+];
+
+const cellFor = (state: Row["semlify"]) => {
+  if (state === "yes") {
+    return {
+      icon: Check,
+      label: "Yes",
+      color: "var(--green-9)",
+      bg: "var(--green-3)",
+    };
+  }
+  if (state === "partial") {
+    return {
+      icon: Minus,
+      label: "Partial",
+      color: "var(--amber-11)",
+      bg: "var(--amber-3)",
+    };
+  }
+  return {
+    icon: X,
+    label: "No",
+    color: "var(--gray-9)",
+    bg: "var(--gray-3)",
+  };
+};
+---
+
+<section class="py-14 md:py-28" style="background: var(--gray-2);">
+  <div class="container-page">
+    <header class="mx-auto mb-8 max-w-2xl text-center md:mb-12">
+      <p class="text-eyebrow">How we compare</p>
+      <h2 class="text-headline mt-3">
+        Not the only option &mdash; but the one built for 2026.
+      </h2>
+      <p
+        class="mx-auto mt-4 max-w-xl text-[15.5px] leading-relaxed"
+        style="color: var(--gray-11);"
+      >
+        We respect the legacy tools. We just think the next ten years of
+        ontology work belongs in a modern multi-tenant SaaS with version
+        control built in.
+      </p>
+    </header>
+
+    <div
+      class="comparison-scroll mx-auto max-w-5xl overflow-x-auto rounded-[var(--radius-5)]"
+      style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4); box-shadow: var(--shadow-2);"
+      data-fade-up
+    >
+      <table class="w-full text-[13.5px]" style="min-width: 720px;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--gray-a4);">
+            <th
+              class="px-3 py-4 text-left font-semibold sm:px-5"
+              style="color: var(--gray-11); min-width: 220px;"
+            >
+              Capability
+            </th>
+            <th
+              class="px-3 py-4 text-center font-semibold sm:px-5"
+              style="color: var(--accent-11); background: var(--accent-2); min-width: 110px;"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span
+                  class="h-1.5 w-1.5 rounded-full"
+                  style="background: var(--accent-9);"></span>
+                Semlify
+              </span>
+            </th>
+            <th
+              class="px-3 py-4 text-center font-semibold sm:px-5"
+              style="color: var(--gray-11); min-width: 100px;"
+            >
+              Protégé
+            </th>
+            <th
+              class="px-3 py-4 text-center font-semibold sm:px-5"
+              style="color: var(--gray-11); min-width: 100px;"
+            >
+              PoolParty
+            </th>
+            <th
+              class="px-3 py-4 text-center font-semibold sm:px-5"
+              style="color: var(--gray-11); min-width: 110px;"
+            >
+              Sheets / wiki
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row, i) => {
+              const cells = [
+                row.semlify,
+                row.protege,
+                row.poolparty,
+                row.spreadsheets,
+              ];
+              return (
+                <tr
+                  style={`${i !== 0 ? "border-top: 1px solid var(--gray-a3);" : ""}`}
+                >
+                  <td
+                    class="px-3 py-3 font-medium sm:px-5"
+                    style="color: var(--gray-12);"
+                  >
+                    {row.feature}
+                  </td>
+                  {cells.map((cell, idx) => {
+                    const meta = cellFor(cell);
+                    const Icon = meta.icon;
+                    return (
+                      <td
+                        class="px-3 py-3 text-center sm:px-5"
+                        style={
+                          idx === 0
+                            ? "background: var(--accent-2);"
+                            : ""
+                        }
+                      >
+                        <span
+                          class="inline-flex h-7 w-7 items-center justify-center rounded-full"
+                          style={`background: ${meta.bg};`}
+                          title={meta.label}
+                        >
+                          <Icon
+                            size={14}
+                            style={{ color: meta.color }}
+                            strokeWidth={2.5}
+                            aria-label={meta.label}
+                          />
+                        </span>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+    <p
+      class="mx-auto mt-3 max-w-5xl text-center text-[12px] md:hidden"
+      style="color: var(--gray-10);"
+    >
+      ← swipe to see all columns →
+    </p>
+
+    <p
+      class="mx-auto mt-6 max-w-2xl text-center text-[12.5px]"
+      style="color: var(--gray-10);"
+    >
+      Comparison reflects April 2026 product capabilities as we understand
+      them. If you spot something inaccurate,{" "}
+      <a
+        href="mailto:hello@semlify.com?subject=Comparison%20correction"
+        style="color: var(--accent-11);">tell us</a
+      > &mdash; we keep this honest.
+    </p>
+  </div>
+</section>

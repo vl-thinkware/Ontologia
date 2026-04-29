@@ -1,0 +1,6 @@
+---
+// /use-cases isn't its own page — clicking "Use cases" in the global nav
+// lands on the most-loaded use case (RAG). The sub-nav handles discovery
+// of the others. This file just sends bookmarks / shared links onward.
+return Astro.redirect("/use-cases/rag", 301);
+---

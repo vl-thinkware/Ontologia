@@ -3,7 +3,7 @@
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
 
-This document summarises Ontologia's security posture. For the audit-ready version, see the trust center at `ontologia.com/trust`.
+This document summarises Semlify's security posture. For the audit-ready version, see the trust center at `semlify.com/trust`.
 
 ---
 
@@ -103,7 +103,7 @@ Detail in [AUTHENTICATION.md](AUTHENTICATION.md). Summary:
 - Critical CVEs patched within 7 days.
 - High within 30 days.
 - Medium within 90 days.
-- Published advisories at `ontologia.com/trust/advisories`.
+- Published advisories at `semlify.com/trust/advisories`.
 
 ## 12. Pen testing
 
@@ -113,7 +113,7 @@ Detail in [AUTHENTICATION.md](AUTHENTICATION.md). Summary:
 
 ## 13. Bug bounty
 
-Target: launch a managed program (HackerOne / Intigriti) within 12 months of GA. In the meantime, responsible-disclosure mailbox `security@ontologia.com`.
+Target: launch a managed program (HackerOne / Intigriti) within 12 months of GA. In the meantime, responsible-disclosure mailbox `security@semlify.com`.
 
 - Safe-harbour statement published.
 - Acknowledgements page.
@@ -142,7 +142,7 @@ Target: launch a managed program (HackerOne / Intigriti) within 12 months of GA.
 
 ## 17. Sub-processors
 
-- List at `ontologia.com/legal/subprocessors`.
+- List at `semlify.com/legal/subprocessors`.
 - Customers notified 30 days in advance of changes affecting data.
 - Each sub-processor reviewed annually for DPAs and security posture.
 
@@ -157,8 +157,8 @@ For feature C2 (AI suggestions):
 
 ## 19. Useful contacts
 
-- `security@ontologia.com` — reports.
-- `privacy@ontologia.com` — GDPR / DSAR.
-- `abuse@ontologia.com` — misuse of service.
+- `security@semlify.com` — reports.
+- `privacy@semlify.com` — GDPR / DSAR.
+- `abuse@semlify.com` — misuse of service.
 
 Related: [Authentication](AUTHENTICATION.md) · [Data Privacy](DATA_PRIVACY.md) · [Compliance](COMPLIANCE.md) · [Security Checklist](SECURITY_CHECKLIST.md)

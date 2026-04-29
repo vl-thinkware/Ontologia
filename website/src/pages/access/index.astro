@@ -1,0 +1,194 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="Try Semlify free — Get your workspace"
+  description="Get your free Semlify workspace in minutes. Fill in a few details and we'll email your access link. No credit card required."
+  current="/access"
+>
+  <!-- Hero -->
+  <section
+    class="py-16 md:py-20"
+    style="background: var(--marketing-gradient-hero);"
+  >
+    <div class="container-page text-center">
+      <p class="text-eyebrow">Free tier</p>
+      <h1
+        class="text-display mt-3"
+        style="font-size: clamp(2rem, 1.5rem + 2.5vw, 3rem);"
+      >
+        Start free.
+      </h1>
+      <p
+        class="mx-auto mt-4 max-w-2xl text-[16px] leading-relaxed md:text-lg"
+        style="color: var(--gray-11);"
+      >
+        Fill in a few details and we'll email your workspace link. No credit
+        card. Takes a minute.
+      </p>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <section class="py-12 md:py-16">
+    <div class="container-page mx-auto max-w-xl">
+      <form
+        name="early-access"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        action="/access/thanks"
+        class="space-y-5 rounded-[var(--radius-5)] p-6 md:p-8"
+        style="background: var(--color-panel-solid); border: 1px solid var(--gray-a4);"
+      >
+        <input type="hidden" name="form-name" value="early-access" />
+
+        {/* Honeypot — bots fill it, humans don't see it. */}
+        <p class="hidden" aria-hidden="true">
+          <label>
+            Don't fill this out:
+            <input name="bot-field" tabindex="-1" autocomplete="off" />
+          </label>
+        </p>
+
+        <div>
+          <label
+            for="name"
+            class="block text-[13.5px] font-semibold"
+            style="color: var(--gray-12);"
+          >
+            Your name
+          </label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            required
+            autocomplete="name"
+            class="form-field mt-1.5"
+          />
+        </div>
+
+        <div>
+          <label
+            for="email"
+            class="block text-[13.5px] font-semibold"
+            style="color: var(--gray-12);"
+          >
+            Work email
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            required
+            autocomplete="email"
+            class="form-field mt-1.5"
+          />
+        </div>
+
+        <div>
+          <label
+            for="phone"
+            class="block text-[13.5px] font-semibold"
+            style="color: var(--gray-12);"
+          >
+            Phone number
+          </label>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            required
+            autocomplete="tel"
+            inputmode="tel"
+            placeholder="+1 (415) 555-0172"
+            pattern="[+0-9\s().\-]{6,}"
+            class="form-field mt-1.5"
+          />
+        </div>
+
+        <div>
+          <label
+            for="company"
+            class="block text-[13.5px] font-semibold"
+            style="color: var(--gray-12);"
+          >
+            Company or project
+            <span class="font-normal" style="color: var(--gray-10);">
+              (optional)
+            </span>
+          </label>
+          <input
+            type="text"
+            name="company"
+            id="company"
+            autocomplete="organization"
+            class="form-field mt-1.5"
+          />
+        </div>
+
+        <div>
+          <label
+            for="usecase"
+            class="block text-[13.5px] font-semibold"
+            style="color: var(--gray-12);"
+          >
+            What are you building?
+            <span class="font-normal" style="color: var(--gray-10);">
+              (optional)
+            </span>
+          </label>
+          <textarea
+            name="usecase"
+            id="usecase"
+            rows="4"
+            placeholder="A RAG pipeline, a product catalog, a glossary — a couple of sentences is plenty."
+            class="form-field mt-1.5"
+            style="resize: vertical; min-height: 110px;"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-primary w-full"
+          style="height: 44px;"
+        >
+          Get my free workspace
+        </button>
+
+        <p class="text-[12.5px]" style="color: var(--gray-10);">
+          We'll email your access link in a few minutes. No marketing list.
+        </p>
+      </form>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .form-field {
+    display: block;
+    width: 100%;
+    border-radius: var(--radius-3);
+    padding: 8px 12px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    background: var(--color-surface);
+    color: var(--gray-12);
+    border: 1px solid var(--gray-a6);
+    transition:
+      border-color 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  .form-field::placeholder {
+    color: var(--gray-9);
+  }
+
+  .form-field:focus {
+    outline: none;
+    border-color: var(--accent-8);
+    box-shadow: 0 0 0 3px var(--accent-a4);
+  }
+</style>

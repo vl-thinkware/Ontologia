@@ -133,7 +133,7 @@ In Year 1 the escalation path is: Alexandre → Valentin → customer email with
 
 ## 8. Status page
 
-- Public status at `status.ontologia.com` powered by Better Stack Status (free up to 10 components).
+- Public status at `status.semlify.com` powered by Better Stack Status (free up to 10 components).
 - Components: API, Web App, Authentication, Webhooks, Imports, Search.
 - Auto-posts "investigating" when a SEV1 fires for > 5 minutes; manual updates after that.
 - Customers can subscribe to email / RSS.

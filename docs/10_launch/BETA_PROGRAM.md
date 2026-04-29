@@ -13,7 +13,7 @@ How we ran the closed and open betas that led to GA — what we offered, what we
 - **Harden the product** under real-world load and edge cases.
 - **Build the first reference base** — case studies, quotes, advocates.
 - **Inform pricing and packaging** from observed usage.
-- **Build a community of practitioners** who feel ownership in Ontologia.
+- **Build a community of practitioners** who feel ownership in Semlify.
 
 ## 2. Program phases
 
@@ -205,4 +205,4 @@ At end of beta, the team produces:
 | W26 | GA |
 | W27–W28 | Post-launch retro + beta programme close |
 
-Related: [Launch Checklist](LAUNCH_CHECKLIST.md) · [Support](SUPPORT.md) · [Customer Success](../07_business/CUSTOMER_SUCCESS.md) · [Product Roadmap](../00_overview/ROADMAP.md)
+Related: [Launch Checklist](LAUNCH_CHECKLIST.md) · [Support](SUPPORT.md) · [Customer Success](../07_business/CUSTOMER_SUCCESS.md) · [Product Roadmap](ROADMAP%20(imported%20to%20notion).md)

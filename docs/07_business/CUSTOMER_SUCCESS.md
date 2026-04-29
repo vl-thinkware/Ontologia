@@ -9,7 +9,7 @@ How we help customers realise the value they bought. The playbook for onboarding
 
 ## 1. CS mission
 
-Every Ontologia customer reaches their first milestone within 30 days, their second within 90, and is measurably ahead of where they started within 12 months. We prevent churn by making customers successful, not by making cancellation painful.
+Every Semlify customer reaches their first milestone within 30 days, their second within 90, and is measurably ahead of where they started within 12 months. We prevent churn by making customers successful, not by making cancellation painful.
 
 ## 2. CS philosophy
 
@@ -75,10 +75,10 @@ For self-serve customers this is compressed into in-app onboarding + email drip;
 
 ## 7. Training & certification
 
-- Free self-paced courses: "Ontologia Essentials" (2 h), "Authoring Deep Dive" (3 h), "Governance & Reviews" (2 h), "API & Integrations" (3 h).
+- Free self-paced courses: "Semlify Essentials" (2 h), "Authoring Deep Dive" (3 h), "Governance & Reviews" (2 h), "API & Integrations" (3 h).
 - Instructor-led workshops included for Pro+ customers quarterly.
-- Certification exam: "Ontologia Certified Practitioner" — free, proctored online.
-- Advanced certification: "Ontologia Certified Administrator" for admins.
+- Certification exam: "Semlify Certified Practitioner" — free, proctored online.
+- Advanced certification: "Semlify Certified Administrator" for admins.
 
 ## 8. Support tiers & SLAs
 
@@ -230,4 +230,4 @@ VoC feeds the product roadmap; we publicly acknowledge what we did / didn't take
 - Training customers on features they don't need.
 - Hiding churn reasons instead of learning from them.
 
-Related: [Sales Playbook](SALES_PLAYBOOK.md) · [Customer Acquisition](CUSTOMER_ACQUISITION.md) · [Pricing Model](../08_finance/PRICING_MODEL.md) · [Support](../10_launch/SUPPORT.md) · [SLA](../05_operations/SLA.md)
+Related: [Sales Playbook](SALES_PLAYBOOK.md) · [Customer Acquisition](CUSTOMER_ACQUISITION%20(imported%20to%20notion).md) · [Pricing Model](../08_finance/PRICING_MODEL.md) · [Support](../10_launch/SUPPORT.md) · [SLA](../05_operations/SLA.md)

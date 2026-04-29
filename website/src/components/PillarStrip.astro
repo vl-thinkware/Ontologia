@@ -1,0 +1,83 @@
+---
+import { Network, GitCommit, Zap } from "lucide-react";
+
+interface Pillar {
+  icon: string;
+  title: string;
+  body: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  pillars?: Pillar[];
+}
+
+const {
+  eyebrow,
+  title,
+  pillars = [
+    {
+      icon: "network",
+      title: "Graph-native",
+      body: "One engine for schema, taxonomy, and instances. SKOS aligned, OWL-exportable, Neo4j underneath. Not three tools stitched together.",
+    },
+    {
+      icon: "history",
+      title: "Versioned",
+      body: "Every change is a reversible, attributable event. Tag a snapshot. Diff two tags. Revert a mistake — without leaving the editor.",
+    },
+    {
+      icon: "api",
+      title: "API-first",
+      body: "Stable JSON-LD / SKOS / OWL endpoints with version pinning, language negotiation, and a built-in playground.",
+    },
+  ],
+} = Astro.props;
+
+const iconMap: Record<string, any> = {
+  network: Network,
+  history: GitCommit,
+  api: Zap,
+};
+---
+
+<section class="py-14 md:py-28" style="background: var(--color-background);">
+  <div class="container-page">
+    {
+      (eyebrow || title) && (
+        <header class="mx-auto max-w-2xl text-center mb-10 md:mb-14">
+          {eyebrow && <p class="text-eyebrow">{eyebrow}</p>}
+          {title && <h2 class="text-headline mt-3">{title}</h2>}
+        </header>
+      )
+    }
+
+    <ul class="grid grid-cols-1 gap-5 md:grid-cols-3" role="list">
+      {
+        pillars.map((p, i) => {
+          const Icon = iconMap[p.icon] ?? Network;
+          return (
+            <li class="marketing-card animate-fade-up" style={`animation-delay: ${i * 80}ms;`}>
+              <div
+                class="mb-5 flex h-11 w-11 items-center justify-center rounded-[var(--radius-3)]"
+                style="background: var(--violet-3); color: var(--violet-11);"
+              >
+                <Icon size={20} aria-hidden="true" />
+              </div>
+              <h3
+                class="text-lg font-bold tracking-tight"
+                style="color: var(--gray-12);"
+              >
+                {p.title}
+              </h3>
+              <p class="mt-2 text-[14.5px] leading-relaxed" style="color: var(--gray-11);">
+                {p.body}
+              </p>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>

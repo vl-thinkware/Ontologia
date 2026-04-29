@@ -3,7 +3,7 @@
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v2 (bootstrap-aligned)
 
 
-What standards Ontologia intends to meet, where we are on the journey, and how we keep our story honest when customers, auditors or regulators ask.
+What standards Semlify intends to meet, where we are on the journey, and how we keep our story honest when customers, auditors or regulators ask.
 
 ---
 
@@ -53,7 +53,7 @@ Evidence is collected continuously via Drata / Vanta / Secureframe (we'll pick o
 
 ## 3. Policies we maintain
 
-All policies are versioned in the private `ontologia/corp` repo with change history and approval signatures.
+All policies are versioned in the private `semlify/corp` repo with change history and approval signatures.
 
 - Information Security Policy.
 - Acceptable Use Policy.
@@ -97,7 +97,7 @@ Each policy has an owner (role, not person) and is reviewed at least annually.
 
 ### Data subject rights
 - Process described in [DATA_PRIVACY.md § 6](DATA_PRIVACY.md#6-rights-management-data-subject-requests).
-- Inbound queue at `privacy@ontologia.com`.
+- Inbound queue at `privacy@semlify.com`.
 - 30-day SLA; extension up to 60 days with justification.
 
 ### DPIAs
@@ -105,7 +105,7 @@ Each policy has an owner (role, not person) and is reviewed at least annually.
 - Template in `docs/06_security_compliance/dpia/TEMPLATE.md`.
 
 ### Sub-processors
-- List published at `ontologia.com/legal/subprocessors`.
+- List published at `semlify.com/legal/subprocessors`.
 - 30-day notice before adding or changing a sub-processor that affects customer data.
 - Annual review of each sub-processor's DPA, security posture and certifications.
 
@@ -119,13 +119,13 @@ Each policy has an owner (role, not person) and is reviewed at least annually.
 - Privacy policy includes CCPA disclosures.
 - We do not sell or share personal information in the CCPA sense.
 - Rights: know, delete, correct, limit use of sensitive PI, opt-out of sharing.
-- Intake via `privacy@ontologia.com` — same workflow as GDPR.
+- Intake via `privacy@semlify.com` — same workflow as GDPR.
 - Notice at collection on web forms.
 
 ## 6. ISO 27001 approach (future)
 
 - Adopt the 93 controls in Annex A (2022 version).
-- ISMS scope: Ontologia's SaaS platform and supporting corporate infrastructure.
+- ISMS scope: Semlify's SaaS platform and supporting corporate infrastructure.
 - Statement of Applicability (SoA) with justifications for any excluded controls.
 - Internal audit programme + external certification by an accredited body.
 
@@ -211,14 +211,14 @@ Pricing adjusted to reflect compliance costs.
 
 | Artefact | Where |
 |---|---|
-| Privacy policy | `ontologia.com/legal/privacy` |
-| Terms of service | `ontologia.com/legal/terms` |
-| DPA | `ontologia.com/legal/dpa` |
-| Sub-processor list | `ontologia.com/legal/subprocessors` |
-| Cookie policy | `ontologia.com/legal/cookies` |
-| Security overview | `ontologia.com/trust` |
-| SOC 2 report | `ontologia.com/trust` (NDA-gated) |
-| Pen test letter | `ontologia.com/trust` (NDA-gated) |
+| Privacy policy | `semlify.com/legal/privacy` |
+| Terms of service | `semlify.com/legal/terms` |
+| DPA | `semlify.com/legal/dpa` |
+| Sub-processor list | `semlify.com/legal/subprocessors` |
+| Cookie policy | `semlify.com/legal/cookies` |
+| Security overview | `semlify.com/trust` |
+| SOC 2 report | `semlify.com/trust` (NDA-gated) |
+| Pen test letter | `semlify.com/trust` (NDA-gated) |
 
 All artefacts dated and versioned.
 
@@ -272,6 +272,6 @@ Pro & Enterprise contracts include:
 
 - Owner: CTO.
 - Review cadence: quarterly; any material change triggers immediate update.
-- Customers and auditors can request the current version from `compliance@ontologia.com`.
+- Customers and auditors can request the current version from `compliance@semlify.com`.
 
 Related: [Security](SECURITY.md) · [Data Privacy](DATA_PRIVACY.md) · [Authentication](AUTHENTICATION.md) · [Security Checklist](SECURITY_CHECKLIST.md)

@@ -3,7 +3,7 @@
 **Primary owner**: Alexandre · **Contributor**: Valentin · **Status**: Draft v2 (bootstrap-aligned)
 
 
-Patterns and recipes for the Ontologia API and worker services.
+Patterns and recipes for the Semlify API and worker services.
 
 ---
 
@@ -200,7 +200,7 @@ Two paths:
 - **User sessions.** Clerk JWT; `auth` plugin verifies and attaches `req.user = { id, email, orgs: [...] }`.
 - **API keys.** Key prefix + secret; lookup by prefix, constant-time compare against Argon2id hash; attach `req.user = { id: apiKeyId, scopes: [...] }`.
 
-The tenant plugin picks the active org (from URL path, or from a `x-ontologia-org` header), checks membership, sets `app.current_org_id`.
+The tenant plugin picks the active org (from URL path, or from a `x-semlify-org` header), checks membership, sets `app.current_org_id`.
 
 See [AUTHENTICATION.md](../06_security_compliance/AUTHENTICATION.md).
 

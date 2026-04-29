@@ -2,11 +2,11 @@
 
 **Primary owner**: Valentin · **Contributor**: Alexandre · **Status**: Draft v4 (ontology-only product)
 
-How we take Ontologia to customers with two founders, no paid ads, and cash we don't want to spend. Every motion here is designed to run on founder time, content, and reputation — not on an SDR team we cannot afford.
+How we take Semlify to customers with two founders, no paid ads, and cash we don't want to spend. Every motion here is designed to run on founder time, content, and reputation — not on an SDR team we cannot afford.
 
 > **Baseline reality.** Two people (Valentin on product + commercial, Alexandre on engineering). No fundraising assumed. No paid acquisition until unit economics and product are both healthy. Win the first 15–25 paying logos founder-to-founder, publish everything we learn, and let content compound.
 >
-> **One product, one narrative.** Ontologia is an ontology editor. The sell is "model your concept world at whatever depth you need, host many taxonomies on a single T-Box, export SKOS or OWL, plug it into your AI / catalogue / search." We compete against enterprise taxonomy management (PoolParty, TopBraid EDG, Protégé) and data catalogues (Collibra, Atlan, DataHub) — positioned as developer-friendly, API-first, ontology-native, and priced an order of magnitude below the incumbents.
+> **One product, one narrative.** Semlify is an ontology editor. The sell is "model your concept world at whatever depth you need, host many taxonomies on a single T-Box, export SKOS or OWL, plug it into your AI / catalogue / search." We compete against enterprise taxonomy management (PoolParty, TopBraid EDG, Protégé) and data catalogues (Collibra, Atlan, DataHub) — positioned as developer-friendly, API-first, ontology-native, and priced an order of magnitude below the incumbents.
 
 ---
 
@@ -41,7 +41,7 @@ Team tier is the PLG engine. Business is where founder-led sales pays the bills.
 ### Primary segment C — Data governance and compliance teams
 - **Size**: 100–5,000 employees; often in data governance, compliance/risk, or a founding PM function at Series B+ companies.
 - **Titles**: Data Governance Lead, Data Steward, Compliance PM, Head of Data Strategy, Product Manager for a governance initiative.
-- **Why they buy**: Confluence / Notion glossaries rot; data catalogs (Collibra, Alation, Atlan) lock the glossary inside the data team and cost far more than a governance PM's budget. Ontologia lets them own a small ontology (a handful of classes, one or two schemes) that their downstream data catalog then consumes via JSON-LD.
+- **Why they buy**: Confluence / Notion glossaries rot; data catalogs (Collibra, Alation, Atlan) lock the glossary inside the data team and cost far more than a governance PM's budget. Semlify lets them own a small ontology (a handful of classes, one or two schemes) that their downstream data catalog then consumes via JSON-LD.
 - **Why now**: AI copilots inside the company need a vetted, versioned definition source; regulation (EU AI Act, SR-11-7 for banks, HIPAA) is adding real audit requirements.
 - **Competition displaced**: Confluence, Notion, Google Docs, the glossary module of Collibra / Alation / Atlan (as a standalone-then-feed pattern).
 
@@ -65,7 +65,7 @@ Team tier is the PLG engine. Business is where founder-led sales pays the bills.
 
 ## 3. Messaging spine
 
-**Master headline** (ontologia.com homepage): "The source of truth for your concepts."
+**Master headline** (semlify.com homepage): "The source of truth for your concepts."
 
 **Sub-head**: "One ontology editor. Classes, relation types and many taxonomies on a shared schema — with change history, a versioned API, and SKOS, OWL and JSON-LD exports your pipelines already know how to read."
 
@@ -73,7 +73,7 @@ Team tier is the PLG engine. Business is where founder-led sales pays the bills.
 
 ### Key narrative pillars
 
-1. **Ontology-native, not taxonomy-retrofitted.** Every artefact in Ontologia is an Ontology. Taxonomies are first-class citizens (ConceptSchemes inside the ontology) but they don't force the product into a SKOS-only corner.
+1. **Ontology-native, not taxonomy-retrofitted.** Every artefact in Semlify is an Ontology. Taxonomies are first-class citizens (ConceptSchemes inside the ontology) but they don't force the product into a SKOS-only corner.
 2. **One T-Box, many taxonomies.** The differentiator nobody else has in a modern UX: add a taxonomy to an existing ontology in two clicks; it automatically inherits the T-Box.
 3. **Modern web UX with the discipline of an ontology editor.** Canvas that feels as fast as Figma; Schema view that a data architect respects; Taxonomies tree a maintainer loves.
 4. **Versioned like your code (without the complexity of git).** Change history, revert, tags, tag-to-tag diff. Branches and reviews deferred and explicitly called out.
@@ -99,20 +99,20 @@ Full detail in [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md).
 ## 4. Channels
 
 ### Inbound — where we spend our time
-- **Content hub** at `ontologia.com/learn`, organised by use case (not by "mode"):
+- **Content hub** at `semlify.com/learn`, organised by use case (not by "mode"):
   - "Designing a T-Box" track — for architects. Topics: class design, relation types, domain/range, evolving schemas safely.
   - "Running a catalogue" track — for maintainers. Topics: multi-taxonomy design, SKOS interop, bulk edits, deprecation workflows, AI-assisted curation.
   - "Pipelines & AI" track — for platform engineers. Topics: JSON-LD export patterns, SKOS for search / CMS / DAM, SPARQL and Cypher, webhooks, tagged snapshots as RAG anchors.
-- **Open source**: examples repo at `github.com/ontologia/examples` with a Cars reference ontology, a product-reference mini-ontology, import/export CLIs, `ontologia.dev` developer portal.
+- **Open source**: examples repo at `github.com/semlify/examples` with a Cars reference ontology, a product-reference mini-ontology, import/export CLIs, `semlify.dev` developer portal.
 - **Technical writing by the founders**: engineering deep-dives by Alexandre, product and market pieces by Valentin. Syndicated to Hacker News, LinkedIn, relevant subreddits (r/LocalLLaMA, r/ragdev, r/informationscience, r/taxonomy, r/dataengineering).
 - **Comparison pages** — factual, linked, updated quarterly:
-  - Ontologia vs Protégé — web vs desktop, collaboration, versioning.
-  - Ontologia vs TopBraid EDG — pricing, UX, API-first.
-  - Ontologia vs PoolParty — multi-taxonomy on one T-Box, pricing, SKOS round-trip.
-  - Ontologia vs TopQuadrant / Graphwise — scope and price positioning.
-  - Ontologia vs Collibra / Atlan / Alation glossaries — upstream vs in-catalog, editability, feed-first pattern.
-  - Ontologia vs Semaphore — classification scope and pricing.
-  - Ontologia vs "rolling your own" on Neo4j / Stardog.
+  - Semlify vs Protégé — web vs desktop, collaboration, versioning.
+  - Semlify vs TopBraid EDG — pricing, UX, API-first.
+  - Semlify vs PoolParty — multi-taxonomy on one T-Box, pricing, SKOS round-trip.
+  - Semlify vs TopQuadrant / Graphwise — scope and price positioning.
+  - Semlify vs Collibra / Atlan / Alation glossaries — upstream vs in-catalog, editability, feed-first pattern.
+  - Semlify vs Semaphore — classification scope and pricing.
+  - Semlify vs "rolling your own" on Neo4j / Stardog.
 - **Short demo video library** tied to the top SEO pages. ~3 minutes each, Cars ontology demo as the anchor.
 
 ### Outbound — narrow, warm, founder-signed
@@ -157,13 +157,13 @@ Full detail in [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md).
 - "New ontology" modal with three starters — Blank, Product reference, Catalog-with-multi-taxonomies — on first load.
 - First-run tooltip ring: Schema → Canvas → Tree → Export modal.
 - In-app checklist: add 1 class, add 1 scheme, add 5 concepts, create a tag, run the Export modal once.
-- Time-to-first-tag target: under 10 minutes. Tracked weekly; see [FEATURES.md](../01_product/FEATURES.md).
+- Time-to-first-tag target: under 10 minutes. Tracked weekly; see [FEATURES.md](FEATURES%20(imported%20to%20notion).md).
 
 ### Conversion Free → Team
 - Soft limit on Free at 500 concepts / 5k API calls per month.
 - In-context upgrade prompts only when the user hits the wall; never on load.
 - Team unlocks: multi-workspace, long-lived API keys, webhooks, unlimited editors, priority email support.
-- Founder inbox (`valentin@ontologia.com`) on every upgrade screen for anyone who wants to talk.
+- Founder inbox (`valentin@semlify.com`) on every upgrade screen for anyone who wants to talk.
 
 ### Retention
 - Weekly digest (opt-out): new change events, API quota used.
@@ -222,10 +222,10 @@ We do not actively pursue enterprise deals until (a) SSO + SAML + audit log are 
 
 If a warm inbound arrives before then, we take the call, set expectations honestly, and offer a "Business Plus" commercial arrangement (Business tier on a dedicated Neo4j Aura instance, custom contract, light SLA) while the Enterprise surface area ships.
 
-Full enterprise requirements (MSA, SSO, SCIM, SOC 2, residency, dedicated CSM, QBRs, named SE, analyst relations) come online progressively in Year 2. Detail in [ROADMAP.md](../00_overview/ROADMAP.md).
+Full enterprise requirements (MSA, SSO, SCIM, SOC 2, residency, dedicated CSM, QBRs, named SE, analyst relations) come online progressively in Year 2. Detail in [ROADMAP.md](ROADMAP%20(imported%20to%20notion).md).
 
 ### Procurement & security readiness (as it ships)
-- Trust center at `ontologia.com/trust` with SOC 2 scope, penetration test letter, DPA, sub-processor list.
+- Trust center at `semlify.com/trust` with SOC 2 scope, penetration test letter, DPA, sub-processor list.
 - Pre-answered security questionnaire for the ten most common frameworks (CAIQ, SIG Lite, a couple of regulated-industry ones).
 - Standard response time on ad-hoc questions: 5 business days.
 
@@ -235,7 +235,7 @@ Full enterprise requirements (MSA, SSO, SCIM, SOC 2, residency, dedicated CSM, Q
 
 ## 9. Pricing & discounting discipline
 
-- Self-serve list price is public at `ontologia.com/pricing` and is the default.
+- Self-serve list price is public at `semlify.com/pricing` and is the default.
 - Annual contract already includes a discount (~17%) vs monthly — that's the "discount".
 - Additional discounting: up to 15% on one founder's approval, 15–25% with both founders' approval, >25% documented as a customer-specific case. Detail in [PRICING_MODEL.md](../08_finance/PRICING_MODEL.md).
 - No quarter-end pressure discounts — we do not have quarters to pressure.
@@ -277,8 +277,8 @@ Full enterprise requirements (MSA, SSO, SCIM, SOC 2, residency, dedicated CSM, Q
 | Analytics | PostHog self-hosted cloud free tier | $0 |
 | Attribution | UTMs + "how did you hear about us?" on signup | $0 |
 | Community | Slack free tier | $0 |
-| Support | Shared inbox (`support@ontologia.com`) via Resend / Plain free tier | $0 |
-| Docs | Docusaurus on `docs.ontologia.com` (Vercel free tier) | $0 |
+| Support | Shared inbox (`support@semlify.com`) via Resend / Plain free tier | $0 |
+| Docs | Docusaurus on `docs.semlify.com` (Vercel free tier) | $0 |
 | Demo / landing video | Loom free tier | $0 |
 
 Total GTM stack spend target for Year 1: under $100 / month.
@@ -324,4 +324,4 @@ Minimum viable library maintained by Valentin:
 - Founder standup every Monday on GTM; asynchronous update in Slack on Wednesday and Friday.
 - First GTM hire (Year 2) is a generalist full-stack marketer who can write, edit video, run community, and segment an email list.
 
-Related: [Business Strategy](BUSINESS_STRATEGY.md) · [Sales Playbook](SALES_PLAYBOOK.md) · [Marketing Strategy](MARKETING_STRATEGY.md) · [Customer Acquisition](CUSTOMER_ACQUISITION.md) · [Partnerships](PARTNERSHIPS.md) · [Pricing Model](../08_finance/PRICING_MODEL.md) · [Unit Economics](../08_finance/UNIT_ECONOMICS.md) · [Roadmap](../00_overview/ROADMAP.md)
+Related: [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md) · [Sales Playbook](SALES_PLAYBOOK.md) · [Marketing Strategy](MARKETING_STRATEGY.md) · [Customer Acquisition](CUSTOMER_ACQUISITION%20(imported%20to%20notion).md) · [Partnerships](PARTNERSHIPS.md) · [Pricing Model](../08_finance/PRICING_MODEL.md) · [Unit Economics](../08_finance/UNIT_ECONOMICS.md) · [Roadmap](ROADMAP%20(imported%20to%20notion).md)

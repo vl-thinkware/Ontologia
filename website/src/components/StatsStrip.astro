@@ -1,0 +1,83 @@
+---
+import AnimatedCounter from "./AnimatedCounter.tsx";
+
+interface Stat {
+  /** Numeric value to count to. If omitted, displays `display` literally (no animation). */
+  value?: number;
+  /** Optional override — for non-numeric values like "SKOS". */
+  display?: string;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+  separator?: boolean;
+  label: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  stats?: Stat[];
+}
+
+const {
+  eyebrow = "Built on real standards",
+  stats = [
+    { display: "SKOS", label: "for concept-level semantics" },
+    { display: "OWL 2", label: "for full-ontology exchange" },
+    { display: "JSON-LD", label: "for linked-data RAG" },
+    { display: "Neo4j 5", label: "for the graph engine" },
+  ],
+} = Astro.props;
+---
+
+<section
+  class="py-12 md:py-16"
+  style="background: var(--gray-2); border-block: 1px solid var(--gray-a4);"
+>
+  <div class="container-page">
+    {
+      eyebrow && (
+        <p class="text-eyebrow mb-6 text-center" style="color: var(--gray-10);">
+          {eyebrow}
+        </p>
+      )
+    }
+    <ul
+      class="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-x-10"
+      role="list"
+    >
+      {
+        stats.map((s, i) => (
+          <li
+            class="text-center"
+            data-fade-up
+            data-delay={String(Math.min(i, 3))}
+          >
+            <div
+              class="font-bold tracking-tight"
+              style="color: var(--gray-12); font-size: clamp(1.5rem, 1rem + 1.5vw, 2rem); font-variant-numeric: tabular-nums;"
+            >
+              {typeof s.value === "number" ? (
+                <AnimatedCounter
+                  client:visible
+                  to={s.value}
+                  prefix={s.prefix}
+                  suffix={s.suffix}
+                  decimals={s.decimals}
+                  separator={s.separator !== false}
+                />
+              ) : (
+                s.display
+              )}
+            </div>
+            <div
+              class="mt-1 text-[12.5px] leading-tight"
+              style="color: var(--gray-11);"
+            >
+              {s.label}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

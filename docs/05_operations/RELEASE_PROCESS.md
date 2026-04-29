@@ -37,7 +37,7 @@ Release day:
 - [ ] Approve; watch canary metrics for 10 min.
 - [ ] Confirm 100% rollout.
 - [ ] Post-deploy smoke passes.
-- [ ] Changelog published to `docs.ontologia.com/changelog`.
+- [ ] Changelog published to `docs.semlify.com/changelog`.
 - [ ] Customer email for significant releases.
 - [ ] `#deploys` retro note: what went well, what was flaky.
 

@@ -1,0 +1,115 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import ProductPageNav from "../../components/ProductPageNav.astro";
+import ProductFeatureBlock from "../../components/ProductFeatureBlock.astro";
+import AiHelpersIllustration from "../../components/illustrations/AiHelpersIllustration.astro";
+import AiSynonymsIllustration from "../../components/illustrations/AiSynonymsIllustration.astro";
+import AiTranslateIllustration from "../../components/illustrations/AiTranslateIllustration.astro";
+import AiDuplicateIllustration from "../../components/illustrations/AiDuplicateIllustration.astro";
+import CtaBlock from "../../components/CtaBlock.astro";
+
+const breadcrumbsLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://semlify.com/" },
+    { "@type": "ListItem", position: 2, name: "Product", item: "https://semlify.com/product" },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "AI helpers",
+      item: "https://semlify.com/product/ai",
+    },
+  ],
+};
+---
+
+<Layout
+  title="AI helpers for ontology curation — Semlify"
+  description="Synonyms, translations, duplicate detection, and class suggestion for your ontology. AI suggestions land as ordinary change events — accept, reject, or revert."
+  current="/product/ai"
+  jsonLd={breadcrumbsLd}
+>
+  <ProductPageNav current="/product/ai" />
+
+  <section
+    class="py-16 md:py-24"
+    style="background: var(--marketing-gradient-hero);"
+  >
+    <div class="container-page grid grid-cols-1 items-center gap-10 md:grid-cols-12 md:gap-12">
+      <div class="md:col-span-6" data-fade-up>
+        <p class="text-eyebrow">Product · AI helpers</p>
+        <h1
+          class="text-display mt-3"
+          style="font-size: clamp(2rem, 1.5rem + 2.5vw, 3.25rem);"
+        >
+          AI that respects your taxonomy.
+        </h1>
+        <p
+          class="mt-5 max-w-xl text-lg leading-relaxed"
+          style="color: var(--gray-11);"
+        >
+          Semlify's AI helpers don't write your concepts for you. They
+          suggest synonyms, translate prefLabels, flag possible duplicates, and
+          propose a class when one is missing. Every suggestion lands as a
+          regular change event — accept, reject, or revert later.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="/access" class="btn-primary">Try free</a>
+          <a href="/product/governance" class="btn-secondary">How revert works</a>
+        </div>
+      </div>
+      <div class="md:col-span-6" data-fade-up data-delay="1">
+        <AiHelpersIllustration />
+      </div>
+    </div>
+  </section>
+
+  <ProductFeatureBlock
+    eyebrow="Synonym suggestions"
+    title="Cover the words your users actually type."
+    body="A heuristic + LLM pass over the prefLabel proposes altLabels — synonyms, abbreviations, regional variants. You decide which ones land in your taxonomy. Hidden labels for misspellings happen the same way, opt-in."
+    bullets={[
+      "Per-language proposals for every workspace locale",
+      "Diff each suggestion against the existing altLabel set",
+      "One change event per accepted batch, easy to revert",
+      "Higher rate limits on the AI add-on for taxonomies with thousands of concepts",
+    ]}
+  >
+    <AiSynonymsIllustration />
+  </ProductFeatureBlock>
+
+  <ProductFeatureBlock
+    eyebrow="Auto-translate"
+    title="Five languages, one click."
+    body="Translate a prefLabel into every other workspace language. Confidence score on each translation. Side-by-side preview before accept. Domain jargon survives — the AI is primed with your existing translations as context."
+    reverse
+    bullets={[
+      "Confidence threshold configurable per ontology",
+      "Domain glossary automatically considered",
+      "Workspace locale list controls the translation set",
+      "Falls back to default language on missing translations",
+    ]}
+  >
+    <AiTranslateIllustration />
+  </ProductFeatureBlock>
+
+  <ProductFeatureBlock
+    eyebrow="Duplicate detection"
+    title="Catch the silent merge."
+    body="A Jaccard pass over altLabel sets surfaces concepts that probably refer to the same thing. The UI shows the overlap score and recommends `dct:isReplacedBy`. Merging is opt-in and reversible — the AI never deletes anything."
+    bullets={[
+      "Overlap threshold tunable per scheme",
+      "Recommends one direction (older → newer) but lets you flip",
+      "Records a deprecation event with replacement pointer",
+      "Cross-scheme detection optional — off by default",
+    ]}
+  >
+    <AiDuplicateIllustration />
+  </ProductFeatureBlock>
+
+  <CtaBlock
+    title="Bring AI in. Keep your taxonomy yours."
+    subtitle="Every suggestion is a regular change event. Reversible. Reviewable. Yours."
+  />
+</Layout>

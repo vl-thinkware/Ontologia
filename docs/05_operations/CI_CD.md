@@ -19,7 +19,7 @@ GitHub Actions workflows and the policies that govern them. Lean in Phase 0–2 
 | `release.yml` | tag `v*` | build release artefacts + changelog | Phase 2 |
 | `nightly.yml` | cron | property-based tests, deep e2e, perf smoke | Phase 3 |
 | `sdk-publish.yml` | tag `sdk-js-v*` or `sdk-py-v*` | publish to npm / PyPI | Phase 3 |
-| `docs.yml` | change under `docs/**` | build and deploy `docs.ontologia.com` | Phase 2 |
+| `docs.yml` | change under `docs/**` | build and deploy `docs.semlify.com` | Phase 2 |
 | `security-scans.yml` | cron + PR | Semgrep, npm audit, dependency diff | Phase 2 |
 
 Phase 0–1: a single `ci.yml` plus a manual "push to Render" script is enough. Two founders don't need canary deploys.
@@ -119,7 +119,7 @@ Traffic split 10% for 10 minutes before 100% — introduced when we have > 50 pa
 
 ## 7. Release artefacts
 
-- Backend Docker images pushed to `ghcr.io/ontologia/api:<sha>` and tagged `:v1.2.3`.
+- Backend Docker images pushed to `ghcr.io/semlify/api:<sha>` and tagged `:v1.2.3`.
 - Source maps uploaded to Sentry with the release version.
 - SDKs built with the same tag (from Phase 3).
 - Release notes auto-generated from Conventional Commits and posted to `#releases` in the team Slack (Phase 2+).

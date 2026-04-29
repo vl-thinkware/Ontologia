@@ -1,0 +1,335 @@
+/* -----------------------------------------------------------------------------
+ * Radix Themes — same theme as the app, with Inter font override.
+ * The body element carries `radix-themes` + data-attributes equivalent to
+ * the `<Theme>` component (set in Layout.astro). React islands that need
+ * portal targets (Tooltip, Dialog) wrap themselves in `<Theme>` internally.
+ *
+ * NOTE: @import must precede @tailwind in CSS — keep these directives at the
+ * top of the file.
+ * --------------------------------------------------------------------------- */
+@import "@radix-ui/themes/styles.css";
+
+/* Self-hosted fonts. fontsource ships only the variants we need so the bundle
+   stays small. Inter at 400/500/600/700/800; JetBrains Mono at 400/500. */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/inter/800.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+.radix-themes {
+  --default-font-family:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --heading-font-family: var(--default-font-family);
+  --code-font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --strong-font-family: var(--default-font-family);
+  --em-font-family: var(--default-font-family);
+  --quote-font-family: var(--default-font-family);
+
+  /* Semlify brand colours (logo-semlify/README.md). These override Radix
+     violet-9 / violet-11 with the indigo brand colour so logo pill, primary
+     CTAs, eyebrow, and accent surfaces use the new brand identity without
+     changing every individual reference across the codebase. The rest of the
+     violet ramp stays the original Radix scale — close enough to the indigo
+     to read as the same family for hover states, focus rings, etc. */
+  --violet-9:  #6366F1; /* brand.500 — primary mark + CTAs */
+  --violet-11: #4338CA; /* brand.700 — emphasis / hover on light */
+  --accent-9:  #6366F1;
+  --accent-11: #4338CA;
+
+  /* Marketing-only token additions — see DESIGN_GUIDE §2. */
+  --marketing-gradient-brand: linear-gradient(
+    135deg,
+    #6366F1,
+    #4338CA
+  );
+  --marketing-gradient-hero: linear-gradient(
+    180deg,
+    var(--gray-1) 0%,
+    var(--violet-2) 100%
+  );
+  --marketing-gradient-section: linear-gradient(
+    135deg,
+    var(--violet-2),
+    var(--color-panel-solid)
+  );
+
+  /* Marketing type scale, beyond the in-app Heading size="8" cap. */
+  --marketing-display: clamp(2.5rem, 1.5rem + 4vw, 4.5rem); /* 40 → 72px */
+  --marketing-headline: clamp(2rem, 1.4rem + 2.4vw, 3rem); /* 32 → 48px */
+  --marketing-eyebrow: 0.75rem;
+
+  /* Section vertical rhythm. */
+  --marketing-section-y: clamp(4rem, 3rem + 4vw, 7.5rem); /* 64 → 120px */
+  --marketing-section-y-large: clamp(5rem, 3rem + 6vw, 10rem); /* 80 → 160px */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-feature-settings: "cv11", "ss01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-background);
+    color: var(--gray-12);
+  }
+
+  ::selection {
+    background: var(--accent-a5);
+    color: var(--accent-12);
+  }
+
+  /* Honor reduced motion globally. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Skip-to-main-content link — visible only when focused. */
+  .skip-link {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 100;
+    padding: 8px 16px;
+    background: var(--accent-9);
+    color: var(--accent-contrast);
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-3);
+    text-decoration: none;
+    transform: translateY(-150%);
+    transition: transform 150ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--accent-a8);
+    outline-offset: 2px;
+  }
+
+  /* The marketing "container" — centered, with consistent gutter. */
+  .container-page {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  }
+
+  /* Display headline — used on hero, big page titles.
+     The clamp() in --marketing-display already scales 40 → 72px responsively. */
+  .text-display {
+    font-size: var(--marketing-display);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--gray-12);
+    /* Avoid orphan word breaks on long titles at narrow viewports. */
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  /* Section headline — used at the top of every long section. */
+  .text-headline {
+    font-size: var(--marketing-headline);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--gray-12);
+  }
+
+  /* Eyebrow — small uppercase label above the section title. */
+  .text-eyebrow {
+    font-size: var(--marketing-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-11);
+  }
+
+  .text-pull {
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--gray-12);
+  }
+
+  /* Marketing button look — uses Radix tokens, mirrors `<Button>` exactly so
+     plain anchors can stand in for the React component when we want SSG. */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: 40px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-3);
+    background: var(--accent-9);
+    color: var(--accent-contrast);
+    font-size: var(--font-size-3);
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color 120ms ease, transform 120ms ease;
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+  }
+  .btn-primary:hover {
+    background: var(--accent-10);
+  }
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--accent-a8);
+    outline-offset: 2px;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: 40px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-3);
+    background: var(--color-panel-solid);
+    color: var(--gray-12);
+    font-size: var(--font-size-3);
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color 120ms ease, border-color 120ms ease;
+    border: 1px solid var(--gray-a5);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn-secondary:hover {
+    background: var(--gray-a3);
+    border-color: var(--gray-a6);
+  }
+  .btn-secondary:focus-visible {
+    outline: 2px solid var(--accent-a8);
+    outline-offset: 2px;
+  }
+
+  /* The eyebrow + display headline + sub-text block, used on hero
+     and section openers. */
+  .marketing-card {
+    background: var(--color-panel-solid);
+    border: 1px solid var(--gray-a4);
+    border-radius: var(--radius-5);
+    padding: var(--space-6);
+    transition: border-color 200ms ease, box-shadow 200ms ease,
+      transform 200ms ease;
+  }
+  .marketing-card:hover {
+    border-color: var(--accent-a6);
+    box-shadow: var(--shadow-3);
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * Animations — subtle, marketing-only.
+ * --------------------------------------------------------------------------- */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatGently {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-a6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 600ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.animate-float {
+  animation: floatGently 4s ease-in-out infinite;
+}
+
+/* IntersectionObserver-driven entry animation. Elements with
+   `data-fade-up` start hidden, then fade up when they enter the viewport.
+   Reduced-motion users see them immediately (the JS observer skips them). */
+@media (prefers-reduced-motion: no-preference) {
+  [data-fade-up] {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 600ms cubic-bezier(0.25, 1, 0.5, 1),
+      transform 600ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  [data-fade-up].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  [data-fade-up][data-delay="1"].is-visible {
+    transition-delay: 80ms;
+  }
+  [data-fade-up][data-delay="2"].is-visible {
+    transition-delay: 160ms;
+  }
+  [data-fade-up][data-delay="3"].is-visible {
+    transition-delay: 240ms;
+  }
+}
+
+/* Dark-mode-only refinements — Radix Themes already swaps every token, but
+   our marketing-only gradients need explicit transforms (per DESIGN_GUIDE §10). */
+.radix-themes.dark {
+  --marketing-gradient-hero: linear-gradient(
+    180deg,
+    var(--gray-1) 0%,
+    var(--violet-3) 100%
+  );
+  --marketing-gradient-section: linear-gradient(
+    135deg,
+    var(--violet-3),
+    var(--color-panel-solid)
+  );
+}

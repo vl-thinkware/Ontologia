@@ -1,0 +1,184 @@
+---
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import CookieBanner from "../components/CookieBanner.tsx";
+import JsonLd from "../components/JsonLd.astro";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  /** Pathname (Astro.url.pathname) for nav highlighting. */
+  current?: string;
+  /** Set to false on full-bleed pages (404). */
+  withChrome?: boolean;
+  /** When true, emit `<meta name="robots" content="noindex, follow">`. */
+  noindex?: boolean;
+  /** Optional extra structured-data objects to merge onto the page. */
+  jsonLd?: unknown;
+}
+
+const {
+  title,
+  description,
+  ogImage = "/og/default.png",
+  current,
+  withChrome = true,
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+
+const fullTitle = title.includes("Semlify")
+  ? title
+  : `${title} · Semlify`;
+const siteOrigin = (Astro.site ?? new URL("https://semlify.com")).toString().replace(/\/$/, "");
+const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://semlify.com").toString();
+const absoluteOgImage = ogImage.startsWith("http")
+  ? ogImage
+  : `${siteOrigin}${ogImage.startsWith("/") ? ogImage : `/${ogImage}`}`;
+
+// Organization schema — emitted on every page so search engines can stitch
+// the brand across results. Logo is the favicon for now (svg); when we ship
+// a raster logo, point this at it.
+const organizationLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Semlify",
+  url: `${siteOrigin}/`,
+  logo: `${siteOrigin}/favicon.svg`,
+  description:
+    "Semlify is the source of truth for the concepts your AI and data pipelines depend on — design, version, and ship knowledge graphs and SKOS / OWL taxonomies through a stable JSON-LD API.",
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      email: "hello@semlify.com",
+      contactType: "customer support",
+      areaServed: ["EU", "US"],
+      availableLanguage: ["English", "French"],
+    },
+  ],
+};
+
+// WebSite schema — brand-name disambiguation. We do not have on-site search,
+// so SearchAction is intentionally omitted.
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Semlify",
+  url: `${siteOrigin}/`,
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#5b3df3" />
+    <meta name="format-detection" content="telephone=no" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={absoluteOgImage} />
+    <meta property="og:site_name" content="Semlify" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+
+    {/* Inter and JetBrains Mono are self-hosted via @fontsource — see
+       global.css. No external font CDN. */}
+
+    {/* Structured data — Organization + WebSite emitted on every page; pages
+       can pass extra schemas via the `jsonLd` prop. */}
+    <JsonLd data={organizationLd} />
+    <JsonLd data={websiteLd} />
+    {jsonLd && <JsonLd data={jsonLd} />}
+  </head>
+  <body
+    class="radix-themes flex min-h-screen flex-col"
+    data-accent-color="violet"
+    data-gray-color="slate"
+    data-radius="medium"
+    data-scaling="100%"
+    data-panel-background="solid"
+    data-is-root-theme="true"
+  >
+    {/* Resolve theme before first paint to avoid the flash. */}
+    <script is:inline>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("semlify.theme");
+          var prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var resolved =
+            stored === "light"
+              ? "light"
+              : stored === "dark"
+                ? "dark"
+                : prefersDark
+                  ? "dark"
+                  : "light";
+          document.body.classList.add(resolved);
+          document.body.setAttribute("data-appearance", resolved);
+        } catch (e) {
+          document.body.classList.add("light");
+          document.body.setAttribute("data-appearance", "light");
+        }
+      })();
+    </script>
+
+    {/* Skip link — first focusable thing in the body for keyboard / screen-reader users. */}
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    {withChrome && <Nav current={current ?? Astro.url.pathname} />}
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    {withChrome && <Footer />}
+
+    {/* Cookie banner — only renders when no choice has been stored. */}
+    <CookieBanner client:load />
+
+    {/* Scroll-triggered fade-up for elements marked [data-fade-up]. */}
+    <script is:inline>
+      (function () {
+        if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+          return;
+        }
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.08, rootMargin: "0px 0px -8% 0px" }
+        );
+        document.querySelectorAll("[data-fade-up]").forEach(function (el) {
+          io.observe(el);
+        });
+      })();
+    </script>
+  </body>
+</html>

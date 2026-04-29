@@ -1,4 +1,4 @@
-# Ontologia — Documentation
+# Semlify — Documentation
 
 **Primary owners**: Valentin Lemort (product, commercial) · Alexandre Delplace (engineering, CTO) · **Status**: Draft v4 (ontology-only product)
 
@@ -8,14 +8,14 @@
 
 ## 1. What is this repository?
 
-This directory is the **single source of truth** for everything related to building, shipping and selling Ontologia as a two-founder bootstrapped company. It is structured so that:
+This directory is the **single source of truth** for everything related to building, shipping and selling Semlify as a two-founder bootstrapped company. It is structured so that:
 
 - **Engineers** have everything they need to go from a blank laptop to a green production deploy on a ~$25 / month infra stack.
 - **Product and design** have PRD, personas, flows, features and a design system.
 - **Go-to-market, sales and finance** have playbooks, workspace-based pricing, a lean cost model and competitive intelligence.
 - **Leadership (the two founders)** have a bootstrap-aligned roadmap, strategy and refinements backlog.
 
-The underlying product specification is derived from `Ontologia — Spécifications v1.0.pdf` and the April 2026 ontology-only repositioning. Proposed evolutions of that spec are tracked in [`01_product/REFINEMENTS.md`](01_product/REFINEMENTS.md).
+The underlying product specification is derived from `Semlify — Spécifications v1.0.pdf` and the April 2026 ontology-only repositioning. Proposed evolutions of that spec are tracked in [`01_product/REFINEMENTS.md`](REFINEMENTS%20(imported%20to%20notion).md).
 
 ---
 
@@ -23,7 +23,7 @@ The underlying product specification is derived from `Ontologia — Spécificati
 
 Two founders. No fundraising. Free-tier infra until paying customers justify upgrading. Workspace-based pricing — Free, Team ($499/mo), Business ($1,990/mo), Enterprise (from $40k/yr) — gated by concept count, API calls, workspaces, seats and support tier, not by artefact mode. Every paid workspace can model at whatever depth suits it: a shallow vocabulary with two classes and a single scheme, or a 30-class ontology hosting a dozen taxonomies side-by-side. MVP ships a change-event log at concept and ontology level plus revert and tags; the git-like branches / merges / reviews workflow is pre-designed but deferred to S1 / S2 until two paying customers need it. Default-alive by month 12. Content-led inbound and founder-led outbound. No SDR, no paid ads, no analyst relations in Year 1.
 
-Full context: [`00_overview/VISION.md`](00_overview/VISION.md) · [`00_overview/ROADMAP.md`](00_overview/ROADMAP.md) · [`07_business/BUSINESS_STRATEGY.md`](07_business/BUSINESS_STRATEGY.md).
+Full context: [`00_overview/VISION.md`](VISION%20(imported%20to%20notion).md) · [`00_overview/ROADMAP.md`](ROADMAP%20(imported%20to%20notion).md) · [`07_business/BUSINESS_STRATEGY.md`](BUSINESS_STRATEGY%20(imported%20to%20notion).md).
 
 ---
 
@@ -56,16 +56,16 @@ Primary owner = the decision-maker. Contributor = the other founder (or future h
 
 ## 4. The product in one frame
 
-Ontologia is an **ontology editor**. Every artefact in the app is an Ontology. The data model is two-layer:
+Semlify is an **ontology editor**. Every artefact in the app is an Ontology. The data model is two-layer:
 
 - **T-Box (schema)** — `ConceptClass` nodes (e.g. Manufacturer, Model, Engine) and `RelationType` edges (e.g. `manufacturedBy`, `poweredBy`) with domain / range. Custom attributes per class, plus six always-present SKOS slots (`prefLabel`, `altLabel`, `hiddenLabel`, `definition`, `notation`, `example`).
 - **A-Box (instances)** — `ConceptScheme` containers holding `Concept` nodes typed by a class, connected by typed relations. Many schemes can live in the same ontology and reuse the same T-Box.
 
-A **taxonomy** in Ontologia is a ConceptScheme — usually one that leans heavily on the built-in `broader` relation — not a separate product. The Cars seed ontology hosts five schemes at once (Model catalogue 2026, Body style taxonomy, Fuel type taxonomy, Market segments, Manufacturing geography) on a single T-Box of 9 classes and 13 relation types.
+A **taxonomy** in Semlify is a ConceptScheme — usually one that leans heavily on the built-in `broader` relation — not a separate product. The Cars seed ontology hosts five schemes at once (Model catalogue 2026, Body style taxonomy, Fuel type taxonomy, Market segments, Manufacturing geography) on a single T-Box of 9 classes and 13 relation types.
 
 Three entry templates in the "New ontology" modal: **Blank**, **Product reference**, **Catalog with multi-taxonomies**. All land in the same product; no mode switch, no migration.
 
-Personas (detailed in [`01_product/PERSONAS.md`](01_product/PERSONAS.md)):
+Personas (detailed in [`01_product/PERSONAS.md`](PERSONAS%20(imported%20to%20notion).md)):
 
 - **Data Architect** — designs the T-Box. Lives in the Schema view.
 - **Catalogue Maintainer** — runs the A-Box day to day. Lives in the Taxonomies tree and Tables view.
@@ -76,16 +76,16 @@ Personas (detailed in [`01_product/PERSONAS.md`](01_product/PERSONAS.md)):
 ## 5. Suggested reading order by role
 
 ### Founder-onboarding path (start here if you're reading this fresh)
-1. [00_overview/VISION.md](00_overview/VISION.md)
-2. [00_overview/ROADMAP.md](00_overview/ROADMAP.md)
-3. [07_business/BUSINESS_STRATEGY.md](07_business/BUSINESS_STRATEGY.md)
+1. [00_overview/VISION.md](VISION%20(imported%20to%20notion).md)
+2. [00_overview/ROADMAP.md](ROADMAP%20(imported%20to%20notion).md)
+3. [07_business/BUSINESS_STRATEGY.md](BUSINESS_STRATEGY%20(imported%20to%20notion).md)
 4. [08_finance/PRICING_MODEL.md](08_finance/PRICING_MODEL.md)
-5. [01_product/FEATURES.md](01_product/FEATURES.md) — what's built today, what's staged next
+5. [01_product/FEATURES.md](FEATURES%20(imported%20to%20notion).md) — what's built today, what's staged next
 6. [02_architecture/VERSIONING_SYSTEM.md](02_architecture/VERSIONING_SYSTEM.md) — the distinctive subsystem, MVP + deferred
 7. [08_finance/FINANCIAL_PROJECTIONS.md](08_finance/FINANCIAL_PROJECTIONS.md)
 
 ### New engineer (day 1)
-1. [00_overview/VISION.md](00_overview/VISION.md)
+1. [00_overview/VISION.md](VISION%20(imported%20to%20notion).md)
 2. [09_team/ONBOARDING.md](09_team/ONBOARDING.md)
 3. [03_engineering/DEVELOPMENT_SETUP.md](03_engineering/DEVELOPMENT_SETUP.md)
 4. [02_architecture/ARCHITECTURE.md](02_architecture/ARCHITECTURE.md)
@@ -119,18 +119,18 @@ Personas (detailed in [`01_product/PERSONAS.md`](01_product/PERSONAS.md)):
 1. [10_launch/LAUNCH_CHECKLIST.md](10_launch/LAUNCH_CHECKLIST.md)
 2. [06_security_compliance/SECURITY_CHECKLIST.md](06_security_compliance/SECURITY_CHECKLIST.md)
 3. [05_operations/RELEASE_PROCESS.md](05_operations/RELEASE_PROCESS.md)
-4. [00_overview/ROADMAP.md](00_overview/ROADMAP.md)
+4. [00_overview/ROADMAP.md](ROADMAP%20(imported%20to%20notion).md)
 
 ### Product / Design
-1. [01_product/PRD.md](01_product/PRD.md)
-2. [01_product/PERSONAS.md](01_product/PERSONAS.md)
-3. [01_product/FEATURES.md](01_product/FEATURES.md)
-4. [01_product/USER_FLOWS.md](01_product/USER_FLOWS.md)
+1. [01_product/PRD.md](PRD%20(imported%20to%20notion).md)
+2. [01_product/PERSONAS.md](PERSONAS%20(imported%20to%20notion).md)
+3. [01_product/FEATURES.md](FEATURES%20(imported%20to%20notion).md)
+4. [01_product/USER_FLOWS.md](USER_FLOWS%20(imported%20to%20notion).md)
 5. [04_design/DESIGN_SYSTEM.md](04_design/DESIGN_SYSTEM.md)
-6. [00_overview/ROADMAP.md](00_overview/ROADMAP.md)
+6. [00_overview/ROADMAP.md](ROADMAP%20(imported%20to%20notion).md)
 
 ### Go-to-market / Sales
-1. [07_business/BUSINESS_STRATEGY.md](07_business/BUSINESS_STRATEGY.md)
+1. [07_business/BUSINESS_STRATEGY.md](BUSINESS_STRATEGY%20(imported%20to%20notion).md)
 2. [07_business/GO_TO_MARKET.md](07_business/GO_TO_MARKET.md) — founder-led, content-first
 3. [07_business/COMPETITIVE_ANALYSIS.md](07_business/COMPETITIVE_ANALYSIS.md)
 4. [07_business/SALES_PLAYBOOK.md](07_business/SALES_PLAYBOOK.md) — founder-run deal mechanics

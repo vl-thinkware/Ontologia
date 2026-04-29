@@ -228,4 +228,4 @@ Hiring closes with a hand-off to the [ONBOARDING.md](ONBOARDING.md) plan. The hi
 
 ---
 
-Related: [Onboarding](ONBOARDING.md) · [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Business Strategy](../07_business/BUSINESS_STRATEGY.md) · [Financial Projections](../08_finance/FINANCIAL_PROJECTIONS.md)
+Related: [Onboarding](ONBOARDING.md) · [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Business Strategy](BUSINESS_STRATEGY%20(imported%20to%20notion).md) · [Financial Projections](../08_finance/FINANCIAL_PROJECTIONS.md)

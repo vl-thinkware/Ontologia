@@ -18,8 +18,8 @@ This repository currently holds the **product, engineering, business and launch 
 ## Where to start
 
 - **Documentation hub**: [`docs/README.md`](docs/README.md)
-- **Product vision**: [`docs/00_overview/VISION.md`](docs/00_overview/VISION.md)
-- **Bootstrap roadmap**: [`docs/00_overview/ROADMAP.md`](docs/00_overview/ROADMAP.md)
+- **Product vision**: [`docs/00_overview/VISION.md`](VISION%20(imported%20to%20notion).md)
+- **Bootstrap roadmap**: [`docs/00_overview/ROADMAP.md`](ROADMAP%20(imported%20to%20notion).md)
 - **Architecture (MVP)**: [`docs/02_architecture/ARCHITECTURE.md`](docs/02_architecture/ARCHITECTURE.md)
 - **Pricing (workspace-based)**: [`docs/08_finance/PRICING_MODEL.md`](docs/08_finance/PRICING_MODEL.md)
 - **Founder-led GTM**: [`docs/07_business/GO_TO_MARKET.md`](docs/07_business/GO_TO_MARKET.md)

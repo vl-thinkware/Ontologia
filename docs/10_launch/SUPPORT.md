@@ -39,16 +39,16 @@ Priority is set by the customer initially and confirmed by the support engineer.
 
 - **Intercom / Plain** for chat + email.
 - **Community Slack / Discord** for peer-to-peer support and announcements.
-- **Email**: `support@ontologia.com` for asynchronous questions.
+- **Email**: `support@semlify.com` for asynchronous questions.
 - **Phone** for Enterprise P1.
 - **Private Slack channel** per Enterprise account.
-- **Status page** at `status.ontologia.com` with incidents and maintenance.
+- **Status page** at `status.semlify.com` with incidents and maintenance.
 
 ## 5. Self-service
 
 Our goal: customers solve 50%+ of questions without opening a ticket.
 
-- Searchable docs hub (`docs.ontologia.com`).
+- Searchable docs hub (`docs.semlify.com`).
 - In-product contextual help (tooltips, empty states, error messages with links).
 - Getting-started tutorials for key flows.
 - Troubleshooting guides for common errors.
@@ -132,7 +132,7 @@ Dashboards in Grafana and Mode; reviewed weekly.
 ## 14. Security & privacy tickets
 
 - Security-related tickets fast-tracked to security on-call.
-- Privacy / DSAR tickets routed to `privacy@ontologia.com` workflow.
+- Privacy / DSAR tickets routed to `privacy@semlify.com` workflow.
 - No PII from tickets logged in analytics; redacted in internal dashboards.
 
 ## 15. Escalation to engineering
